@@ -1,18 +1,13 @@
 {% extends "base.html" %}
+
 {% load static %}
 
+{% block title %}Welcome Page{% endblock %}
+
 {% block content %}
-<div class="text-center">
-    <h1 class="mx-2">PageTurner Reviews</h1>
-        <div class="search-container">
-        <input type="text" class="search-input mt-5" placeholder="Search by title or author">
-        <button type="submit" class="search-button mt-5">Search</button>
-        </div>
-        <button class="button-35 mt-5 mx-2">Log in</button>
-        <button class="button-35 mt-5 mx-2">Sign in</button>
+
+<div class="container-fluid d-flex justify-content-center mt-5">
+<h1>PageTurner Reviews</h1>
     </div>
 
-
 {% endblock %}
-
-
