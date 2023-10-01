@@ -7,7 +7,14 @@ font-size: 5em;
 
 h2, h3 {
 
-font-family: 'Gloock', serif;
+font-family: 'Lora', serif;
+
+}
+
+.book-link {
+
+font-family: 'Lora', serif;
+font-size: 2em;
 
 }
 
@@ -18,18 +25,18 @@ font-size: 1em;
 
 }
 
-
 body {
-
-background: rgb(238,174,202);
-background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,168,233,1) 100%);
+    background: rgb(238,174,202);
+    background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,168,233,1) 100%);
 
 }
 
+
+
 .navbar {
 
-background: rgb(238,174,202);
-background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,168,233,1) 100%);
+    background: transparent;
+    padding: 40px;
 
 }
 
@@ -38,3 +45,10 @@ background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,168,233,1) 
 width: 300px;
 
 }
+
+
+
+
+
+
+

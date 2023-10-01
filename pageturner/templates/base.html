@@ -21,11 +21,11 @@
 
   <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg">
 <div class="collapse navbar-collapse justify-content-md-center" id="navbarsExample08">
         <ul class="navbar-nav">
           <li class="nav-item active">
-            <a class="nav-link" href="#">About<span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="#">About</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Contact</a>
@@ -34,8 +34,9 @@
             <a class="nav-link" href="#">Log In</a>
           </li>
           <li class="nav-item dropdown">
-            <form class="form-inline my-2 my-md-0 mx-2">
-            <input class="form-control" type="text" placeholder="Search by author or title 🔍" aria-label="Search">
+            <form class="form-inline my-2 my-md-0 mx-2" method="post" action="{% url 'book_search' %}">
+                {% csrf_token %}
+            <input class="form-control" type="text" placeholder="Search by author or title 🔍" aria-label="Search" name="searched">
           </form>
           </li>
         </ul>

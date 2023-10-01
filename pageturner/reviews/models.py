@@ -6,31 +6,26 @@ class Publisher(models.Model):
     name = models.CharField(max_length=50, help_text="The name of the Publisher.")
 
     def __str__(self):
-        return f"{self.name} / {self.website}"
+        return f"{self.name}"
 
 
 class Author(models.Model):
     """A contributor to a Book, e.g. author, editor"""
-    first_name = models.CharField(max_length=50, help_text="The author's first name or names.")
-    last_name = models.CharField(max_length=50, help_text="The author's last name or names.")
+    name = models.CharField(max_length=100, help_text="The name of the author", default=None)
 
     def __str__(self):
-        return f"{self.last_name}, {self.first_name}"
+        return f"{self.name}"
 
 
 class Book(models.Model):
     """A published book"""
     title = models.CharField(max_length=70, help_text="The title of the book.")
-    publication_date = models.DateField(verbose_name="Date the book was published.")
-    isbn = models.CharField(max_length=20, verbose_name="ISBN number of the book.")
-    summary = models.TextField(default=None)
-    publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, default=None)
-    cover = models.ImageField(upload_to="book_covers/", null=True, blank=True)
-    sample = models.FileField(upload_to="book_samples/", null=True, blank=True)
+    rating = models.CharField(default=None, max_length=50, help_text="The rating of the book")
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    url = models.URLField(help_text="Link to the book page on Goodreads", default=None, null=True)
 
     def __str__(self):
-        return f"{self.title} / {self.isbn} / {self.author}"
+        return f"{self.title} / {self.author}"
 
 
 class Review(models.Model):
@@ -42,3 +37,8 @@ class Review(models.Model):
 
     def __str__(self):
         return f"Review for {self.book} / {self.rating}"
+
+
+class BookImport(models.Model):
+    csv_file = models.FileField(upload_to='uploads/')
+    date_added = models.DateTimeField(auto_now_add=True)

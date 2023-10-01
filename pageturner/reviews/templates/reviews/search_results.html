@@ -1,9 +1,26 @@
 {% extends "base.html" %}
+
 {% load static %}
 
-
-{% block title %}Book Search{% endblock %}
+{% block title %}Search Results{% endblock %}
 
 {% block content %}
+
+<div class="container-xxl d-flex justify-content-center">
+        <div class="text-center">
+            {% if searched %}
+<h1>Search Results for <em>{{ searched }}</em></h1>
+            {% for book in books %}
+            <a class="book-link" href="#"> {{ book.title }} by {{ book.author }}</a>
+
+            {% endfor %}
+
+            {% else %}
+            <h1>You didn't search for anything...</h1>
+            {% endif %}
+
+            </div>
+    </div>
+
 
 {% endblock %}
