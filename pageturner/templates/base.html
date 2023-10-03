@@ -32,7 +32,7 @@
                 <a class="nav-link" href="#">About</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Contact</a>
+                <a class="nav-link" href="{% url 'profile_list' %}">Community</a>
             </li>
             {% if user.is_authenticated %}
             <li class="nav-item">

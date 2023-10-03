@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
+from .models import Profile
+from boringavatars import avatar
 
 
 def login_user(request):
@@ -41,3 +43,20 @@ def register_user(request):
         form = UserCreationForm()
 
     return render(request, "authenticate/register_user.html", {"form": form})
+
+
+def profile_list(request):
+    profiles = Profile.objects.exclude(user=request.user)
+
+    def generate_avatar(name, size=100, variant="beam", colors=None, title=False, square=False):
+        if colors is None:
+            colors = ["92A1C6", "146A7C", "F0AB3D", "C271B4", "C20D90"]
+
+        avatar_svg = avatar(name, variant=variant, colors=colors, title=title, size=size, square=square)
+
+        return avatar_svg
+
+    for profile in profiles:
+        profile.avatar_svg = generate_avatar(profile.user.username)
+
+    return render(request, "profiles/profile_list.html", {"profiles": profiles})
