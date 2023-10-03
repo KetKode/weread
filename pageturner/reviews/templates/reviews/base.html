@@ -6,12 +6,18 @@
 
 {% block content %}
 
-<div class="container-xxl d-flex justify-content-center align-items-center vh-100">
+<div class="container-xxl">
         <div class="text-center">
-<h1>PageTurner Reviews</h1>
-<h2>find your next best read and leave a review</h2>
-            </div>
+<h1 class="mt-5">PageTurner Reviews</h1>
+<h3 class="mt-5">find your next best read and leave a review</h3>
+            <p class="mt-2">Not sure where to start?</p>
+        </div>
+
+<div class="button-container mt-3">
+            <a class="button-56 book-info" href="{% url 'book_list' %}">View Best Books of All Times</a>
     </div>
+    </div>
+
 
 
 {% endblock %}

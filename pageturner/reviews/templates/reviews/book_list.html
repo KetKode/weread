@@ -1,10 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% load static %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+
+<div class="container-xxl d-flex justify-content-center">
+        <div class="text-center">
+
+            <h1 class="mb-5">Best Books of All Times</h1>
+            {% for book in book_list %}
+            <div class="book-container">
+            <a class="book-info" href="{% url 'book_detail' book.pk %}"> <b>{{ book.title }}</b> by {{ book.author }}</a>
+            <p>⭐️{{ book.rating }}</p>
+                <div class="button-container mt-3">
+            <a class="button-56 book-info" href="{{ book.url }}" target="_blank">View this book on Goodreads</a>
+                </div>
+            </div>
+            {% endfor %}
+
+            </div>
+    </div>
+
+
+{% endblock %}

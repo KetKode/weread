@@ -9,9 +9,16 @@
 <div class="container-xxl d-flex justify-content-center">
         <div class="text-center">
             {% if searched %}
-<h1>Search Results for <em>{{ searched }}</em></h1>
+            <h1 class="mb-5">Search Results for <em>"{{ searched }}"</em></h1>
             {% for book in books %}
-            <a class="book-link" href="#"> {{ book.title }} by {{ book.author }}</a>
+            <div class="book-container">
+            <a class="book-info" href="{% url 'book_detail' book.pk %}"> <b>{{ book.title }}</b> by {{ book.author }}</a>
+            <p>⭐️{{ book.rating }}</p>
+                <div class="button-container mt-3">
+            <a class="button-56 book-info" href="{{ book.url }}" target="_blank">View this book on Goodreads</a>
+                    </div>
+                </div>
+
 
             {% endfor %}
 

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Book Details{% endblock %}
+
+{% block content %}
+
+<div class="container-xxl d-flex justify-content-center">
+    <div class="text-center">
+
+        <h2 class="mb-5">{{ book.title }}</h2>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- Placeholder for the book cover -->
+                    <img src="{% static 'hunger_games.jpg' %}" alt="Book Cover" class="book-cover">
+                </div>
+                <div class="col-md-6 text-left mt-5">
+                    <a class="book-info-detail" href="#"><b>{{ book.author }}</b></a>
+                    <p class="rating-detail mt-3">⭐️{{ book.rating }}</p>
+                    <div class="button-container mt-3 text-center">
+                        <a class="button-56 book-info" href="{{ book.url }}" target="_blank">View this book on Goodreads</a>
+                    </div>
+                    <div class="buttons-user mt-5">
+                        <a class="button-6" href="#"></a>
+                        <a class="button-6" href="#"></a>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+{% endblock %}
