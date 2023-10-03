@@ -5,39 +5,38 @@
 
 {% block content %}
 <div class="container login-container">
-  <div class="wrapper">
-   <form action="{% url 'login' %}" method="post">
-     {% csrf_token %}
-      <h1>Login</h1>
-      <div class="input-box">
-        <input type="text" placeholder="Username" name="username" required>
-        <i class='bx bxs-user'></i>
-        {% if form.username.errors %}
-          <div class="alert alert-warning" role="alert">
-            {{ form.username.errors.as_text }}
-          </div>
-        {% endif %}
-      </div>
-      <div class="input-box">
-        <input type="password" placeholder="Password" name="password" required>
-        <i class='bx bxs-lock-alt'></i>
-        {% if form.password.errors %}
-          <div class="alert alert-warning mt-3" role="alert">
-            {{ form.password.errors.as_text }}
-          </div>
-        {% endif %}
-      </div>
-      <div class="remember-forgot">
-      <label><input type="checkbox">Remember me</label>
-      <a href="#">Forgot password?</a>
-        </div>
-      <button type="submit" class="btn">Login</button>
-      <div class="register-link">
-        <p>Don't have an account? <a href="{% url 'register_user' %}">Register</a></p>
-      </div>
-  </form>
-</div>
+    <div class="wrapper">
+        <form action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <h1>Login</h1>
+            <div class="input-box">
+                <input name="username" placeholder="Username" required type="text">
+                <i class='bx bxs-user'></i>
+                {% if form.username.errors %}
+                <div class="alert alert-warning" role="alert">
+                    {{ form.username.errors.as_text }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="input-box">
+                <input name="password" placeholder="Password" required type="password">
+                <i class='bx bxs-lock-alt'></i>
+                {% if form.password.errors %}
+                <div class="alert alert-warning mt-3" role="alert">
+                    {{ form.password.errors.as_text }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="remember-forgot">
+                <label><input type="checkbox">Remember me</label>
+                <a href="#">Forgot password?</a>
+            </div>
+            <button class="btn" type="submit">Login</button>
+            <div class="register-link">
+                <p>Don't have an account? <a href="{% url 'register_user' %}">Register</a></p>
+            </div>
+        </form>
+    </div>
 
 
-
-{% endblock %}
+    {% endblock %}
