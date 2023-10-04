@@ -10,32 +10,41 @@
         <form action="{% url 'register_user' %}" method="post">
             {% csrf_token %}
             <h1>Register</h1>
-
-            <!-- Display form-level errors -->
-            {% if form.non_field_errors %}
-            <div class="alert alert-warning" role="alert">
-                {{ form.non_field_errors.as_text }}
-            </div>
-            {% endif %}
-
             <div class="input-box">
-                <input name="username" placeholder="Create username" required type="text">
-                <i class='bx bxs-user'></i>
+                {{ form.username }}
+                {% if form.username.errors %}
+                <div class="alert alert-warning" role="alert">
+                    {{ form.username.errors.as_text }}
+                </div>
+                {% endif %}
             </div>
-
             <div class="input-box">
-                <input name="password1" placeholder="Create password" required type="password">
-                <i class='bx bxs-lock-alt'></i>
+                {{ form.email }}
+                {% if form.email.errors %}
+                <div class="alert alert-warning" role="alert">
+                    {{ form.email.errors.as_text }}
+                </div>
+                {% endif %}
             </div>
-
             <div class="input-box">
-                <input name="password2" placeholder="Confirm password" required type="password">
-                <i class='bx bxs-lock-alt'></i>
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                <div class="alert alert-warning" role="alert">
+                    {{ form.password1.errors.as_text }}
+                </div>
+                {% endif %}
             </div>
-
-            <button class="btn" type="submit">Register</button>
+            <div class="input-box">
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                <div class="alert alert-warning" role="alert">
+                    {{ form.password2.errors.as_text }}
+                </div>
+                {% endif %}
+            </div>
+            <button class="button-56" type="submit">Register</button>
             <div class="register-link">
-                <p>Already have an account? <a href="#">Login</a></p>
+                <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
             </div>
         </form>
     </div>

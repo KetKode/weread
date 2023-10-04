@@ -5,23 +5,22 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Profile, Snippet
 from boringavatars import avatar
 from django.contrib.auth.models import User
-from .forms import CustomUserCreationForm, ProfilePicForm
+from .forms import RegisterForm, ProfilePicForm
+from django.shortcuts import get_object_or_404
+from .forms import CustomAuthenticationForm
 
 
 def login_user(request):
     if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
+        form = CustomAuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
             login(request, user)
             return redirect("welcome_page")
-        else:
-            messages.success(request, "There was an error logging in. Try again.")
-            return redirect("login")
     else:
+        form = CustomAuthenticationForm(request)
 
-        return render(request, "authenticate/login.html", {})
+    return render(request, "authenticate/login.html", {"form": form})
 
 
 def logout_user(request):
@@ -59,17 +58,19 @@ def generate_avatar_main(name, size=250, variant="beam", colors=None, title=Fals
 
 def register_user(request):
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = RegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password1"]
-            user = authenticate(username=username, password=password)
+            user = authenticate(request, username=username, password=password)
             login(request, user)
             messages.success(request, "You are registered successfully.")
             return redirect("welcome_page")
+        else:
+            messages.error(request, "Please correct the errors below.")
     else:
-        form = UserCreationForm()
+        form = RegisterForm()
 
     return render(request, "authenticate/register_user.html", {"form": form})
 
@@ -114,18 +115,24 @@ def profile(request, pk):
 
 def update_user(request):
     if request.user.is_authenticated:
-        current_user = User.objects.get(id=request.user.id)
-        profile_user = Profile.objects.get(user__id=request.user.id)
+        current_user = get_object_or_404(User, id=request.user.id)
+        profile_user = get_object_or_404(Profile, user__id=request.user.id)
 
-        user_form = CustomUserCreationForm(request.POST, request.FILES or None, instance=current_user)
-        profile_form = ProfilePicForm(request.POST, request.FILES or None, instance=profile_user)
+        if request.method == 'POST':
+            user_form = RegisterForm(request.POST, instance=current_user)
+            profile_form = ProfilePicForm(request.POST, request.FILES, instance=profile_user)
 
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            login(request, current_user)
-            messages.success(request, "Your profile has been updated!")
-            return redirect('welcome_page')
+            if user_form.is_valid() and profile_form.is_valid():
+                user_form.save()
+                profile_form.save()
+                login(request, current_user)
+                messages.success(request, "Your profile has been updated!")
+                return redirect('welcome_page')
+            else:
+                messages.error(request, "Please correct the errors below.")
+        else:
+            user_form = RegisterForm(instance=current_user)
+            profile_form = ProfilePicForm(instance=profile_user)
 
         return render(request, "profiles/update_user.html", {"user_form": user_form, "profile_form": profile_form})
     else:
