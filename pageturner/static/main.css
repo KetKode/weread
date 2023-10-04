@@ -338,3 +338,10 @@ input {
 .alert {
     margin-top: 20px;
 }
+
+.profile-image-main {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+}

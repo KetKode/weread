@@ -1,15 +1,33 @@
 from django.shortcuts import render, redirect, reverse
 from .models import Book, Author
+from members.models import Snippet
 from django.db.models import Q
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from members.forms import SnippetForm
+from django.contrib import messages
 
 
 def welcome_page(request):
-    return render(request, "reviews/base.html")
+    if request.user.is_authenticated:
+        form = SnippetForm(request.POST or None)
+        if request.method == "POST":
+            if form.is_valid():
+                snippet = form.save(commit=False)
+                snippet.user = request.user
+                snippet.save()
+                messages.success(request, "Your snippet has been posted!")
+                return redirect("welcome_page")
+
+        snippets = Snippet.objects.all().order_by("-created_at")
+        return render(request, "reviews/base.html", {"snippets": snippets, "form": form})
+    else:
+        snippets = Snippet.objects.all().order_by("-created_at")
+        return render(request, "reviews/base.html", {"snippets": snippets})
+
 
 
 def book_search(request):

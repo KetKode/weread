@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile
+from .models import Profile, Snippet
 from boringavatars import avatar
+from django.contrib.auth.models import User
+from .forms import CustomUserCreationForm, ProfilePicForm
 
 
 def login_user(request):
@@ -28,6 +30,33 @@ def logout_user(request):
     return redirect('welcome_page')
 
 
+def generate_avatar_list(name, size=100, variant="beam", colors=None, title=False, square=False):
+    if colors is None:
+        colors = ["92A1C6", "146A7C", "F0AB3D", "C271B4", "C20D90"]
+
+    avatar_svg = avatar(name, variant=variant, colors=colors, title=title, size=size, square=square)
+
+    return avatar_svg
+
+
+def generate_avatar_follow(name, size=40, variant="beam", colors=None, title=False, square=False):
+    if colors is None:
+        colors = ["92A1C6", "146A7C", "F0AB3D", "C271B4", "C20D90"]
+
+    avatar_svg = avatar(name, variant=variant, colors=colors, title=title, size=size, square=square)
+
+    return avatar_svg
+
+
+def generate_avatar_main(name, size=250, variant="beam", colors=None, title=False, square=False):
+    if colors is None:
+        colors = ["92A1C6", "146A7C", "F0AB3D", "C271B4", "C20D90"]
+
+    avatar_svg_main = avatar(name, variant=variant, colors=colors, title=title, size=size, square=square)
+
+    return avatar_svg_main
+
+
 def register_user(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
@@ -46,17 +75,60 @@ def register_user(request):
 
 
 def profile_list(request):
-    profiles = Profile.objects.exclude(user=request.user)
+    if request.user.is_authenticated:
+        profiles = Profile.objects.exclude(user=request.user)
 
-    def generate_avatar(name, size=100, variant="beam", colors=None, title=False, square=False):
-        if colors is None:
-            colors = ["92A1C6", "146A7C", "F0AB3D", "C271B4", "C20D90"]
+        for profile in profiles:
+            profile.avatar_svg = generate_avatar_list(profile.user.username)
 
-        avatar_svg = avatar(name, variant=variant, colors=colors, title=title, size=size, square=square)
+        return render(request, "profiles/profile_list.html", {"profiles": profiles})
 
-        return avatar_svg
+    else:
+        messages.success(request, "You must be logged in to view this page.")
+        return redirect('welcome_page')
 
-    for profile in profiles:
-        profile.avatar_svg = generate_avatar(profile.user.username)
 
-    return render(request, "profiles/profile_list.html", {"profiles": profiles})
+def profile(request, pk):
+    if request.user.is_authenticated:
+        profile = Profile.objects.get(user_id=pk)
+        snippets = Snippet.objects.filter(user_id=pk).order_by("-created_at")
+
+        profile.avatar_svg = generate_avatar_follow(profile.user.username)
+        profile.avatar_svg_main = generate_avatar_main(profile.user.username)
+
+        if request.method == "POST":
+            current_user_profile = request.user.profile
+            action = request.POST["follow"]
+            if action == "unfollow":
+                current_user_profile.follows.remove(profile)
+            elif action == "follow":
+                current_user_profile.follows.add(profile)
+
+            current_user_profile.save()
+
+        return render(request, "profiles/profile.html", {"profile": profile, "snippets": snippets})
+    else:
+        messages.success(request, "You must be logged in to view this page.")
+        return redirect('welcome_page')
+
+
+def update_user(request):
+    if request.user.is_authenticated:
+        current_user = User.objects.get(id=request.user.id)
+        profile_user = Profile.objects.get(user__id=request.user.id)
+
+        user_form = CustomUserCreationForm(request.POST, request.FILES or None, instance=current_user)
+        profile_form = ProfilePicForm(request.POST, request.FILES or None, instance=profile_user)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            login(request, current_user)
+            messages.success(request, "Your profile has been updated!")
+            return redirect('welcome_page')
+
+        return render(request, "profiles/update_user.html", {"user_form": user_form, "profile_form": profile_form})
+    else:
+        messages.success(request, "You must be logged in to view this page.")
+        return redirect('welcome_page')
+

@@ -13,9 +13,39 @@
             <p class="mt-2">Not sure where to start?</p>
         </div>
 
-<div class="button-container mt-3">
+<div class="button-container mt-3 mb-5">
             <a class="button-56 book-info" href="{% url 'book_list' %}">View Best Books of All Times</a>
     </div>
+
+    <div class="container-xxl text-center">
+        <div class="row">
+            <div class="col-8">
+
+    {% for snippet in snippets %}
+    <div class="alert alert-light" role="alert">
+    {{ snippet.body }} <br/>
+        <small class="text-muted"> by
+            @{{ snippet.user.username }} on
+            {{ snippet.created_at }}
+        </small>
+    </div>
+    {% endfor %}
+
+
+        </div>
+
+        <div class="col-4 mt-4">
+            {% if form %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <button type="submit" class="button-56">Share snippet!</button>
+
+            </form>
+            {% endif %}
+        </div>
+
     </div>
 
 
