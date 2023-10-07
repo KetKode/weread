@@ -15,12 +15,31 @@
 {% if snippets %}
             {% for snippet in snippets %}
     <div class="alert alert-light" role="alert">
+        <div class="container">
+            <div class="row">
+                <div class="col-1">
+                    {% if profile.profile_image %}
+                    <img class="profile-image-snippet" src="{{ profile.profile_image.url }}">
+                    {% endif %}
+                </div>
+
+                    <div class="col-10">
     {{ snippet.body }} <br/>
         <small class="text-muted"> by
             @{{ snippet.user.username }} on
             {{ snippet.created_at }}
+            {{ snippet.number_of_likes }}
+            {% if user in snippet.likes.all %}
+                                    <a href="{% url 'snippet_like' snippet.id %}"><i class="fa-solid fa-heart" style="color:red"></i></a>
+                                    {% else %}
+                                    <a href="{% url 'snippet_like' snippet.id %}"><i class="fa-regular fa-heart" style="color:red"></i></a>
+                                    {% endif %}
+            <a href="{% url 'snippet_show' snippet.id %}"><i class="fa-solid fa-share" style="color:gray"></i></a>
         </small>
     </div>
+    </div>
+    </div>
+        </div>
     {% endfor %}
             {% endif %}
             </div>

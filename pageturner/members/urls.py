@@ -9,4 +9,6 @@ urlpatterns = [
     path('profile_list', views.profile_list, name='profile_list'),
     path('profile/<int:pk>', views.profile, name="profile"),
     path('update_user', views.update_user, name="update_user"),
+    path('snippet_like/<int:pk>', views.snippet_like, name="snippet_like"),
+    path('snippet_show/<int:pk>', views.snippet_show, name="snippet_show"),
     ]

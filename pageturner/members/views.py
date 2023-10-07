@@ -139,3 +139,28 @@ def update_user(request):
         messages.success(request, "You must be logged in to view this page.")
         return redirect('welcome_page')
 
+
+def snippet_like(request, pk):
+    if request.user.is_authenticated:
+        snippet = get_object_or_404(Snippet, id=pk)
+        if snippet.likes.filter(id=request.user.id):
+            snippet.likes.remove(request.user)
+        else:
+            snippet.likes.add(request.user)
+
+        return redirect(request.META.get("HTTP_REFERER"))
+
+    else:
+        messages.success(request, "You must be logged in to view this page.")
+        return redirect('welcome_page')
+
+
+def snippet_show(request, pk):
+    snippet = get_object_or_404(Snippet, id=pk)
+    if snippet:
+        return render(request, "snippets/show_snippet.html", {"snippet": snippet})
+
+    else:
+        messages.success(request, "This snippet does not exist!")
+        return redirect('welcome_page')
+

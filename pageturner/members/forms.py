@@ -52,4 +52,4 @@ class SnippetForm (forms.ModelForm):
 
     class Meta:
         model = Snippet
-        exclude = ("user",)
+        exclude = ("user", "likes")
