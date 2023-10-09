@@ -35,8 +35,8 @@
 
                             <div class="col-10">
                                 {{ snippet.body }} <br/>
-                                <small class="text-muted"> by
-                                    @{{ snippet.user.username }} on
+                                <small class="text-muted"> by <a href="{% url 'profile' snippet.user.profile.user.id %}">@{{ snippet.user.username }}</a>
+                                     on
                                     {{ snippet.created_at }}
                                     {{ snippet.number_of_likes }}
 

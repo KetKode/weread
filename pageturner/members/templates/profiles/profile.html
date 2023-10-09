@@ -8,9 +8,9 @@
 
 <div class="container-xxl text-center">
     <div class="row">
-        <div class="col-8">
+        <div class="col-8 justify-content-center mx-auto my-5 text-center">
+            <h3>My snippets:</h3>
             {% if user_snippets %}
-                <h3>My snippets:</h3>
             {% for snippet in user_snippets %}
             <div class="alert alert-light" role="alert">
                 <div class="container">
@@ -22,8 +22,8 @@
                         </div>
                         <div class="col-10">
                             {{ snippet.body }} <br/>
-                            <small class="text-muted"> by
-                                @{{ snippet.user.username }} on
+                            <small class="text-muted"> by <a href="{% url 'profile' snippet.user.profile.user.id %}">
+                                @{{ snippet.user.username }}</a> on
                                 {{ snippet.created_at }}
                                 {{ snippet.number_of_likes }}
                                 {% if user in snippet.likes.all %}
@@ -41,10 +41,12 @@
                 </div>
             </div>
             {% endfor %}
+            {% else %}
+            <p>No posted snippets yet 😥</p>
             {% endif %}
 
+            <h3>Snippets I shared:</h3>
             {% if shared_snippets %}
-                <h3>Snippets I shared:</h3>
             {% for snippet in shared_snippets %}
 
             <div class="alert alert-light" role="alert">
@@ -59,8 +61,8 @@
 
                         <div class="col-10">
                             {{ snippet.original_snippet.body }} <br/>
-                            <small class="text-muted"> originally posted by
-                                @{{ snippet.original_snippet.user.username }} on
+                            <small class="text-muted"> originally posted by <a href="{% url 'profile' snippet.original_snippet.user.profile.user.id %}">
+                                @{{ snippet.original_snippet.user.username }}</a> on
                                 {{ snippet.original_snippet.created_at }}
                                 {{ snippet.original_snippet.number_of_likes }}
                                 {% if user in snippet.original_snippet.likes.all %}
@@ -78,20 +80,21 @@
                 </div>
             </div>
             {% endfor %}
+            {% else %}
+            <p>No shared snippets yet 😥</p>
             {% endif %}
         </div>
 
 
         <div class="col-4">
-            {% if profile.profile_image %}
-            <img class="profile-image-main" src="{{ profile.profile_image.url }}">
-            {% else %}
-            {{ profile.avatar_svg_main|safe }}
-            {% endif %}
-            <br/>
 
-            <div class="card mt-3 mb-5 px-3 py-5">
+            <div class="card mt-2 mb-5 px-3 py-3">
+                <div class="card-body d-flex flex-column align-items-center">
+                {% if profile.profile_image %}
+            <img class="profile-image-main mb-2" src="{{ profile.profile_image.url }}">
+            {% endif %}
                 <h5 class="card-header">@{{profile.user.username}}</h5>
+                </div>
                 <div class="card-body">
 
                     {% if profile.homepage_link %}
@@ -110,9 +113,11 @@
                     </div>
 
                     {% if profile.profile_bio %}
-                    <p align="justify">{{ profile.profile_bio }}</p>
+                    <p align="center">{{ profile.profile_bio }}</p>
+                    {% else %}
+                    <p>Just a nice member of our book community ❤️</p>
                     {% endif %}
-                </div>
+
 
                 {% if request.user.id == profile.user.id %}
                 <a class="button-56" href="{% url 'update_user' %}">Update Profile</a>
@@ -122,8 +127,8 @@
                 <form method="post">
                     {% csrf_token %}
                     {% if profile in user.profile.follows.all %}
-                    <button class="button-56" name="follow" type="submit" value="unfollow">Unfollow @{{
-                        profile.user.username|lower }}
+                    <p align="center">You are following @{{ profile.user.username|lower }}</p>
+                    <button class="button-56" name="follow" type="submit" value="unfollow">Unfollow @{{ profile.user.username|lower }}
                     </button>
                     {% else %}
                     <button class="button-56" name="follow" type="submit" value="follow">Follow @{{ profile.user.username|lower }}
@@ -138,6 +143,7 @@
             </div>
 
 
+
             <div class="card mt-3 mb-5">
                 <h5 class="card-header">Follows</h5>
                 <div class="card-body">
@@ -147,7 +153,9 @@
                         {% for following in user.profile.follows.all %}
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
-                                {{ profile.avatar_svg|safe }}
+                                {% if following.profile.profile_image %}
+                                <img class="profile-image-snippet" src="{{ following.profile.profile_image.url }}">
+                                {% endif %}
                                 <a class="mx-3" href="{% url 'profile' following.user.id %}">@{{ following }}</a>
                             </div>
                             <a href="{% url 'unfollow' following.user.id %}">

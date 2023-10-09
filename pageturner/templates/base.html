@@ -27,10 +27,11 @@
 
 <nav class="navbar navbar-expand-md">
     <div class="collapse navbar-collapse justify-content-md-center" id="navbarsExample08">
+        <a class="nav-link" href="{% url 'welcome_page' %}"><i class="fa-solid fa-book"></i> Home</a>
         <ul class="navbar-nav">
             {% if user.is_authenticated %}
             <li class="nav-item active">
-                <a class="nav-link" href="{% url 'profile' request.user.id %}">Your Shelf</a>
+                <a class="nav-link" href="{% url 'profile' request.user.id %}">Your Page</a>
             </li>
             {% endif %}
             <li class="nav-item">

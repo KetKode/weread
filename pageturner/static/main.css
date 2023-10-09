@@ -369,6 +369,12 @@ input {
 
 }
 
+.card-list {
+    width: 540px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;}
+
 .card-header {
     background-color:white;
 }

@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from .models import Profile, Snippet, SharedSnippet
-from boringavatars import avatar
+from .utils import generate_avatar
 from django.contrib.auth.models import User
 from .forms import RegisterForm, ProfilePicForm
 from django.shortcuts import get_object_or_404
@@ -29,31 +29,22 @@ def logout_user(request):
     return redirect('welcome_page')
 
 
-def generate_avatar_list(name, size=100, variant="beam", colors=None, title=False, square=False):
-    if colors is None:
-        colors = ["92A1C6", "146A7C", "F0AB3D", "C271B4", "C20D90"]
-
-    avatar_svg = avatar(name, variant=variant, colors=colors, title=title, size=size, square=square)
-
-    return avatar_svg
-
-
-def generate_avatar_follow(name, size=40, variant="beam", colors=None, title=False, square=False):
-    if colors is None:
-        colors = ["92A1C6", "146A7C", "F0AB3D", "C271B4", "C20D90"]
-
-    avatar_svg = avatar(name, variant=variant, colors=colors, title=title, size=size, square=square)
-
-    return avatar_svg
+# def generate_avatar_list(name, size=100, variant="beam", colors=None, title=False, square=False):
+#     if colors is None:
+#         colors = ["92A1C6", "146A7C", "F0AB3D", "C271B4", "C20D90"]
+#
+#     avatar_svg = avatar(name, variant=variant, colors=colors, title=title, size=size, square=square)
+#
+#     return avatar_svg
 
 
-def generate_avatar_main(name, size=250, variant="beam", colors=None, title=False, square=False):
-    if colors is None:
-        colors = ["92A1C6", "146A7C", "F0AB3D", "C271B4", "C20D90"]
-
-    avatar_svg_main = avatar(name, variant=variant, colors=colors, title=title, size=size, square=square)
-
-    return avatar_svg_main
+# def generate_avatar_follow(name, size=40, variant="beam", colors=None, title=False, square=False):
+#     if colors is None:
+#         colors = ["92A1C6", "146A7C", "F0AB3D", "C271B4", "C20D90"]
+#
+#     avatar_svg = avatar(name, variant=variant, colors=colors, title=title, size=size, square=square)
+#
+#     return avatar_svg
 
 
 def register_user(request):
@@ -63,6 +54,7 @@ def register_user(request):
             user = form.save()
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password1"]
+
             user = authenticate(request, username=username, password=password)
             login(request, user)
             messages.success(request, "You are registered successfully.")
@@ -79,8 +71,8 @@ def profile_list(request):
     if request.user.is_authenticated:
         profiles = Profile.objects.exclude(user=request.user)
 
-        for profile in profiles:
-            profile.avatar_svg = generate_avatar_list(profile.user.username)
+        # for profile in profiles:
+        #     profile.avatar_svg = generate_avatar_list(profile.user.username)
 
         return render(request, "profiles/profile_list.html", {"profiles": profiles})
 
@@ -119,8 +111,8 @@ def profile(request, pk):
         user_snippets = Snippet.objects.filter(user_id=pk).order_by("-created_at")
         shared_snippets = SharedSnippet.objects.filter(user_id=pk).order_by("-shared_at")
 
-        profile.avatar_svg = generate_avatar_follow(profile.user.username)
-        profile.avatar_svg_main = generate_avatar_main(profile.user.username)
+        # profile.avatar_svg = generate_avatar_follow(profile.user.username)
+        # profile.avatar_svg_main = generate_avatar_main(profile.user.username)
 
         if request.method == "POST":
             current_user_profile = request.user.profile
