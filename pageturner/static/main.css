@@ -359,3 +359,21 @@ input {
     border-radius: 50%;
     object-fit: cover;
 }
+
+.card {
+
+    width: 300px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+
+}
+
+.card-header {
+    background-color:white;
+}
+
+.alert-light {
+    width: 530px;
+
+}

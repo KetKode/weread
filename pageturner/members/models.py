@@ -13,6 +13,10 @@ class Profile(models.Model):
 
     date_modified = models.DateTimeField(User, auto_now=True)
     profile_image = models.ImageField(null=True, blank=True, upload_to="images")
+    profile_bio = models.CharField(null=True, blank=True, max_length=500)
+    homepage_link = models.CharField(null=True, blank=True, max_length=100)
+    instagram_link = models.CharField(null=True, blank=True, max_length=100)
+    facebook_link = models.CharField(null=True, blank=True, max_length=100)
 
     def __str__(self):
         return self.user.username
@@ -42,3 +46,12 @@ class Snippet(models.Model):
         return f"{self.user} " \
                f"{self.created_at:%Y-%m-%d %H:%M}: " \
                f"{self.body}"
+
+
+class SharedSnippet(models.Model):
+    original_snippet = models.ForeignKey(Snippet, on_delete=models.CASCADE, related_name="shared_snippet")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    shared_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Shared by {self.user} at {self.shared_at}"

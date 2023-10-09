@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile, Snippet
+from .models import Profile, Snippet, SharedSnippet
 from boringavatars import avatar
 from django.contrib.auth.models import User
 from .forms import RegisterForm, ProfilePicForm
@@ -89,10 +89,35 @@ def profile_list(request):
         return redirect('welcome_page')
 
 
+def unfollow(request, pk):
+    if request.user.is_authenticated:
+        profile = Profile.objects.get(user_id=pk)
+        request.user.profile.follows.remove(profile)
+        request.user.profile.save()
+        messages.success(request, f"You have unfollowed {profile}")
+        return redirect(request.META.get("HTTP_REFERER"))
+    else:
+        messages.success(request, "You must be logged in to view this page.")
+        return redirect('welcome_page')
+
+
+def follow(request, pk):
+    if request.user.is_authenticated:
+        profile = Profile.objects.get(user_id=pk)
+        request.user.profile.follows.add(profile)
+        request.user.profile.save()
+        messages.success(request, f"You are following {profile}")
+        return redirect(request.META.get("HTTP_REFERER"))
+    else:
+        messages.success(request, "You must be logged in to view this page.")
+        return redirect('welcome_page')
+
+
 def profile(request, pk):
     if request.user.is_authenticated:
         profile = Profile.objects.get(user_id=pk)
-        snippets = Snippet.objects.filter(user_id=pk).order_by("-created_at")
+        user_snippets = Snippet.objects.filter(user_id=pk).order_by("-created_at")
+        shared_snippets = SharedSnippet.objects.filter(user_id=pk).order_by("-shared_at")
 
         profile.avatar_svg = generate_avatar_follow(profile.user.username)
         profile.avatar_svg_main = generate_avatar_main(profile.user.username)
@@ -107,7 +132,7 @@ def profile(request, pk):
 
             current_user_profile.save()
 
-        return render(request, "profiles/profile.html", {"profile": profile, "snippets": snippets})
+        return render(request, "profiles/profile.html", {"profile": profile, "user_snippets": user_snippets, "shared_snippets": shared_snippets})
     else:
         messages.success(request, "You must be logged in to view this page.")
         return redirect('welcome_page')
@@ -155,12 +180,20 @@ def snippet_like(request, pk):
         return redirect('welcome_page')
 
 
-def snippet_show(request, pk):
-    snippet = get_object_or_404(Snippet, id=pk)
-    if snippet:
-        return render(request, "snippets/show_snippet.html", {"snippet": snippet})
+# def snippet_show(request, pk):
+#     snippet = get_object_or_404(Snippet, id=pk)
+#     if snippet:
+#         return render(request, "snippets/show_snippet.html", {"snippet": snippet})
+#
+#     else:
+#         messages.success(request, "This snippet does not exist!")
+#         return redirect('welcome_page')
 
-    else:
-        messages.success(request, "This snippet does not exist!")
-        return redirect('welcome_page')
+
+def snippet_share(request, pk):
+    original_snippet = get_object_or_404(Snippet, id=pk)
+
+    shared_snippet = SharedSnippet.objects.create(original_snippet=original_snippet, user=request.user)
+
+    return redirect('profile', pk=request.user.pk)
 

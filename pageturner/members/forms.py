@@ -21,7 +21,7 @@ class RegisterForm (UserCreationForm):
         fields = ('username', 'email', 'password1', 'password2')
 
     def __init__(self, *args, **kwargs):
-        super (RegisterForm, self).__init__ (*args, **kwargs)
+        super(RegisterForm, self).__init__ (*args, **kwargs)
 
         self.fields['username'].widget.attrs['class'] = 'form-control'
         self.fields['username'].widget.attrs['placeholder'] = 'User Name'
@@ -37,11 +37,19 @@ class RegisterForm (UserCreationForm):
 
 
 class ProfilePicForm (forms.ModelForm):
-    profile_image = forms.ImageField (label="", widget=forms.FileInput (attrs={'class': 'form-control'}))
+    profile_image = forms.ImageField(label="", widget=forms.FileInput(attrs={'class': 'form-control'}))
+    profile_bio = forms.CharField(label="Profile Bio", widget=forms.Textarea(
+        attrs={'class': 'form-control', 'placeholder': 'Profile Bio'}))
+    homepage_link = forms.CharField(label="", widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Website Link'}))
+    facebook_link = forms.CharField(label="", widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Facebook Link'}))
+    instagram_link = forms.CharField(label="", widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Instagram Link'}))
 
     class Meta:
         model = Profile
-        fields = ('profile_image',)
+        fields = ('profile_image', 'profile_bio', 'homepage_link', 'instagram_link', 'facebook_link')
 
 
 class SnippetForm (forms.ModelForm):

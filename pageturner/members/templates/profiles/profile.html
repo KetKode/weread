@@ -9,40 +9,78 @@
 <div class="container-xxl text-center">
     <div class="row">
         <div class="col-8">
-        <h1 class="mb-5">My Shelf</h1>
-      <h2>Welcome back, <em>{{ profile.user.username }}</em>!</h2>
-
-{% if snippets %}
-            {% for snippet in snippets %}
-    <div class="alert alert-light" role="alert">
-        <div class="container">
-            <div class="row">
-                <div class="col-1">
-                    {% if profile.profile_image %}
-                    <img class="profile-image-snippet" src="{{ profile.profile_image.url }}">
-                    {% endif %}
+            {% if user_snippets %}
+                <h3>My snippets:</h3>
+            {% for snippet in user_snippets %}
+            <div class="alert alert-light" role="alert">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-2">
+                            {% if profile.profile_image %}
+                            <img class="profile-image-snippet" src="{{ profile.profile_image.url }}">
+                            {% endif %}
+                        </div>
+                        <div class="col-10">
+                            {{ snippet.body }} <br/>
+                            <small class="text-muted"> by
+                                @{{ snippet.user.username }} on
+                                {{ snippet.created_at }}
+                                {{ snippet.number_of_likes }}
+                                {% if user in snippet.likes.all %}
+                                <a href="{% url 'snippet_like' snippet.id %}"><i class="fa-solid fa-heart"
+                                                                                 style="color:red"></i></a>
+                                {% else %}
+                                <a href="{% url 'snippet_like' snippet.id %}"><i class="fa-regular fa-heart"
+                                                                                 style="color:red"></i></a>
+                                {% endif %}
+                                <a href="{% url 'snippet_share' snippet.id %}"><i class="fa-solid fa-share"
+                                                                                  style="color:gray"></i></a>
+                            </small>
+                        </div>
+                    </div>
                 </div>
-
-                    <div class="col-10">
-    {{ snippet.body }} <br/>
-        <small class="text-muted"> by
-            @{{ snippet.user.username }} on
-            {{ snippet.created_at }}
-            {{ snippet.number_of_likes }}
-            {% if user in snippet.likes.all %}
-                                    <a href="{% url 'snippet_like' snippet.id %}"><i class="fa-solid fa-heart" style="color:red"></i></a>
-                                    {% else %}
-                                    <a href="{% url 'snippet_like' snippet.id %}"><i class="fa-regular fa-heart" style="color:red"></i></a>
-                                    {% endif %}
-            <a href="{% url 'snippet_show' snippet.id %}"><i class="fa-solid fa-share" style="color:gray"></i></a>
-        </small>
-    </div>
-    </div>
-    </div>
-        </div>
-    {% endfor %}
-            {% endif %}
             </div>
+            {% endfor %}
+            {% endif %}
+
+            {% if shared_snippets %}
+                <h3>Snippets I shared:</h3>
+            {% for snippet in shared_snippets %}
+
+            <div class="alert alert-light" role="alert">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-2">
+                            {% if snippet.original_snippet.user.profile.profile_image %}
+                            <img class="profile-image-snippet"
+                                 src="{{ snippet.original_snippet.user.profile.profile_image.url }}">
+                            {% endif %}
+                        </div>
+
+                        <div class="col-10">
+                            {{ snippet.original_snippet.body }} <br/>
+                            <small class="text-muted"> originally posted by
+                                @{{ snippet.original_snippet.user.username }} on
+                                {{ snippet.original_snippet.created_at }}
+                                {{ snippet.original_snippet.number_of_likes }}
+                                {% if user in snippet.original_snippet.likes.all %}
+                                <a href="{% url 'snippet_like' snippet.original_snippet.id %}"><i
+                                        class="fa-solid fa-heart" style="color:red"></i></a>
+                                {% else %}
+                                <a href="{% url 'snippet_like' snippet.original_snippet.id %}"><i
+                                        class="fa-regular fa-heart" style="color:red"></i></a>
+                                {% endif %}
+                                <a href="{% url 'snippet_share' snippet.original_snippet.id %}"><i
+                                        class="fa-solid fa-share" style="color:gray"></i></a>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+
 
         <div class="col-4">
             {% if profile.profile_image %}
@@ -50,55 +88,117 @@
             {% else %}
             {{ profile.avatar_svg_main|safe }}
             {% endif %}
+            <br/>
+
+            <div class="card mt-3 mb-5 px-3 py-5">
+                <h5 class="card-header">@{{profile.user.username}}</h5>
+                <div class="card-body">
+
+                    {% if profile.homepage_link %}
+                    <div class="container-links mt-3 mb-3">
+                        <a href="{{ profile.homepage_link }}" target="new"><i class="fa-brands fa-goodreads fa-2xl mx-2"
+                                                                              style="color:brown"></i></a>
+                        {% endif %}
+                        {% if profile.facebook_link %}
+                        <a href="{{ profile.facebook_link }}" target="new"><i class="fa-brands fa-facebook fa-2xl mx-2"
+                                                                              style="color:blue"></i></a>
+                        {% endif %}
+                        {% if profile.instagram_link %}
+                        <a href="{{ profile.instagram_link }}" target="new"><i
+                                class="fa-brands fa-instagram fa-2xl mx-2" style="color:red"></i></a>
+                        {% endif %}
+                    </div>
+
+                    {% if profile.profile_bio %}
+                    <p align="justify">{{ profile.profile_bio }}</p>
+                    {% endif %}
+                </div>
+
+                {% if request.user.id == profile.user.id %}
+                <a class="button-56" href="{% url 'update_user' %}">Update Profile</a>
+
+                {% else %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    {% if profile in user.profile.follows.all %}
+                    <button class="button-56" name="follow" type="submit" value="unfollow">Unfollow @{{
+                        profile.user.username|lower }}
+                    </button>
+                    {% else %}
+                    <button class="button-56" name="follow" type="submit" value="follow">Follow @{{ profile.user.username|lower }}
+                    </button>
+
+                    {% endif %}
+
+
+                    {% endif %}
+
+                </form>
+            </div>
+
 
             <div class="card mt-3 mb-5">
-  <h5 class="card-header">Follows</h5>
-  <div class="card-body">
+                <h5 class="card-header">Follows</h5>
+                <div class="card-body">
 
-    <p class="card-text">
-        {% if profile.follows %}
-        {% for following in user.profile.follows.all %}
-        <a href="{% url 'profile' following.user.id %}">
-    {{ profile.avatar_svg|safe }}&nbsp;@{{ following }}
-</a><br/>
-        {% endfor %}
-        {% else %}
-        <p><b>{{ profile.user.username }}</b> doesn't follow anyone 😔</p>
-        {% endif %}
-
-
-  </div>
-</div>
-            <div class="card">
-  <h5 class="card-header">Followed by</h5>
-  <div class="card-body">
-    <p class="card-text">
-        {% if profile.followed_by %}
-        {% for following in user.profile.followed_by.all %}
-        <a href="{% url 'profile' following.user.id %}">{{ profile.avatar_svg|safe }}&nbsp;@{{ following }}</a><br/>
-        {% endfor %}</p>
-        {% else %}
-        <p><b>{{ profile.user.username }}</b> isn't followed by anyone 😔</p>
-        {% endif %}
-
-  </div>
-</div>
-<form method="post">
-    {% csrf_token %}
-    {% if profile in user.profile.follows.all %}
-    <button class="button-56" name="follow" value="unfollow" type="submit">Unfollow @{{ profile.user.username|lower }}</button>
-    {% else %}
-    <button class="button-56" name="follow" value="follow" type="submit">Follow @{{ profile.user.username|lower }}</button>
+                    <div class="card-text">
+                        {% if profile.follows %}
+                        {% for following in user.profile.follows.all %}
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                {{ profile.avatar_svg|safe }}
+                                <a class="mx-3" href="{% url 'profile' following.user.id %}">@{{ following }}</a>
+                            </div>
+                            <a href="{% url 'unfollow' following.user.id %}">
+                                <i class="fa-solid fa-user-minus" style="color:red"></i>
+                            </a>
+                        </div>
+                        <br/>
+                        {% endfor %}
+                        {% else %}
+                        <p><b>{{ profile.user.username }}</b> doesn't follow anyone 😔</p>
+                        {% endif %}
+                    </div>
 
 
-    {% endif %}
+                </div>
+            </div>
+            <div class="card mt-3 mb-5">
+    <h5 class="card-header">Followed by</h5>
+    <div class="card-body">
 
-</form>
+        <div class="card-text">
+            {% for following in profile.followed_by.all %}
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        {{ profile.avatar_svg|safe }}
+                        <a class="mx-3" href="{% url 'profile' following.user.id %}">@{{ following }}</a>
+                    </div>
+                    {% if following in profile.follows.all %}
+                        <a href="{% url 'unfollow' following.user.id %}">
+                            <i class="fa-solid fa-user-minus" style="color:red"></i>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'follow' following.user.id %}">
+                            <i class="fa-solid fa-user-plus" style="color:green"></i>
+                        </a>
+                    {% endif %}
+                </div>
+                <br/>
+            {% endfor %}
+        </div>
+
     </div>
-        {% if request.user.id == profile.user.id %}
-        <a href="{% url 'update_user' %}" class="button-56">Update Profile</a>
-        {% endif %}
 </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+
 
 {% endif %}
 

@@ -6,7 +6,7 @@
 {% block content %}
 <div class="container login-container">
     <div class="wrapper">
-        <form action="{% url 'update_user' %}" method="post" enctype="multipart/form-data">
+        <form action="{% url 'update_user' %}" enctype="multipart/form-data" method="post">
             {% csrf_token %}
             <h1>Update Profile</h1>
             <div class="input-box">
@@ -41,12 +41,44 @@
                 </div>
                 {% endif %}
             </div>
-            <h2>Update Profile Picture</h2>
+            <h2>Update Profile Info</h2>
             <div class="input-box">
                 {{ profile_form.profile_image }}
                 {% if profile_form.profile_image.errors %}
                 <div class="alert alert-warning" role="alert">
                     {{ profile_form.profile_image.errors.as_text }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="input-box">
+                {{ profile_form.profile_bio }}
+                {% if profile_form.profile_bio.errors %}
+                <div class="alert alert-warning" role="alert">
+                    {{ profile_form.profile_bio.errors.as_text }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="input-box">
+                {{ profile_form.homepage_link }}
+                {% if profile_form.homepage_link.errors %}
+                <div class="alert alert-warning" role="alert">
+                    {{ profile_form.homepage_link.errors.as_text }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="input-box">
+                {{ profile_form.facebook_link }}
+                {% if profile_form.facebook_link.errors %}
+                <div class="alert alert-warning" role="alert">
+                    {{ profile_form.facebook_link.errors.as_text }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="input-box">
+                {{ profile_form.instagram_link }}
+                {% if profile_form.instagram_link.errors %}
+                <div class="alert alert-warning" role="alert">
+                    {{ profile_form.instagram_link.errors.as_text }}
                 </div>
                 {% endif %}
             </div>
