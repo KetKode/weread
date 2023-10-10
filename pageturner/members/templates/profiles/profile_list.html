@@ -9,30 +9,50 @@
 
         <h1 class="mb-5">PageTurner Users</h1>
 
+    </div>
+</div>
+
+   <div class="container-xxl d-flex justify-content-center align-items-center">
+    <div class="text-center">
         {% if profiles %}
         {% for profile in profiles %}
 
-        <div class="card card-list mb-3" style="max-width: 540px;">
+        <div class="card card-list mb-3">
             <div class="row g-0">
-                <div class="col-md-4 profile-image d-flex align-items-center justify-content-center">
-                    {% if profile.profile_image %}
-                    <img class="profile-image-list" src="{{ profile.profile_image.url }}">
+                <div class="col-10">
+                    <div class="profile-image d-flex align-items-center justify-content-center">
+                        {% if profile.profile_image %}
+                        <img class="profile-image-list" src="{{ profile.profile_image.url }}">
+                        {% endif %}
+                    </div>
 
-                    {% else %}
-
-                    {{ profile.avatar_svg|safe }}
-                    {% endif %}
-                </div>
-                <div class="col-md-8">
                     <div class="card-body">
-                        <h5 class="card-title">{{ profile.user.username }}</h5>
-                        <p class="card-text"><a href="{% url 'profile' profile.user.id %}">@{{ profile.user.username|lower }}</a></p>
+                        <h5 class="card-text"><a href="{% url 'profile' profile.user.id %}">@{{ profile.user.username|lower }}</a></h5>
                         <p class="card-text"><small class="text-body-secondary">Last updated: {{ profile.date_modified }}</small></p>
                     </div>
+                </div>
+
+                <div class="col-2">
+                    {% if user.is_authenticated %}
+                    {% if profile in user.profile.follows.all %}
+                    <a href="{% url 'unfollow' profile.user.id %}">
+                        <i class="fa-solid fa-user-minus" style="color:red"></i>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'follow' profile.user.id %}">
+                        <i class="fa-solid fa-user-plus" style="color:green"></i>
+                    </a>
+                    {% endif %}
+                    {% endif %}
                 </div>
             </div>
         </div>
 
-        {% endfor %}
-        {% endif %}
-        {% endblock %}
+
+
+
+{% endfor %}
+{% endif %}
+            </div>
+   </div>
+{% endblock %}
