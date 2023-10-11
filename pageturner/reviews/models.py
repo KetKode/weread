@@ -21,9 +21,12 @@ class Author(models.Model):
 class Book(models.Model):
     """A published book"""
     title = models.CharField(max_length=70, help_text="The title of the book.")
-    rating = models.CharField(default=None, max_length=50, help_text="The rating of the book")
+    rating_small = models.CharField(default=0, max_length=50, help_text="The smaller rating of the book", null=True, blank=True)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     url = models.URLField(help_text="Link to the book page on Goodreads", default=None, null=True)
+    cover_url = models.URLField(null=True, blank=True)
+    summary = models.CharField(max_length=2000, help_text="Summary of the book", blank=True, null=True)
+    genres = models.CharField(max_length=1000, help_text="Genres of the book", null=True, blank=True)
 
     def __str__(self):
         return f"{self.title} / {self.author}"

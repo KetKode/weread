@@ -44,13 +44,18 @@ def book_search(request):
 
 class BookList(ListView):
     model = Book
-    template_name = 'book_list.html'
+    template_name = 'reviews/book_list.html'
     context_object_name = "book_list"
+    paginate_by = 10
+
+    def get_queryset(self):
+        return Book.objects.order_by('pk')
 
 
 class BookDetail(DetailView):
     model = Book
     template_name = "reviews/book_detail.html"
     context_object_name = "book"
+
 
 

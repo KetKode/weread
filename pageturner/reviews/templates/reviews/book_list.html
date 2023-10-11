@@ -12,16 +12,56 @@
             <h1 class="mb-5">Best Books of All Times</h1>
             {% for book in book_list %}
             <div class="book-container">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-2">
+                            {% if book.cover_url %}
+                    <img src="{{ book.cover_url }}" alt="Book Cover" class="book-cover-list">
+                    {% endif %}
+
+                        </div>
+
+                        <div class="col-10">
             <a class="book-info" href="{% url 'book_detail' book.pk %}"> <b>{{ book.title }}</b> by {{ book.author }}</a>
-            <p>⭐️{{ book.rating }}</p>
-                <div class="button-container mt-3">
-            <a class="button-56 book-info" href="{{ book.url }}" target="_blank">View this book on Goodreads</a>
+                            <p class="book-info mt-2">⭐️<b>{{ book.rating_small }}</b></p>
+                            <p class="book-info-genres"><b>genres:</b> {{ book.genres }}</p>
+                            <p class="py-5 px-5" align="justify">{{ book.summary }}</p>
+                <div class="buttons-user mt-5">
+                        <a class="button-6" href="#"><i class="fa-solid fa-check"></i></a>
+                        <a class="button-6" href="#"><i class="fa-solid fa-bookmark"></i></a>
+                        <a class="button-6" href="#">Leave a Review</a>
+                        </div>
+            </div>
                 </div>
+                    </div>
             </div>
             {% endfor %}
 
-            </div>
+
+        </div>
     </div>
+
+<div class="container-xxl d-flex justify-content-center">
+        <div class="text-center">
+
+<div class="pagination">
+            {% if page_obj.has_previous %}
+                <a class="mx-3" href="?page=1">First Page</a>
+                <a href="?page={{ page_obj.previous_page_number }}"><i class="fa-solid fa-chevron-left"></i></a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}"><i class="fa-solid fa-chevron-right"></i></a>
+                <a class="mx-3" href="?page={{ page_obj.paginator.num_pages }}">Go to the Last Page</a>
+            {% endif %}
+        </div>
+        </div>
+</div>
+
 
 
 {% endblock %}

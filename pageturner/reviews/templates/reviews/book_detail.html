@@ -14,17 +14,21 @@
             <div class="row">
                 <div class="col-md-6">
                     <!-- Placeholder for the book cover -->
-                    <img src="{% static 'hunger_games.jpg' %}" alt="Book Cover" class="book-cover">
+                    {% if book.cover_url %}
+                    <img src="{{ book.cover_url }}" alt="Book Cover" class="book-cover">
+                    {% endif %}
                 </div>
                 <div class="col-md-6 text-left mt-5">
                     <a class="book-info-detail" href="#"><b>{{ book.author }}</b></a>
-                    <p class="rating-detail mt-3">⭐️{{ book.rating }}</p>
+                    <p class="rating-detail mt-3">⭐️{{ book.rating_small }}</p>
+                    <p class="summary mt-3">{{ book.summary }}</p>
+                    <p>Genres: {{ book.genres }}</p>
                     <div class="button-container mt-3 text-center">
                         <a class="button-56 book-info" href="{{ book.url }}" target="_blank">View this book on Goodreads</a>
                     </div>
                     <div class="buttons-user mt-5">
-                        <a class="button-6" href="#"></a>
-                        <a class="button-6" href="#"></a>
+                        <a class="button-6" href="#"><i class="fa-solid fa-check"></i></a>
+                        <a class="button-6" href="#"><i class="fa-solid fa-bookmark"></i></a>
                         </div>
                 </div>
             </div>
