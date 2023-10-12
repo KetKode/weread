@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .utils import generate_avatar
 from django.core.files.base import ContentFile
+from reviews.models import Book
 
 
 class Profile(models.Model):
@@ -19,6 +20,9 @@ class Profile(models.Model):
     homepage_link = models.CharField(null=True, blank=True, max_length=100)
     instagram_link = models.CharField(null=True, blank=True, max_length=100)
     facebook_link = models.CharField(null=True, blank=True, max_length=100)
+
+    books_bookmarked = models.ManyToManyField(Book, related_name="bookmarks", symmetrical=False, blank=True)
+    books_read = models.ManyToManyField(Book, related_name="read_books", symmetrical=False, blank=True)
 
     def __str__(self):
         return self.user.username

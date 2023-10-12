@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile, Snippet, SharedSnippet
+from .models import Profile, Snippet, SharedSnippet, Book
 from .utils import generate_avatar
 from django.contrib.auth.models import User
 from .forms import RegisterForm, ProfilePicForm
@@ -27,24 +27,6 @@ def logout_user(request):
     logout(request)
     messages.success(request, "You have been logged out.")
     return redirect('welcome_page')
-
-
-# def generate_avatar_list(name, size=100, variant="beam", colors=None, title=False, square=False):
-#     if colors is None:
-#         colors = ["92A1C6", "146A7C", "F0AB3D", "C271B4", "C20D90"]
-#
-#     avatar_svg = avatar(name, variant=variant, colors=colors, title=title, size=size, square=square)
-#
-#     return avatar_svg
-
-
-# def generate_avatar_follow(name, size=40, variant="beam", colors=None, title=False, square=False):
-#     if colors is None:
-#         colors = ["92A1C6", "146A7C", "F0AB3D", "C271B4", "C20D90"]
-#
-#     avatar_svg = avatar(name, variant=variant, colors=colors, title=title, size=size, square=square)
-#
-#     return avatar_svg
 
 
 def register_user(request):
@@ -107,12 +89,9 @@ def follow(request, pk):
 
 def profile(request, pk):
     if request.user.is_authenticated:
-        profile = Profile.objects.get(user_id=pk)
+        profile = Profile.objects.get(id=pk)
         user_snippets = Snippet.objects.filter(user_id=pk).order_by("-created_at")
         shared_snippets = SharedSnippet.objects.filter(user_id=pk).order_by("-shared_at")
-
-        # profile.avatar_svg = generate_avatar_follow(profile.user.username)
-        # profile.avatar_svg_main = generate_avatar_main(profile.user.username)
 
         if request.method == "POST":
             current_user_profile = request.user.profile
@@ -189,3 +168,14 @@ def snippet_share(request, pk):
 
     return redirect('profile', pk=request.user.pk)
 
+
+def bookmark_book(request, pk):
+    book = get_object_or_404(Book, id=pk)
+    if request.user.is_authenticated:
+        request.user.profile.books_bookmarked.add(book)
+        messages.success(request, f"You have bookmarked {book.title} by {book.author}.")
+    else:
+        messages.success(request, "You must be logged in to view this page.")
+        return redirect('welcome_page')
+
+    return redirect('profile', pk=request.user.pk)
