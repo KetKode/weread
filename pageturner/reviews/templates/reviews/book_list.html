@@ -27,7 +27,7 @@
                             <p class="book-info-genres"><b>genres:</b> {{ book.genres }}</p>
                             <p class="py-5 px-5" align="justify">{{ book.summary }}</p>
                 <div class="buttons-user mt-5">
-                        <a class="button-6" href="#"><i class="fa-solid fa-check"></i></a>
+                        <a class="button-6" href="{% url 'mark_as_read' book.id %}"><i class="fa-solid fa-check"></i></a>
                         <a class="button-6" href="{% url 'bookmark_book' book.id %}"><i class="fa-solid fa-bookmark"></i></a>
                         <a class="button-6" href="#">Leave a Review</a>
                         </div>

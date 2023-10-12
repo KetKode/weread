@@ -92,6 +92,7 @@ def profile(request, pk):
         profile = Profile.objects.get(id=pk)
         user_snippets = Snippet.objects.filter(user_id=pk).order_by("-created_at")
         shared_snippets = SharedSnippet.objects.filter(user_id=pk).order_by("-shared_at")
+        books_bookmarked = Profile.objects.filter(books_bookmarked=True)
 
         if request.method == "POST":
             current_user_profile = request.user.profile
@@ -103,7 +104,7 @@ def profile(request, pk):
 
             current_user_profile.save()
 
-        return render(request, "profiles/profile.html", {"profile": profile, "user_snippets": user_snippets, "shared_snippets": shared_snippets})
+        return render(request, "profiles/profile.html", {"profile": profile, "user_snippets": user_snippets, "shared_snippets": shared_snippets, "books_bookmarked": books_bookmarked})
     else:
         messages.success(request, "You must be logged in to view this page.")
         return redirect('welcome_page')
@@ -174,6 +175,18 @@ def bookmark_book(request, pk):
     if request.user.is_authenticated:
         request.user.profile.books_bookmarked.add(book)
         messages.success(request, f"You have bookmarked {book.title} by {book.author}.")
+    else:
+        messages.success(request, "You must be logged in to view this page.")
+        return redirect('welcome_page')
+
+    return redirect('profile', pk=request.user.pk)
+
+
+def mark_as_read(request, pk):
+    book = get_object_or_404(Book, id=pk)
+    if request.user.is_authenticated:
+        request.user.profile.books_read.add(book)
+        messages.success(request, f"You have added {book.title} by {book.author} as a finished book.")
     else:
         messages.success(request, "You must be logged in to view this page.")
         return redirect('welcome_page')

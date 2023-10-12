@@ -9,6 +9,22 @@
 <div class="container-xxl text-center">
     <div class="row">
         <div class="col-8 justify-content-center mx-auto my-5 text-center">
+            <h3>Books Read:</h3>
+            {% if request.user.profile.books_read.all %}
+    {% for book in request.user.profile.books_read.all %}
+        <img src="{{ book.cover_url }}" alt="{{ book.title }}" class="book-cover-list">
+    {% endfor %}
+{% else %}
+    <p>No added books yet.</p>
+{% endif %}
+            <h3>Bookmarks:</h3>
+            {% if request.user.profile.books_bookmarked.all %}
+    {% for bookmark in request.user.profile.books_bookmarked.all %}
+        <img src="{{ bookmark.cover_url }}" alt="{{ bookmark.title }}" class="book-cover-list">
+    {% endfor %}
+{% else %}
+    <p>No bookmarks available.</p>
+{% endif %}
             <h3>My snippets:</h3>
             {% if user_snippets %}
             {% for snippet in user_snippets %}

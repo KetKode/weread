@@ -14,4 +14,5 @@ urlpatterns = [
     path('unfollow/<int:pk>', views.unfollow, name="unfollow"),
     path('follow/<int:pk>', views.follow, name="follow"),
     path('bookmark_book/<int:pk>', views.bookmark_book, name="bookmark_book"),
+    path('mark_as_read/<int:pk>', views.mark_as_read, name="mark_as_read"),
     ]
