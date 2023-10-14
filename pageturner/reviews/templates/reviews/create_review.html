@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Review{% endblock %}
+
+{% block content %}
+
+<div class="container-xxl d-flex justify-content-center text-center">
+    <h2 class="mb-5">Write a review for {{ book.title }}</h2>
+</div>
+
+<div class="container-xxl">
+    <div class="row">
+    <div class="col-3">
+        <img src="{{ book.cover_url }}">
+    </div>
+
+    <div class="col-9">
+
+
+        <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="button-56" type="submit">Submit</button>
+        </form>
+    </div>
+
+    </div>
+
+
+{% endblock %}

@@ -29,6 +29,7 @@
                     <div class="buttons-user mt-5">
                         <a class="button-6" href="{% url 'mark_as_read' book.id %}"><i class="fa-solid fa-check"></i></a>
                         <a class="button-6" href="{% url 'bookmark_book' book.id %}"><i class="fa-solid fa-bookmark"></i></a>
+                        <a href="{% url 'create_review' pk=book.id %}">Write a Review</a>
                         </div>
                 </div>
             </div>

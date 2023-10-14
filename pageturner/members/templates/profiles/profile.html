@@ -6,26 +6,57 @@
 
 {% if profile %}
 
+
 <div class="container-xxl text-center">
     <div class="row">
         <div class="col-8 justify-content-center mx-auto my-5 text-center">
-            <h3>Books Read:</h3>
+            <h3 class="mb-3">Books Read:</h3>
+
+            <div class="carousel-wrapper">
+            <div class="carousel">
+                <div class="carousel-content">
+
             {% if request.user.profile.books_read.all %}
-    {% for book in request.user.profile.books_read.all %}
-        <img src="{{ book.cover_url }}" alt="{{ book.title }}" class="book-cover-list">
-    {% endfor %}
-{% else %}
-    <p>No added books yet.</p>
-{% endif %}
-            <h3>Bookmarks:</h3>
+            {% for book in request.user.profile.books_read.all %}
+
+                    <a href="{% url 'book_detail' book.id %}"><img src="{{ book.cover_url }}" alt="{{ book.title }}" class="item"></a>
+
+            {% endfor %}
+            {% else %}
+             <p>No added books yet.</p>
+            {% endif %}
+              </div>
+              </div>
+              <button class="prev"><i class="fa-solid fa-arrow-left"></i>
+              </button>
+              <button class="next"><i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+
+
+            <h3 class="mt-5 mb-3">Bookmarks:</h3>
+
+            <div class="carousel-wrapper">
+            <div class="carousel">
+                <div class="carousel-content">
+
             {% if request.user.profile.books_bookmarked.all %}
-    {% for bookmark in request.user.profile.books_bookmarked.all %}
-        <img src="{{ bookmark.cover_url }}" alt="{{ bookmark.title }}" class="book-cover-list">
-    {% endfor %}
-{% else %}
-    <p>No bookmarks available.</p>
-{% endif %}
-            <h3>My snippets:</h3>
+            {% for bookmark in request.user.profile.books_bookmarked.all %}
+                    <a href="#"><img src="{{ bookmark.cover_url }}" alt="{{ bookmark.title }}" class="item"></a>
+            {% endfor %}
+            {% else %}
+            <p>No bookmarks available.</p>
+            {% endif %}
+
+            </div>
+              </div>
+              <button class="prev"><i class="fa-solid fa-arrow-left"></i>
+              </button>
+              <button class="next"><i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+
+            <h3 class="mt-5 mb-3">My snippets:</h3>
             {% if user_snippets %}
             {% for snippet in user_snippets %}
             <div class="alert alert-light" role="alert">
@@ -61,7 +92,7 @@
             <p>No posted snippets yet 😥</p>
             {% endif %}
 
-            <h3>Snippets I shared:</h3>
+            <h3 class="mt-5 mb-3">Snippets I shared:</h3>
             {% if shared_snippets %}
             {% for snippet in shared_snippets %}
 
@@ -225,5 +256,6 @@
 
 
 {% endif %}
+                <script src="/static/script.js"></script>
 
 {% endblock %}

@@ -1,14 +1,18 @@
 from django.shortcuts import render, redirect, reverse
-from .models import Book, Author
+from .models import Book, Author, Review
 from members.models import Snippet
 from django.db.models import Q
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.views.generic import CreateView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from members.forms import SnippetForm
 from django.contrib import messages
+from .forms import ReviewForm
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
 
 
 def welcome_page(request):
@@ -27,7 +31,6 @@ def welcome_page(request):
     else:
         snippets = Snippet.objects.all().order_by("-created_at")
         return render(request, "reviews/base.html", {"snippets": snippets})
-
 
 
 def book_search(request):
@@ -58,4 +61,30 @@ class BookDetail(DetailView):
     context_object_name = "book"
 
 
+class ReviewCreateView(CreateView):
+    model = Review
+    form_class = ReviewForm
+    template_name = "reviews/create_review.html"
 
+    def get_success_url(self):
+        return reverse_lazy('profile', kwargs={'pk': self.request.user.pk})
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.rating = form.cleaned_data['rating']
+
+        book_id = self.kwargs.get('pk')
+        book = get_object_or_404(Book, id=book_id)
+        form.instance.book = book
+
+        form.instance.written_by = self.request.user
+
+        messages.success(self.request, "The review was created successfully.")
+        return super(ReviewCreateView, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        book_id = self.kwargs.get('pk')
+        book = get_object_or_404(Book, id=book_id)
+        context['book'] = book
+        return context

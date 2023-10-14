@@ -52,12 +52,11 @@ class ProfilePicForm (forms.ModelForm):
         fields = ('profile_image', 'profile_bio', 'homepage_link', 'instagram_link', 'facebook_link')
 
 
-class SnippetForm (forms.ModelForm):
-    body = forms.CharField (required=True,
-                            widget=forms.widgets.Textarea (attrs={"placeholder": "Type your snippet here.",
+class SnippetForm(forms.ModelForm):
+    body = forms.CharField(required=True,
+                            widget=forms.widgets.Textarea(attrs={"placeholder": "Type your snippet here.",
                                                                   "class": "form-control", }
                                                            ), label="", )
-
     class Meta:
         model = Snippet
         exclude = ("user", "likes")
