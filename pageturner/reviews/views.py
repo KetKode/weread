@@ -13,9 +13,14 @@ from django.contrib import messages
 from .forms import ReviewForm
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
+import random
 
 
 def welcome_page(request):
+
+    books = list(Book.objects.all())
+    random_books = random.sample(books, 12)
+
     if request.user.is_authenticated:
         form = SnippetForm(request.POST or None)
         if request.method == "POST":
@@ -27,10 +32,10 @@ def welcome_page(request):
                 return redirect("welcome_page")
 
         snippets = Snippet.objects.all().order_by("-created_at")
-        return render(request, "reviews/base.html", {"snippets": snippets, "form": form})
+        return render(request, "reviews/base.html", {"snippets": snippets, "form": form, "random_books": random_books})
     else:
         snippets = Snippet.objects.all().order_by("-created_at")
-        return render(request, "reviews/base.html", {"snippets": snippets})
+        return render(request, "reviews/base.html", {"snippets": snippets, "random_books": random_books})
 
 
 def book_search(request):
@@ -59,6 +64,15 @@ class BookDetail(DetailView):
     model = Book
     template_name = "reviews/book_detail.html"
     context_object_name = "book"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        book_id = self.kwargs.get('pk')
+        book = get_object_or_404(Book, id=book_id)
+        context['book'] = book
+
+        context['reviews'] = book.reviews.all()
+        return context
 
 
 class ReviewCreateView(CreateView):

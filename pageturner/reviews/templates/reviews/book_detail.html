@@ -35,6 +35,27 @@
             </div>
         </div>
 
+        <div class="review">
+        <h2>Reviews</h2>
+        {% for review in reviews %}
+
+        <div class="alert alert-light" role="alert">
+                <div class="container">
+                    <div class="row">
+        <h4>Review by {{ review.written_by.username }}</h4>
+        <p>Rating: {{ review.rating }}</p>
+        <p>{{ review.content }}</p>
+        <p>Created on: {{ review.date_created }}</p>
+        {% if review.date_edited %}
+            <p>Last edited on: {{ review.date_edited }}</p>
+        {% endif %}
+                    </div>
+                </div>
+    </div>
+{% empty %}
+    <p>No reviews available for this book.</p>
+{% endfor %}
+
     </div>
 </div>
 

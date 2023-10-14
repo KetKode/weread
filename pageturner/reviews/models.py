@@ -38,7 +38,7 @@ class Review(models.Model):
     rating = models.CharField(help_text="The rating the reviewer has given.", max_length=10, null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True, help_text="The date and time the review was created.")
     date_edited = models.DateTimeField(null=True, help_text="The date and time this review was last edited.")
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, help_text="The Book that this review is for.")
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, help_text="The Book that this review is for.", related_name="reviews")
 
     def __str__(self):
         return f"Review for {self.book} / {self.rating}"

@@ -56,10 +56,12 @@
               </button>
             </div>
 
+            <div class="snippets-container justify-content-center">
+            <div class="snippets-section">
             <h3 class="mt-5 mb-3">My snippets:</h3>
             {% if user_snippets %}
             {% for snippet in user_snippets %}
-            <div class="alert alert-light" role="alert">
+            <div class="comment-card mb-3">
                 <div class="container">
                     <div class="row">
                         <div class="col-2">
@@ -91,12 +93,14 @@
             {% else %}
             <p>No posted snippets yet 😥</p>
             {% endif %}
+            </div>
 
+                <div class="snippets-section">
             <h3 class="mt-5 mb-3">Snippets I shared:</h3>
             {% if shared_snippets %}
             {% for snippet in shared_snippets %}
 
-            <div class="alert alert-light" role="alert">
+            <div class="comment-card mb-3">
                 <div class="container">
                     <div class="row">
                         <div class="col-2">
@@ -130,10 +134,13 @@
             {% else %}
             <p>No shared snippets yet 😥</p>
             {% endif %}
+                </div>
+        </div>
         </div>
 
 
         <div class="col-4">
+            <div class="profile-section">
 
             <div class="card mt-2 mb-5 px-3 py-3">
                 <div class="card-body d-flex flex-column align-items-center">
@@ -246,6 +253,7 @@
 
     </div>
 </div>
+            </div>
 
 
 
