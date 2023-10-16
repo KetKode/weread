@@ -1,8 +1,9 @@
 from django import forms
-from .models import Snippet, Profile
+from .models import Snippet, Profile, Comment
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
+from django.views.generic import UpdateView
 
 
 class CustomAuthenticationForm(AuthenticationForm):
@@ -60,3 +61,36 @@ class SnippetForm(forms.ModelForm):
     class Meta:
         model = Snippet
         exclude = ("user", "likes")
+
+
+class CommentForm(forms.ModelForm):
+    body = forms.CharField(required=True,
+                            widget=forms.widgets.Textarea(attrs={"placeholder": "Type your comment here.",
+                                                                  "class": "form-control", }
+                                                           ), label="", )
+
+    class Meta:
+        model = Comment
+        fields = ["body"]
+
+
+class SnippetUpdate(forms.ModelForm):
+    body = forms.CharField(required=True,
+                            widget=forms.widgets.Textarea(attrs={"placeholder": "Type your snippet here.",
+                                                                  "class": "form-control", }
+                                                           ), label="", )
+
+    class Meta:
+        model = Snippet
+        fields = ["body"]
+
+
+class CommentUpdate(forms.ModelForm):
+    body = forms.CharField(required=True,
+                            widget=forms.widgets.Textarea(attrs={"placeholder": "Type your comment here.",
+                                                                  "class": "form-control", }
+                                                           ), label="", )
+
+    class Meta:
+        model = Comment
+        fields = ["body"]

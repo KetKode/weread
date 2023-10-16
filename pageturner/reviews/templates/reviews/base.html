@@ -20,14 +20,17 @@
     <div class="random-books">
         {% if random_books %}
         {% for book in random_books %}
-        <a href="{% url 'book_detail' book.id %}"><img src="{{ book.cover_url }}" class="random-book"></a>
+        <a href="{% url 'book_detail' book.id %}"><img src="{{ book.cover_url }}" class="random-book mt-2 mb-2"></a>
         {% endfor %}
         {% endif %}
     </div>
 
+
     <div class="container-xxl text-center">
         <div class="row">
             <div class="col-8">
+                <div class="snippets-section">
+                <h2 class="mt-5 mb-5">Recently shared snippets:</h2>
 
                 {% for snippet in snippets %}
                 <div class="comment-card mb-3">
@@ -42,7 +45,7 @@
                             </div>
 
                             <div class="col-10">
-                                {{ snippet.body }} <br/>
+                                {{ snippet.body }} {% if request.user.id == snippet.user.id %} <a href="{% url 'snippet_delete' snippet.id %}"><i class="fa-solid fa-eraser"></i></a><a href="{% url 'snippet_edit' snippet.id %}"><i class="fa-solid fa-pencil"></i></a>{% endif %} <br/>
                                 <small class="text-muted"> by <a href="{% url 'profile' snippet.user.profile.user.id %}">@{{ snippet.user.username }}</a>
                                      on
                                     {{ snippet.created_at }}
@@ -55,17 +58,54 @@
 
                                     {% endif %}
                                     <a href="{% url 'snippet_share' snippet.id %}"><i class="fa-solid fa-share" style="color:gray"></i></a>
+
+                                    <a href="{% url 'snippet_comment' snippet.id %}"><i class="fa-regular fa-comment"></i></a>
                                 </small>
+
                             </div>
+
                         </div>
                     </div>
                 </div>
-                {% endfor %}
+                    {% if snippet.replied_snippet.all %}
+{% for comment in snippet.replied_snippet.all %}
+<div class="comment-card-reply mb-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-2">
+                {% if comment.user.profile.profile_image %}
+                <img class="profile-image-snippet" src="{{ comment.user.profile.profile_image.url }}">
+                {% endif %}
+            </div>
 
+            <div class="col-10">
+                {{ comment.body }} {% if request.user.id == comment.user.id %} <a href="{% url 'comment_delete' comment.id %}"><i class="fa-solid fa-eraser"></i></a> <a href="{% url 'comment_edit' snippet_id=snippet.id comment_id=comment.id %}"><i class="fa-solid fa-pencil"></i></a>{% endif %} <br/>
+                <small class="text-muted"> replied by <a href="{% url 'profile' comment.user.profile.user.id %}">@{{ comment.user.username }}</a>
+                    on {{ comment.created_at }}
+                    {{ comment.number_of_likes }}
+
+                    {% if user in comment.likes.all %}
+                                    <a href="{% url 'comment_like' comment.id %}"><i class="fa-solid fa-heart" style="color:red"></i></a>
+                                    {% else %}
+                                    <a href="{% url 'comment_like' comment.id %}"><i class="fa-regular fa-heart" style="color:red"></i></a>
+
+                                    {% endif %}
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
+                {% endfor %}
+                </div>
 
             </div>
 
             <div class="col-4 mt-4">
+                <div class="profile-section">
+                    <h2 class="mt-5 mb-5">📖</h2>
                 {% if form %}
                 <form method="post">
                     {% csrf_token %}
@@ -75,6 +115,7 @@
 
                 </form>
                 {% endif %}
+            </div>
             </div>
 
         </div>

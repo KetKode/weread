@@ -14,7 +14,8 @@ font-size: 3em;
 
 h3 {
 
-font-family: 'Lora', serif;
+font-family: 'Gloock', serif;
+font-size: 3em;
 
 }
 
@@ -394,15 +395,23 @@ input {
     width: 400px;
     padding-left: 20px;
     padding-right: 20px;
-    padding-top: 20px;}
+    padding-top: 20px;
+    }
 
 .card-header {
     background-color:white;
 }
 
-.alert-light {
-    width: 530px;
-
+.comment-card {
+    width: 600px;
+    height: 100px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .center-content{
@@ -412,24 +421,26 @@ input {
     width: 500px;
 }
 
-#wrapper {
+.carousel-wrapper {
   width: 100%;
   max-width: 964px;
   position: relative;
+  margin: 0 auto;
 }
 
-#carousel {
+.carousel {
   overflow: auto;
   scroll-behavior: smooth;
   scrollbar-width: none;
+  white-space: nowrap;
 }
 
-#carousel::-webkit-scrollbar {
+.carousel::-webkit-scrollbar {
   height: 0;
 }
 
-#prev,
-#next {
+.prev,
+.next {
   display: flex;
   justify-content: center;
   align-content: center;
@@ -440,31 +451,58 @@ input {
   outline: 0;
   cursor: pointer;
   position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
-#prev {
+.prev {
   top: 50%;
   left: 0;
   transform: translate(50%, -50%);
-  display: none;
 }
 
-#next {
+.next {
   top: 50%;
   right: 0;
   transform: translate(-50%, -50%);
 }
 
-#content {
+.carousel-content {
   display: grid;
-  grid-gap: 16px;
+  grid-gap: 5px;
   grid-auto-flow: column;
   margin: auto;
   box-sizing: border-box;
 }
 
 .item {
-  width: 180px;
-  height: 180px;
-  background: green;
+  width: 120px;
+  height: 200px;
+  background: transparent;
+}
+
+.snippets-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.snippets-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.random-book {
+  width: 200px;
+  height: 280px;
+  background: transparent;
 }

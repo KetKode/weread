@@ -1,28 +1,24 @@
-const gap = 16;
+$(document).ready(function() {
+    $('.like-button').on('click', function(event) {
+        event.preventDefault(); // Prevent the default behavior of the anchor tag
 
-const carousel = document.getElementById("carousel"),
-  content = document.getElementById("content"),
-  next = document.getElementById("next"),
-  prev = document.getElementById("prev");
+        var snippetId = $(this).data('snippet-id');
 
-next.addEventListener("click", e => {
-  carousel.scrollBy(width + gap, 0);
-  if (carousel.scrollWidth !== 0) {
-    prev.style.display = "flex";
-  }
-  if (content.scrollWidth - width - gap <= carousel.scrollLeft + width) {
-    next.style.display = "none";
-  }
+        // Send an AJAX request to the server
+        $.ajax({
+            type: 'POST', // or 'GET' depending on your server-side handling
+            url: 'snippet_like/<int:pk>', // Specify the URL for your like endpoint
+            data: {
+                snippet_id: snippetId
+            },
+            success: function(data) {
+                // Handle the success response if needed
+                console.log('Liked successfully');
+            },
+            error: function(error) {
+                // Handle the error response if needed
+                console.error('Error occurred while liking:', error);
+            }
+        });
+    });
 });
-prev.addEventListener("click", e => {
-  carousel.scrollBy(-(width + gap), 0);
-  if (carousel.scrollLeft - width - gap <= 0) {
-    prev.style.display = "none";
-  }
-  if (!content.scrollWidth - width - gap <= carousel.scrollLeft + width) {
-    next.style.display = "flex";
-  }
-});
-
-let width = carousel.offsetWidth;
-window.addEventListener("resize", e => (width = carousel.offsetWidth));

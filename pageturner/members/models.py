@@ -35,10 +35,14 @@ def create_profile(sender, instance, created, **kwargs):
 
         user_profile = Profile(user=instance)
         user_profile.profile_image.save(f'{instance.username}_avatar.svg', ContentFile(avatar_svg.encode('utf-8')))
+        user_profile.save()
 
+        # Add the user to follow their own profile
+        user_profile.follows.add(user_profile)
         user_profile.save()
-        user_profile.follows.set([instance.profile.id])
-        user_profile.save()
+    else:
+        # If the user is not new, update the profile
+        instance.profile.save()
 
 
 class Snippet(models.Model):
@@ -65,3 +69,17 @@ class SharedSnippet(models.Model):
 
     def __str__(self):
         return f"Shared by {self.user} at {self.shared_at}"
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, related_name="comments", on_delete=models.CASCADE)
+    body = models.CharField(max_length=300)
+    created_at = models.DateTimeField(auto_now_add=True)
+    original_snippet = models.ForeignKey(Snippet, on_delete=models.CASCADE, related_name="replied_snippet")
+    likes = models.ManyToManyField(User, related_name="comment_like", blank=True)
+
+    def __str__(self):
+        return f"Commented by {self.user} at {self.created_at} to {self.original_snippet}"
+
+    def number_of_likes(self):
+        return self.likes.count()

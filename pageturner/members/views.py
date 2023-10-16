@@ -2,12 +2,13 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile, Snippet, SharedSnippet, Book
+from .models import Profile, Snippet, SharedSnippet, Book, Comment
 from .utils import generate_avatar
 from django.contrib.auth.models import User
-from .forms import RegisterForm, ProfilePicForm
+from .forms import RegisterForm, ProfilePicForm, CommentForm, SnippetUpdate, CommentUpdate
 from django.shortcuts import get_object_or_404
 from .forms import CustomAuthenticationForm
+from django.contrib.auth.decorators import login_required
 
 
 def login_user(request):
@@ -152,14 +153,38 @@ def snippet_like(request, pk):
         return redirect('welcome_page')
 
 
-# def snippet_show(request, pk):
-#     snippet = get_object_or_404(Snippet, id=pk)
-#     if snippet:
-#         return render(request, "snippets/show_snippet.html", {"snippet": snippet})
-#
-#     else:
-#         messages.success(request, "This snippet does not exist!")
-#         return redirect('welcome_page')
+@login_required()
+def comment_like(request, pk):
+    comment = get_object_or_404(Comment, id=pk)
+    if comment.likes.filter(id=request.user.id):
+        comment.likes.remove(request.user)
+    else:
+        comment.likes.add(request.user)
+
+    return redirect(request.META.get("HTTP_REFERER"))
+
+
+def snippet_delete(request, pk):
+    if request.user.is_authenticated:
+        snippet = get_object_or_404(Snippet, id=pk)
+        snippet.delete()
+        return redirect(request.META.get("HTTP_REFERER"))
+    else:
+        messages.success(request, "You must be logged in to view this page.")
+        return redirect('welcome_page')
+
+
+@login_required
+def snippet_edit(request, pk):
+    snippet = get_object_or_404(Snippet, id=pk)
+    form = SnippetUpdate(request.POST, instance=snippet)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Your snippet has been successfully updated!")
+        return redirect('welcome_page')
+    else:
+        form = SnippetUpdate(instance=snippet)
+    return render(request, 'snippets/edit_snippet.html', {"form": form, "snippet": snippet})
 
 
 def snippet_share(request, pk):
@@ -168,6 +193,44 @@ def snippet_share(request, pk):
     shared_snippet = SharedSnippet.objects.create(original_snippet=original_snippet, user=request.user)
 
     return redirect('profile', pk=request.user.pk)
+
+
+@login_required
+def snippet_comment(request, pk):
+    original_snippet = get_object_or_404(Snippet, id=pk)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.original_snippet = original_snippet
+            comment.user = request.user
+            comment.save()
+            messages.success(request, "Your comment has been successfully posted.")
+            return redirect("welcome_page")
+    else:
+        form = CommentForm()
+    return render(request, "snippets/comment_snippet.html", {"original_snippet": original_snippet, "form": form})
+
+
+@login_required()
+def comment_delete(request, pk):
+    comment = get_object_or_404(Comment, id=pk)
+    comment.delete()
+    return redirect(request.META.get("HTTP_REFERER"))
+
+
+@login_required
+def comment_edit(request, snippet_id, comment_id):
+    original_snippet = get_object_or_404(Snippet, id=snippet_id)
+    comment = get_object_or_404(Comment, id=comment_id, original_snippet=original_snippet)
+    form = CommentUpdate(request.POST, instance=comment)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Your comment has been successfully updated!")
+        return redirect('welcome_page')
+    else:
+        form = CommentUpdate(instance=comment)
+    return render(request, 'snippets/edit_comment.html', {"form": form, "comment": comment, "original_snippet": original_snippet})
 
 
 def bookmark_book(request, pk):
@@ -192,3 +255,4 @@ def mark_as_read(request, pk):
         return redirect('welcome_page')
 
     return redirect('profile', pk=request.user.pk)
+

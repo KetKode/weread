@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Edit Snippet{% endblock %}
+
+{% block content %}
+
+<div class="container-xxl text-center">
+        <div class="row">
+                <div class="snippets-section">
+                <h2 class="mt-5 mb-5">Your Snippet:</h2>
+                <div class="comment-card mb-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-2">
+                                {% if snippet.user.profile.profile_image %}
+                                <img class="profile-image-snippet" src="{{ snippet.user.profile.profile_image.url }}">
+                                {% endif %}
+                            </div>
+
+                            <div class="col-10">
+                                {{ snippet.body }} {% if request.user.id == snippet.user.id %} <a href="{% url 'snippet_delete' snippet.id %}"><i class="fa-solid fa-eraser"></i></a> <a href="{% url 'snippet_edit' snippet.id %}"><i class="fa-solid fa-pencil"></i></a>{% endif %} <br/>
+                                <small class="text-muted"> posted by <a href="{% url 'profile' snippet.user.profile.user.id %}">@{{ snippet.user.username }}</a>
+                                     on
+                                    {{ snippet.created_at }}
+                                    {{ snippet.number_of_likes }}
+                                </small>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="button-56" type="submit">Submit changes</button>
+        </form>
+           </div>
+        </div>
+
+        {% endblock %}
