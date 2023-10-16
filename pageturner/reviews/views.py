@@ -84,8 +84,11 @@ class ReviewCreateView(CreateView):
         return reverse_lazy('profile', kwargs={'pk': self.request.user.pk})
 
     def form_valid(self, form):
+        rating = self.request.POST.get('rating')
+        if rating:
+            form.instance.rating = rating
+
         form.instance.user = self.request.user
-        form.instance.rating = form.cleaned_data['rating']
 
         book_id = self.kwargs.get('pk')
         book = get_object_or_404(Book, id=book_id)

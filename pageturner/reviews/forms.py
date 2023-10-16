@@ -16,19 +16,10 @@ class BookImportForm(forms.ModelForm):
 
 class ReviewForm(forms.ModelForm):
     content = forms.CharField(required=True,
-                            widget=forms.widgets.Textarea(attrs={"placeholder": "Type your review here.",
-                                                                  "class": "form-control center-content", }
-                                                           ), label="", )
-
-    RATING_CHOICES = [
-        ('1', '⭐'),
-        ('2', '⭐⭐'),
-        ('3', '⭐⭐⭐'),
-        ('4', '⭐⭐⭐⭐'),
-        ('5', '⭐⭐⭐⭐⭐')
-        ]
-
-    rating = forms.MultipleChoiceField(required=True, choices=RATING_CHOICES, )
+                               widget=forms.widgets.Textarea(attrs={"placeholder": "Type your review here.",
+                                                                     "class": "form-control center-content", }
+                                                              ), label="", )
+    rating = forms.CharField(widget=forms.HiddenInput())
 
 
     class Meta:

@@ -414,6 +414,19 @@ input {
     text-align: center;
 }
 
+.comment-card-reply {
+    width: 600px;
+    height: 80px;
+    background-color: #EBE3F6;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-left: 50px;
+}
+
 .center-content{
     text-align: center;
     vertical-align: middle;
@@ -468,9 +481,9 @@ input {
 }
 
 .carousel-content {
-  display: grid;
-  grid-gap: 5px;
-  grid-auto-flow: column;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
   margin: auto;
   box-sizing: border-box;
 }
@@ -505,4 +518,48 @@ input {
   width: 200px;
   height: 280px;
   background: transparent;
+}
+
+.book-detail-container {
+    padding: 30px;
+    margin-top: 30px;
+}
+
+.book-cover {
+    margin-top: 20px;
+    margin-left: 50px;
+    padding: 10px;
+}
+
+.book-info-card {
+    margin-top: 90px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+}
+
+.review-card {
+    margin-top: 30px;
+    background-color: transparent;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.star-label {
+    cursor: pointer;
+    padding: 5px;
+}
+
+.star-label::before {
+    content: "⭐";
+    color: #ccc;
+}
+
+.star-label input[type="radio"] {
+    display: none;
+}
+
+.star-label input[type="radio"]:checked + .star-label::before {
+    color: #f39c12;
 }

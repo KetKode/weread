@@ -6,27 +6,51 @@
 
 {% block content %}
 
-<div class="container-xxl d-flex justify-content-center text-center">
-    <h2 class="mb-5">Write a review for {{ book.title }}</h2>
-</div>
+<div class="container-xxl d-flex justify-content-center">
+    <div class="text-center">
 
-<div class="container-xxl">
+    <div class="book-detail-container">
+    <h2>{{ book.title }}</h2>
+
     <div class="row">
-    <div class="col-3">
-        <img src="{{ book.cover_url }}">
-    </div>
+                <div class="col-6">
+                    <div class="book-cover">
+                    {% if book.cover_url %}
+                    <img src="{{ book.cover_url }}" alt="Book Cover" class="book-cover">
+                    {% endif %}
+                        </div>
+                </div>
 
-    <div class="col-9">
 
+        <div class="col-6">
 
+<div class="review-card">
         <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="button-56" type="submit">Submit</button>
-        </form>
+    {% csrf_token %}
+            <div class="rating-card">
+            <div class="stars">
+        <i class="fas fa-star star"></i>
+        <i class="fas fa-star star"></i>
+        <i class="fas fa-star star"></i>
+        <i class="fas fa-star star"></i>
+        <i class="fas fa-star star"></i>
+    </div>
+                </div>
+
+    <div class="form-group">
+        <label for="{{ form.content.id_for_label }}"></label>
+        {{ form.content }}
+    </div>
+    <input type="hidden" id="id_rating" name="rating">
+
+    <button class="button-56" type="submit">Submit</button>
+</form>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
     </div>
 
-    </div>
-
-
+<script src="{% static 'star-rating.js' %}"></script>
 {% endblock %}

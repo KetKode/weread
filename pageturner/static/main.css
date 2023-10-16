@@ -519,3 +519,44 @@ input {
   height: 280px;
   background: transparent;
 }
+
+.book-detail-container {
+    padding: 30px;
+    margin-top: 30px;
+}
+
+.book-cover {
+    margin-top: 20px;
+    margin-left: 50px;
+    padding: 10px;
+}
+
+.book-info-card {
+    margin-top: 90px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+}
+
+.review-card {
+    margin-top: 30px;
+    background-color: transparent;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.rating-card {
+    width: 200px;
+    height: 60px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+    align: center;
+}
+
+
+.star.active {
+    color: orange;
+}

@@ -9,27 +9,32 @@
 <div class="container-xxl d-flex justify-content-center">
     <div class="text-center">
 
-        <h2 class="mb-5">{{ book.title }}</h2>
-        <div class="container">
+    <div class="book-detail-container">
+        <h2>{{ book.title }}</h2>
+
             <div class="row">
-                <div class="col-md-6">
-                    <!-- Placeholder for the book cover -->
+                <div class="col-6">
+                    <div class="book-cover">
                     {% if book.cover_url %}
                     <img src="{{ book.cover_url }}" alt="Book Cover" class="book-cover">
                     {% endif %}
+                        </div>
                 </div>
-                <div class="col-md-6 text-left mt-5">
+
+                <div class="col-6 text-left">
+                    <div class="book-info-card">
                     <a class="book-info-detail" href="#"><b>{{ book.author }}</b></a>
-                    <p class="rating-detail mt-3">⭐️{{ book.rating_small }}</p>
+                    <p class="rating-detail mt-3"> ⭐️{{ book.rating_small }}</p>
                     <p class="summary mt-3">{{ book.summary }}</p>
                     <p>Genres: {{ book.genres }}</p>
                     <div class="button-container mt-3 text-center">
-                        <a class="button-56 book-info" href="{{ book.url }}" target="_blank">View this book on Goodreads</a>
+                        <a class="button-56" href="{{ book.url }}" target="_blank">View this book on Goodreads</a>
+                    </div>
                     </div>
                     <div class="buttons-user mt-5">
                         <a class="button-6" href="{% url 'mark_as_read' book.id %}"><i class="fa-solid fa-check"></i></a>
                         <a class="button-6" href="{% url 'bookmark_book' book.id %}"><i class="fa-solid fa-bookmark"></i></a>
-                        <a href="{% url 'create_review' pk=book.id %}">Write a Review</a>
+                        <a class="button-6" href="{% url 'create_review' pk=book.id %}">Write a Review</a>
                         </div>
                 </div>
             </div>
