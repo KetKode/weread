@@ -23,13 +23,13 @@
 
                 <div class="col-6 text-left">
                     <div class="book-info-card">
-                    <a class="book-info-detail" href="#"><b>{{ book.author }}</b></a>
-                    <p class="rating-detail mt-3"> ⭐️{{ book.rating_small }}</p>
-                    <p class="summary mt-3">{{ book.summary }}</p>
-                    <p>Genres: {{ book.genres }}</p>
-                    <div class="button-container mt-3 text-center">
-                        <a class="button-56" href="{{ book.url }}" target="_blank">View this book on Goodreads</a>
-                    </div>
+                        <a class="book-info-detail" href="#"><b>{{ book.author }}</b></a>
+                        <p class="rating-detail mt-3"> ⭐️{{ book.rating_small }}</p>
+                        <p class="summary mt-3">{{ book.summary }}</p>
+                        <p>Genres: {{ book.genres }}</p>
+                        <div class="button-container mt-3 text-center">
+                            <a class="button-56" href="{{ book.url }}" target="_blank">View this book on Goodreads</a>
+                        </div>
                     </div>
                     <div class="buttons-user mt-5">
                         <a class="button-6" href="{% url 'mark_as_read' book.id %}"><i class="fa-solid fa-check"></i></a>
@@ -44,22 +44,32 @@
         <h2>Reviews</h2>
         {% for review in reviews %}
 
-        <div class="alert alert-light" role="alert">
+        <div class="review-posted">
                 <div class="container">
                     <div class="row">
-        <h4>Review by {{ review.written_by.username }}</h4>
-        <p>Rating: {{ review.rating }}</p>
+        <h4>Review by @{{ review.written_by.username }}</h4>
+        <p>Rating: {{ review.rating }}
+</p>
         <p>{{ review.content }}</p>
         <p>Created on: {{ review.date_created }}</p>
         {% if review.date_edited %}
             <p>Last edited on: {{ review.date_edited }}</p>
         {% endif %}
                     </div>
+                    {{ review.number_of_likes }}
+
+                    {% if user in review.likes.all %}
+                        <a href="{% url 'review_like' review.id %}"><i class="fa-solid fa-heart" style="color:red"></i></a>
+                    {% else %}
+                        <a href="{% url 'review_like' review.id %}"><i class="fa-regular fa-heart" style="color:red"></i></a>
+                    {% endif %}
+                    <a href="{% url 'review_share' review.id %}"><i class="fa-solid fa-share" style="color:gray"></i></a>
+
                 </div>
     </div>
-{% empty %}
-    <p>No reviews available for this book.</p>
-{% endfor %}
+        {% empty %}
+            <p>No reviews available for this book.</p>
+        {% endfor %}
 
     </div>
 </div>

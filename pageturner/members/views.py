@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from .models import Profile, Snippet, SharedSnippet, Book, Comment
+from reviews.models import Review, SharedReview
 from .utils import generate_avatar
 from django.contrib.auth.models import User
 from .forms import RegisterForm, ProfilePicForm, CommentForm, SnippetUpdate, CommentUpdate
@@ -88,27 +89,26 @@ def follow(request, pk):
         return redirect('welcome_page')
 
 
+@login_required
 def profile(request, pk):
-    if request.user.is_authenticated:
-        profile = Profile.objects.get(id=pk)
-        user_snippets = Snippet.objects.filter(user_id=pk).order_by("-created_at")
-        shared_snippets = SharedSnippet.objects.filter(user_id=pk).order_by("-shared_at")
-        books_bookmarked = Profile.objects.filter(books_bookmarked=True)
+    profile = Profile.objects.get(id=pk)
+    user_snippets = Snippet.objects.filter(user_id=pk).order_by("-created_at")
+    user_reviews = Review.objects.filter(written_by_id=pk).order_by("-date_created")
+    shared_reviews = SharedReview.objects.filter(user=pk).order_by("-shared_at")
+    shared_snippets = SharedSnippet.objects.filter(user_id=pk).order_by("-shared_at")
+    books_bookmarked = profile.books_bookmarked.all()
 
-        if request.method == "POST":
-            current_user_profile = request.user.profile
-            action = request.POST["follow"]
-            if action == "unfollow":
-                current_user_profile.follows.remove(profile)
-            elif action == "follow":
-                current_user_profile.follows.add(profile)
+    if request.method == "POST":
+        current_user_profile = request.user.profile
+        action = request.POST["follow"]
+        if action == "unfollow":
+            current_user_profile.follows.remove(profile)
+        elif action == "follow":
+            current_user_profile.follows.add(profile)
 
-            current_user_profile.save()
+        current_user_profile.save()
 
-        return render(request, "profiles/profile.html", {"profile": profile, "user_snippets": user_snippets, "shared_snippets": shared_snippets, "books_bookmarked": books_bookmarked})
-    else:
-        messages.success(request, "You must be logged in to view this page.")
-        return redirect('welcome_page')
+    return render(request, "profiles/profile.html", {"profile": profile, "user_snippets": user_snippets, "shared_snippets": shared_snippets, "books_bookmarked": books_bookmarked, "user_reviews": user_reviews, "shared_reviews": shared_reviews})
 
 
 def update_user(request):

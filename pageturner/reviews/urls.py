@@ -8,5 +8,8 @@ urlpatterns = [
     path('book_search', views.book_search, name="book_search"),
     path('book_list', views.BookList.as_view(), name="book_list"),
     path('book_detail/<int:pk>', views.BookDetail.as_view(), name="book_detail"),
-    path('book_detail/<int:pk>/review', views.ReviewCreateView.as_view(), name='create_review')
+    path('book_detail/<int:pk>/review', views.ReviewCreateView.as_view(), name='create_review'),
+    path('review_like/<int:pk>', views.review_like, name="review_like"),
+    path('review_share/<int:pk>', views.review_share, name="review_share"),
+
     ]

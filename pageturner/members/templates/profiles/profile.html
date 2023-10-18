@@ -10,14 +10,15 @@
 <div class="container-xxl text-center">
     <div class="row">
         <div class="col-8 justify-content-center mx-auto my-5 text-center">
+<!-- Read books carousel -->
             <h3 class="mb-3">Books Read:</h3>
 
             <div class="carousel-wrapper">
             <div class="carousel">
                 <div class="carousel-content">
 
-            {% if request.user.profile.books_read.all %}
-            {% for book in request.user.profile.books_read.all %}
+            {% if profile.books_read.all %}
+            {% for book in profile.books_read.all %}
 
                     <a href="{% url 'book_detail' book.id %}"><img src="{{ book.cover_url }}" alt="{{ book.title }}" class="item"></a>
 
@@ -33,15 +34,15 @@
               </button>
             </div>
 
-
+<!--Bookmarked books carousel -->
             <h3 class="mt-5 mb-3">Bookmarks:</h3>
 
             <div class="carousel-wrapper">
             <div class="carousel">
                 <div class="carousel-content">
 
-            {% if request.user.profile.books_bookmarked.all %}
-            {% for bookmark in request.user.profile.books_bookmarked.all %}
+            {% if profile.books_bookmarked.all %}
+            {% for bookmark in profile.books_bookmarked.all %}
                     <a href="#"><img src="{{ bookmark.cover_url }}" alt="{{ bookmark.title }}" class="item"></a>
             {% endfor %}
             {% else %}
@@ -56,6 +57,7 @@
               </button>
             </div>
 
+<!--My snippets section-->
             <div class="snippets-container justify-content-center">
             <div class="snippets-section">
             <h3 class="mt-5 mb-3">My snippets:</h3>
@@ -95,7 +97,8 @@
             {% endif %}
             </div>
 
-                <div class="snippets-section">
+<!--Shared snippets section -->
+            <div class="snippets-section">
             <h3 class="mt-5 mb-3">Snippets I shared:</h3>
             {% if shared_snippets %}
             {% for snippet in shared_snippets %}
@@ -135,6 +138,89 @@
             <p>No shared snippets yet 😥</p>
             {% endif %}
                 </div>
+
+<!--My reviews section-->
+            <div class="reviews-section">
+            <h3 class="mt-5 mb-3">My Reviews:</h3>
+                    {% if user_reviews %}
+                    {% for review in user_reviews %}
+
+                <div class="review-posted mb-3">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-2">
+                                {% if profile.profile_image %}
+                                <img class="profile-image-snippet" src="{{ profile.profile_image.url }}">
+                                {% endif %}
+                            </div>
+                            <div class="col-10">
+                                {{ review.content }} <br/>
+                                <small class="text-muted"> by <a href="{% url 'profile' review.written_by.profile.user.id %}">
+                                    @{{ review.written_by.username }}</a> on
+                                    {{ review.date_created }}
+                                    {{ review.number_of_likes }}
+                                    {% if user in review.likes.all %}
+                                    <a href="{% url 'review_like' review.id %}"><i class="fa-solid fa-heart"
+                                                                                     style="color:red"></i></a>
+                                    {% else %}
+                                    <a href="{% url 'review_like' review.id %}"><i class="fa-regular fa-heart"
+                                                                                     style="color:red"></i></a>
+                                    {% endif %}
+                                    <a href="{% url 'review_share' review.id %}"><i class="fa-solid fa-share"
+                                                                                      style="color:gray"></i></a>
+                                </small>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>No posted reviews yet 😥</p>
+            {% endif %}
+            </div>
+
+
+                <div class="reviews-section">
+            <h3 class="mt-5 mb-3">Reviews that I shared:</h3>
+                    {% if shared_reviews %}
+                    {% for review in shared_reviews %}
+
+                <div class="review-posted mb-3">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-2">
+                                {% if review.original_review.written_by.profile.profile_image %}
+                                <img class="profile-image-snippet" src="{{ review.original_review.written_by.profile.profile_image.url }}">
+                                {% endif %}
+                            </div>
+
+                            <div class="col-10">
+                                {{ review.original_review.content }} <br/>
+                                <small class="text-muted"> originally posted by <a href="{% url 'profile' review.original_review.written_by.profile.user.id %}">
+                                    @{{ review.original_review.written_by.username }}</a> on
+                                    {{ review.original_review.date_created }}
+                                    {{ review.shared_review.shared_at }}
+                                    {{ review.original_review.number_of_likes }}
+                                    {% if user in review.original_review.likes.all %}
+                                    <a href="{% url 'review_like' review.original_review.id %}"><i class="fa-solid fa-heart"
+                                                                                     style="color:red"></i></a>
+                                    {% else %}
+                                    <a href="{% url 'review_like' review.original_review.id %}"><i class="fa-regular fa-heart"
+                                                                                     style="color:red"></i></a>
+                                    {% endif %}
+                                    <a href="{% url 'review_share' review.original_review.id %}"><i class="fa-solid fa-share"
+                                                                                      style="color:gray"></i></a>
+                                </small>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>No shared reviews yet 😥</p>
+            {% endif %}
+            </div>
+
         </div>
         </div>
 

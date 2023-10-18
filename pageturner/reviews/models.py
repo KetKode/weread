@@ -39,9 +39,36 @@ class Review(models.Model):
     date_created = models.DateTimeField(auto_now_add=True, help_text="The date and time the review was created.")
     date_edited = models.DateTimeField(null=True, help_text="The date and time this review was last edited.")
     book = models.ForeignKey(Book, on_delete=models.CASCADE, help_text="The Book that this review is for.", related_name="reviews")
+    likes = models.ManyToManyField(User, related_name="review_like", blank=True, default=0)
 
     def __str__(self):
         return f"Review for {self.book} / {self.rating}"
+
+    def number_of_likes(self):
+        return self.likes.count()
+
+
+class SharedReview(models.Model):
+    original_review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name="shared_review")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    shared_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Shared by {self.user} at {self.shared_at}"
+
+
+class ReviewComment(models.Model):
+    user = models.ForeignKey(User, related_name="review_comment", on_delete=models.CASCADE)
+    body = models.CharField(max_length=300)
+    created_at = models.DateTimeField(auto_now_add=True)
+    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name="commented_review")
+    likes = models.ManyToManyField(User, related_name="review_comment_like", blank=True)
+
+    def __str__(self):
+        return f"Review commented by {self.user} at {self.created_at} to {self.review}"
+
+    def number_of_likes(self):
+        return self.likes.count()
 
 
 class BookImport(models.Model):

@@ -6,51 +6,63 @@
 
 {% block content %}
 
-<div class="container-xxl d-flex justify-content-center">
+<div class="container-lg d-flex justify-content-center">
     <div class="text-center">
-
-    <div class="book-detail-container">
-    <h2>{{ book.title }}</h2>
-
-    <div class="row">
-                <div class="col-6">
+        <h2>{{ book.title }}</h2>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="book-detail-container">
                     <div class="book-cover">
-                    {% if book.cover_url %}
-                    <img src="{{ book.cover_url }}" alt="Book Cover" class="book-cover">
-                    {% endif %}
+                        {% if book.cover_url %}
+                        <img src="{{ book.cover_url }}" alt="Book Cover" class="img-fluid">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+<div class="col-lg-6">
+    <div class="container review-card">
+        <div class="row">
+            <form method="post">
+                {% csrf_token %}
+                <div class="rating container">
+                    <div class="row">
+                <div class="col-lg-4">
+                    <h5>Your rating:</h5>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="rating-card">
+                    <div class="stars">
+                        <i class="fas fa-star star"></i>
+                        <i class="fas fa-star star"></i>
+                        <i class="fas fa-star star"></i>
+                        <i class="fas fa-star star"></i>
+                        <i class="fas fa-star star"></i>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.content.id_for_label }}"></label>
+                                {{ form.content }}
+                            </div>
+
+                            <input type="hidden" id="id_rating" name="rating">
+
+                        <div class="d-flex mt-4">
+
+                            <button class="button-56" type="submit">Submit</button>
                         </div>
-                </div>
 
+                    </form>
+                    </div>
 
-        <div class="col-6">
-
-<div class="review-card">
-        <form method="post">
-    {% csrf_token %}
-            <div class="rating-card">
-            <div class="stars">
-        <i class="fas fa-star star"></i>
-        <i class="fas fa-star star"></i>
-        <i class="fas fa-star star"></i>
-        <i class="fas fa-star star"></i>
-        <i class="fas fa-star star"></i>
+            </div>
+        </div>
     </div>
-                </div>
-
-    <div class="form-group">
-        <label for="{{ form.content.id_for_label }}"></label>
-        {{ form.content }}
-    </div>
-    <input type="hidden" id="id_rating" name="rating">
-
-    <button class="button-56" type="submit">Submit</button>
-</form>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
+</div>
 
 <script src="{% static 'star-rating.js' %}"></script>
 {% endblock %}

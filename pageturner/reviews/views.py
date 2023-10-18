@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse
-from .models import Book, Author, Review
+from .models import Book, Author, Review, SharedReview
 from members.models import Snippet
 from django.db.models import Q
 from django.views.generic.list import ListView
@@ -105,3 +105,25 @@ class ReviewCreateView(CreateView):
         book = get_object_or_404(Book, id=book_id)
         context['book'] = book
         return context
+
+
+@login_required
+def review_like(request, pk):
+    review = get_object_or_404(Review, id=pk)
+    if review.likes.filter(id=request.user.id):
+        review.likes.remove(request.user)
+    else:
+        review.likes.add(request.user)
+
+    return redirect(request.META.get("HTTP_REFERER"))
+
+
+@login_required
+def review_share(request, pk):
+    review = get_object_or_404(Review, id=pk)
+
+    shared_review = SharedReview.objects.create(original_review=review, user=request.user)
+
+    return redirect('profile', pk=request.user.pk)
+
+
