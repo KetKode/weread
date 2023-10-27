@@ -19,7 +19,6 @@ class Profile(models.Model):
     profile_bio = models.CharField(null=True, blank=True, max_length=500)
     homepage_link = models.CharField(null=True, blank=True, max_length=100)
     instagram_link = models.CharField(null=True, blank=True, max_length=100)
-    facebook_link = models.CharField(null=True, blank=True, max_length=100)
 
     books_bookmarked = models.ManyToManyField(Book, related_name="bookmarks", symmetrical=False, blank=True)
     books_read = models.ManyToManyField(Book, related_name="read_books", symmetrical=False, blank=True)

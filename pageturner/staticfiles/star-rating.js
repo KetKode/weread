@@ -1,28 +1,21 @@
-
 document.addEventListener("DOMContentLoaded", function () {
-    const stars = document.querySelectorAll('.star-rating span');
+    const stars = document.querySelectorAll(".star");
+    const ratingInput = document.getElementById("id_rating");
+    console.log(ratingInput);
 
     stars.forEach((star, index) => {
-        star.addEventListener('mouseover', () => {
-            resetStars();
-            for (let i = 0; i <= index; i++) {
-                stars[i].classList.add('checked');
-            }
-        });
+        star.addEventListener("click", () => {
+            // Set the value of the hidden input field to the selected rating
+            ratingInput.value = index + 1;
+            console.log("Rating set:", ratingInput.value);
 
-        star.addEventListener('click', () => {
-            const ratingField = document.getElementById('id_rating');
-            ratingField.value = index + 1;
-        });
-
-        star.addEventListener('mouseout', () => {
-            resetStars();
+            // Reset all stars to inactive state
+            stars.forEach((star, index2) => {
+                star.classList.remove("active");
+                if (index2 <= index) {
+                    star.classList.add("active");
+                }
+            });
         });
     });
-
-    function resetStars() {
-        stars.forEach(star => {
-            star.classList.remove('checked');
-        });
-    }
 });

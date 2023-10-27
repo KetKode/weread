@@ -39,13 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'reviews',
-    'crispy_forms',
-    'crispy_bootstrap5',
+    'members',
     'widget_tweaks',
     'django_extensions',
     'import_export',
-    'members',
-]
+    ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -83,8 +82,12 @@ WSGI_APPLICATION = 'pageturner.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'weread_books_db',
+        'USER': 'postgres',
+        'PASSWORD': '19092810',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 
@@ -136,6 +139,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
-CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+
+
+
+
+
+
+
 
