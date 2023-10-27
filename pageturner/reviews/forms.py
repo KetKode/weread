@@ -1,7 +1,5 @@
 from django import forms
-from .models import Publisher, Review, Book, BookImport
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from .models import Publisher, Review, Book, BookImport, ReviewComment
 
 
 class BookSearchForm(forms.Form):
@@ -21,8 +19,18 @@ class ReviewForm(forms.ModelForm):
                                                               ), label="", )
     rating = forms.CharField(widget=forms.HiddenInput())
 
-
     class Meta:
         model = Review
         exclude = ("date_created", "date_edited", "book", "written_by")
+
+
+class ReviewCommentForm(forms.ModelForm):
+    body = forms.CharField(required=True,
+                            widget=forms.widgets.Textarea(attrs={"placeholder": "Type your comment here.",
+                                                                  "class": "form-control", }
+                                                           ), label="", )
+
+    class Meta:
+        model = ReviewComment
+        fields = ["body"]
 

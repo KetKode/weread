@@ -94,3 +94,5 @@ class CommentUpdate(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ["body"]
+
+

@@ -8,7 +8,8 @@ from django.views.generic import CreateView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from members.forms import SnippetForm
+from members.forms import SnippetForm, CommentForm
+from .forms import ReviewCommentForm
 from django.contrib import messages
 from .forms import ReviewForm
 from django.shortcuts import get_object_or_404
@@ -116,6 +117,23 @@ def review_like(request, pk):
         review.likes.add(request.user)
 
     return redirect(request.META.get("HTTP_REFERER"))
+
+
+@login_required
+def review_comment(request, pk):
+    original_review = get_object_or_404(Review, id=pk)
+    if request.method == "POST":
+        form = ReviewCommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.review = original_review
+            comment.user = request.user
+            comment.save()
+            messages.success(request, "Your comment has been successfully posted.")
+            return redirect(request.META.get("HTTP_REFERER"))
+    else:
+        form = CommentForm()
+    return render(request, "reviews/comment_review.html", {"original_review": original_review, "form": form})
 
 
 @login_required
