@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Genres List{% endblock %}
+
+{% block content %}
+
+
+  {% for genre, color in genre_color_tuples %}
+<span class="badge badge-pill" style="color: #ffffff; background-color: {{ color }};">{{ genre }}</span>
+
+
+  {% empty %}
+  <li>No genres available</li>
+
+
+{% endfor %}
+
+{% endblock %}

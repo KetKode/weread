@@ -145,3 +145,24 @@ def review_share(request, pk):
     return redirect('profile', pk=request.user.pk)
 
 
+def generate_random_color():
+    return "#{:02x}{:02x}{:02x}".format(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
+
+def genre_selection(request):
+    unique_genres = Book.objects.exclude(tags=None).values_list('tags', flat=True).distinct()
+
+    # Remove None values and split tags into individual genres
+    genres_list = [genre.strip() for genres in unique_genres if genres for genre in genres.split(',')]
+
+    # Remove duplicates by converting the list to a set and then back to a list
+    unique_genres_list = list(set(genres_list))
+
+    # Generate random colors for each genre
+    genre_color_mapping = {genre: generate_random_color() for genre in unique_genres_list}
+
+    # Create a list of tuples containing genre names and their corresponding colors
+    genre_color_tuples = [(genre, genre_color_mapping.get(genre, generate_random_color())) for genre in
+                          unique_genres_list]
+
+    return render(request, "reviews/genres_list.html", {"unique_genres_list": unique_genres_list, "genre_color_tuples": genre_color_tuples})

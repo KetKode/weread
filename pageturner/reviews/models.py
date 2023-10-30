@@ -1,5 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+import random
+
+from django.shortcuts import render
+from requests import request
 
 
 class Publisher(models.Model):
