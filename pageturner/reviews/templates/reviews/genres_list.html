@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load custom_filters %}
+
 {% load static %}
 
 {% block title %}Genres List{% endblock %}
@@ -7,14 +9,10 @@
 {% block content %}
 
 
-  {% for genre, color in genre_color_tuples %}
-<span class="badge badge-pill" style="color: #ffffff; background-color: {{ color }};">{{ genre }}</span>
-
-
+  {% for genre in unique_genres_list %}
+<a href="#" class="badge badge-pill" style="color: #ffffff; background-color: {{ tag|random_color }};">{{ genre }}</a>
   {% empty %}
   <li>No genres available</li>
-
-
 {% endfor %}
 
 {% endblock %}

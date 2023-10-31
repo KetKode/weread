@@ -145,8 +145,11 @@ def review_share(request, pk):
     return redirect('profile', pk=request.user.pk)
 
 
-def generate_random_color():
-    return "#{:02x}{:02x}{:02x}".format(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+# def generate_random_dark_color():
+#     r = random.randint(128, 255)  # Red component (128-255)
+#     g = random.randint(0, 64)  # Green component (0-64, kept low for purple shades)
+#     b = random.randint(128, 255)  # Blue component (128-255)
+#     return "#{:02x}{:02x}{:02x}".format(r, g, b)
 
 
 def genre_selection(request):
@@ -159,10 +162,10 @@ def genre_selection(request):
     unique_genres_list = list(set(genres_list))
 
     # Generate random colors for each genre
-    genre_color_mapping = {genre: generate_random_color() for genre in unique_genres_list}
+    # genre_color_mapping = {genre: generate_random_dark_color() for genre in unique_genres_list}
+    #
+    # # Create a list of tuples containing genre names and their corresponding colors
+    # genre_color_tuples = [(genre, genre_color_mapping.get(genre, generate_random_dark_color())) for genre in
+    #                       unique_genres_list]
 
-    # Create a list of tuples containing genre names and their corresponding colors
-    genre_color_tuples = [(genre, genre_color_mapping.get(genre, generate_random_color())) for genre in
-                          unique_genres_list]
-
-    return render(request, "reviews/genres_list.html", {"unique_genres_list": unique_genres_list, "genre_color_tuples": genre_color_tuples})
+    return render(request, "reviews/genres_list.html", {"unique_genres_list": unique_genres_list})

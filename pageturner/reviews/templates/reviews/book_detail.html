@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
+{% load custom_filters %}
+
+
 {% load static %}
 
 {% block title %}Book Details{% endblock %}
@@ -26,7 +29,13 @@
                         <a class="book-info-detail" href="#"><b>{{ book.author }}</b></a>
                         <p class="rating-detail mt-3"> ⭐️{{ book.rating }}</p>
                         <p class="summary mt-3">{{ book.summary }}</p>
-                        <p>Genres: {{ book.tags }}</p>
+                        <p>Genres:
+
+                        {% for tag in book.get_tags_list %}
+                        <a href="#" class="badge badge-pill" style="color: #ffffff; background-color: {{ tag|random_color }};">{{ tag }}</a>
+                        {% endfor %}
+
+                        </p>
                         <div class="button-container mt-3 text-center">
                             <a class="button-56" href="{{ book.url }}" target="_blank">View this book on Goodreads</a>
                         </div>

@@ -40,6 +40,10 @@ class Book(models.Model):
     def __str__(self):
         return f"{self.title} / {self.author}"
 
+    def get_tags_list(self):
+        return [tag.strip() for tag in self.tags.split(',')]
+
+
 
 class Review(models.Model):
     written_by = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
