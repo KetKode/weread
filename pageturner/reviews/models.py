@@ -1,9 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-import random
-
-from django.shortcuts import render
-from requests import request
 
 
 class Publisher(models.Model):
@@ -36,13 +32,11 @@ class Book(models.Model):
     amazon_link = models.URLField(help_text="Buy on Amazon.", blank=True, null=True)
     audible_link = models.URLField(help_text="Buy on Amazon.", blank=True, null=True)
 
-
     def __str__(self):
         return f"{self.title} / {self.author}"
 
     def get_tags_list(self):
         return [tag.strip() for tag in self.tags.split(',')]
-
 
 
 class Review(models.Model):

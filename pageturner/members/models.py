@@ -45,7 +45,7 @@ def create_profile(sender, instance, created, **kwargs):
 
 
 class Snippet(models.Model):
-    user = models.ForeignKey(User, related_name="snippets", on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, related_name="snippets", on_delete=models.CASCADE)
     body = models.CharField(max_length=300)
     created_at = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User, related_name="snippet_like", blank=True)
