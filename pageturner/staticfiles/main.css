@@ -5,19 +5,11 @@ font-size: 5em;
 
 }
 
-h2 {
+h2, h3 {
 
 font-family: 'Gloock', serif;
 font-size: 3em;
 
-}
-
-h3 {
-
-font-family: 'Gloock', serif;
-font-size: 3em;
-
-}
 
 .book-link {
 
@@ -38,7 +30,6 @@ body {
     background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,168,233,1) 100%);
 
 }
-
 
 
 .navbar {
@@ -68,7 +59,6 @@ color: black;
 
 }
 
-/* CSS */
 .button-56 {
   align-items: center;
   background-color: #fee6e3;
@@ -132,21 +122,17 @@ color: black;
 }
 
 .book-cover {
-
-    height: 400px;
-    width: 300px;
-
-
-
+    height: 500px;
+    width: 400px;
+    border-radius: .25rem;
 }
 
-.book-cover-list {
 
+
+.book-cover-list img {
     height: 350px;
-    width: 200px;
+    width: 250px;
     border-radius: .25rem;
-
-
 }
 
 .book-info {
@@ -155,7 +141,7 @@ color: black;
     font-size: 25px;
     }
 
-book-info-genres {
+.book-info-genres {
 
     font-family: 'Lora', serif;
     font-size: 22px;
@@ -521,23 +507,16 @@ input {
 }
 
 .book-detail-container {
-    padding: 30px;
-    margin-top: 30px;
+
+    margin: 0 auto; /* Center the container */
 }
 
-.book-cover {
-    margin-top: 20px;
-    margin-left: 50px;
-    padding: 10px;
-}
 
 .book-info-card {
-    margin-top: 90px;
     background-color: white;
-    padding: 20px;
     border-radius: 8px;
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
-    }
+}
 
 .review-card {
     margin-top: 30px;

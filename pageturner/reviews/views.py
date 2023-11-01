@@ -5,8 +5,6 @@ from django.db.models import Q
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic import CreateView
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from members.forms import SnippetForm, CommentForm
 from django.core.paginator import Paginator
@@ -82,11 +80,8 @@ def book_genres_list(request, tag):
     books_with_tag = Book.objects.filter(tags__icontains=tag)
 
     items_per_page = 10
-
     paginator = Paginator(books_with_tag, items_per_page)
-
     page_number = request.GET.get('page')
-
     page = paginator.get_page(page_number)
 
     return render(request, "reviews/book_genres_list.html", {'books': page, 'tag': tag})

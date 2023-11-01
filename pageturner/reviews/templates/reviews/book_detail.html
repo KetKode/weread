@@ -12,30 +12,31 @@
 <div class="container-xxl d-flex justify-content-center">
     <div class="text-center">
 
-    <div class="book-detail-container">
+    <div class="container">
         <h2>{{ book.title }}</h2>
 
             <div class="row">
                 <div class="col-6">
-                    <div class="book-cover">
+                    <div>
                     {% if book.cover_url %}
                     <img src="{{ book.cover_url }}" alt="Book Cover" class="book-cover">
                     {% endif %}
                         </div>
                 </div>
 
-                <div class="col-6 text-left">
+                <div class="col-6">
                     <div class="book-info-card">
                         <a class="book-info-detail" href="#"><b>{{ book.author }}</b></a>
                         <p class="rating-detail mt-3"> ⭐️{{ book.rating }}</p>
                         <p class="summary mt-3">{{ book.summary }}</p>
-                        <p>Genres:
+                        <p>
 
                         {% for tag in book.get_tags_list %}
                         <a href="{% url 'book_genres_list' tag %}" class="badge badge-pill" style="color: #ffffff; background-color: {{ tag|random_color }};">{{ tag }}</a>
                         {% endfor %}
 
                         </p>
+                        <p>Number of pages: {{ book.number_of_pages }} <em>({{ book.time }} to read the book)</em></p>
                         <div class="button-container mt-3 text-center">
                             <a class="button-56" href="{{ book.url }}" target="_blank">View this book on Goodreads</a>
                         </div>

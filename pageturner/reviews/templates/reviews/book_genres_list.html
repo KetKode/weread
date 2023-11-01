@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}Books with Tag: {{ tag }}{% endblock %}
 
@@ -24,12 +25,19 @@
                         <div class="col-10">
             <a class="book-info" href="{% url 'book_detail' book.pk %}"> <b>{{ book.title }}</b> by {{ book.author }}</a>
                             <p class="book-info mt-2">⭐️<b>{{ book.rating }}</b></p>
-                            <p class="book-info-genres"><b>genres:</b> {{ book.tags }}</p>
+                            <p>
+                                {% for tag in book.get_tags_list %}
+                                <a href="{% url 'book_genres_list' tag %}" class="badge badge-pill" style="color: #ffffff; background-color: {{ tag|random_color }};">{{ tag }}</a>
+                                {% endfor %}
+
+                                </p>
                             <p class="py-5 px-5" align="justify">{{ book.summary }}</p>
                 <div class="buttons-user mt-5">
-                        <a class="button-6" href="{% url 'mark_as_read' book.id %}"><i class="fa-solid fa-check"></i></a>
-                        <a class="button-6" href="{% url 'bookmark_book' book.id %}"><i class="fa-solid fa-bookmark"></i></a>
-                        <a class="button-6" href="#">Leave a Review</a>
+                        <a class="button-6" href="{% url 'mark_as_read' book.id %}">Mark as read</a>
+                        <a class="button-6" href="{% url 'bookmark_book' book.id %}">Bookmark<i class="fa-solid fa-bookmark mx-2"></i></a>
+                        <a class="button-6" href="{% url 'create_review' pk=book.id %}">Write a Review</a>
+                        <a class="button-6" href="{{ book.amazon_link }}"><i class="fa-brands fa-amazon"></i></a>
+                        <a class="button-6" href="{{ book.audible_link }}"><i class="fa-brands fa-audible"></i></a>
                         </div>
             </div>
                 </div>
@@ -46,15 +54,15 @@
 
 <div class="pagination">
         {% if books.has_previous %}
-            <a href="?page=1">First</a>
-            <a href="?page={{ books.previous_page_number }}">Previous</a>
+                <a class="mx-3" href="?page=1">First Page</a>
+                <a href="?page={{ books.previous_page_number }}"><i class="fa-solid fa-chevron-left"></i></a>
         {% endif %}
 
-        <span class="current">Page {{ books.number }} of {{ books.paginator.num_pages }}.</span>
+        <span class="current">Page {{ books.number }} of {{ books.paginator.num_pages }}</span>
 
         {% if books.has_next %}
-            <a href="?page={{ books.next_page_number }}">Next</a>
-            <a href="?page={{ books.paginator.num_pages }}">Last</a>
+                <a href="?page={{ books.next_page_number }}"><i class="fa-solid fa-chevron-right"></i></a>
+                <a class="mx-3" href="?page={{ books.paginator.num_pages }}">Go to the Last Page</a>
         {% endif %}
     </div>
 
