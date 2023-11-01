@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from members.forms import SnippetForm, CommentForm
+from django.core.paginator import Paginator
 from .forms import ReviewCommentForm
 from django.contrib import messages
 from .forms import ReviewForm
@@ -74,6 +75,21 @@ class BookDetail(DetailView):
 
         context['reviews'] = book.reviews.all()
         return context
+
+
+def book_genres_list(request, tag):
+
+    books_with_tag = Book.objects.filter(tags__icontains=tag)
+
+    items_per_page = 10
+
+    paginator = Paginator(books_with_tag, items_per_page)
+
+    page_number = request.GET.get('page')
+
+    page = paginator.get_page(page_number)
+
+    return render(request, "reviews/book_genres_list.html", {'books': page, 'tag': tag})
 
 
 class ReviewCreateView(CreateView):
@@ -169,3 +185,6 @@ def genre_selection(request):
     #                       unique_genres_list]
 
     return render(request, "reviews/genres_list.html", {"unique_genres_list": unique_genres_list})
+
+
+
