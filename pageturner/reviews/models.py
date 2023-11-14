@@ -26,6 +26,7 @@ class Book(models.Model):
     url = models.URLField(help_text="Link to the book page on Goodreads", default=None, null=True)
     cover_url = models.URLField(null=True, blank=True)
     summary = models.CharField(max_length=5000, help_text="Summary of the book", blank=True, null=True)
+    main_genre = models.CharField(max_length=20, help_text="Main genre of the book", blank=True, null=True)
     tags = models.CharField(max_length=1000, help_text="Genres of the book (tags)", null=True, blank=True)
     number_of_pages = models.IntegerField(help_text="Number of pages in the book.", blank=True, null=True)
     time = models.CharField(max_length=30, help_text="Time to finish the book.", blank=True, null=True)

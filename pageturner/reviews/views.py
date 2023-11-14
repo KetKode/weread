@@ -14,6 +14,7 @@ from .forms import ReviewForm
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 import random
+from .filters import BookFilter
 
 
 def welcome_page(request):
@@ -39,15 +40,28 @@ def welcome_page(request):
 
 
 def book_search(request):
-    if request.method == "POST":
-        searched = request.POST.get("searched")
+    queryset = Book.objects.all()
+    main_genres = Book.objects.values_list('main_genre', flat=True).distinct()
 
+    # Get the search query and selected genres
+    searched = request.GET.get("searched") or request.POST.get("searched")
+    selected_genres = request.GET.getlist("selected_genres")
+
+    # Apply filters based on search and selected genres
+    if searched and selected_genres:
+        books = Book.objects.filter(Q(title__icontains=searched) | Q(author__name__icontains=searched) | Q(main_genre__in=selected_genres))
+    elif searched:
         books = Book.objects.filter(Q(title__icontains=searched) | Q(author__name__icontains=searched))
-
-        return render(request,
-                  "reviews/search_results.html", {"searched": searched, "books": books})
+    elif selected_genres:
+            books = Book.objects.filter(main_genre__in=selected_genres)
     else:
-        return render(request, "reviews/search_results.html", {})
+        books = Book.objects.all()
+
+    return render(
+        request,
+        "reviews/search_results.html",
+        {"searched": searched, "books": books, "main_genres": main_genres, "selected_genres": selected_genres},
+        )
 
 
 class BookList(ListView):

@@ -571,3 +571,15 @@ input {
     color: orange;
 }
 
+.card {
+        width: 100%; /* Ensures the card takes full width of its container */
+        height: 100%; /* Set a fixed height for all cards */
+        display: flex;
+        flex-direction: column;
+        background: transparent;
+    }
+
+    .card-img-top {
+        height: 350px; /* Set a fixed height for the card image */
+        object-fit: cover; /* Ensures the image covers the entire container */
+    }
