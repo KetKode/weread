@@ -13,6 +13,7 @@
             <div class="flex-shrink-0 p-3 bg-white" style="width: 280px;">
               <form method="get" action="{% url 'book_search' %}">
                 {% csrf_token %}
+<!--Bestseller/custom filter checkboxes-->
     <ul class="list-unstyled ps-0">
       <li class="mb-1">
         <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
@@ -28,6 +29,7 @@
         </div>
         </div>
       </li>
+<!--Language filter -->
         <li class="mb-1">
         <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
           <b>LANGUAGE</b>
@@ -47,6 +49,7 @@
         </div>
         </div>
       </li>
+<!--Age filter-->
         <li class="mb-1">
         <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
           <b>AGE</b>
@@ -63,6 +66,7 @@
           </ul>
         </div>
       </li>
+<!--Genre filter-->
       <li class="mb-1">
         <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
           <b>GENRE</b>
@@ -77,23 +81,29 @@
                 </div>
         </div>
       </li>
+<!--Lists filter-->
         <li class="mb-1">
-        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
-          <b>LISTS</b>
-        </button>
-        <div class="show" style="">
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            {% for book_list in book_lists %}
-  <li>
-    <label>
-      <input type="checkbox" name="book_lists" value="{{ book_list.name }}" {% if book_list.name in book_lists %}checked{% endif %}>
-      {{ book_list.name }}
-    </label>
-  </li>
-{% endfor %}
-          </ul>
+    <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+        <b>LISTS</b>
+    </button>
+    <div class="show" style="">
+        <div class="form-check">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                {% for book_list_name in book_lists %}
+                    <li>
+                        <label>
+                            <input type="checkbox" class="form-check-input" name="selected_book_lists" value="{{ book_list_name }}" {% if book_list_name in selected_book_lists %}checked{% endif %}>
+                            {{ book_list_name }}
+                        </label>
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
-      </li>
+    </div>
+</li>
+
+
+<!--Year filter-->
         <li class="mb-1">
         <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
           <b>YEAR</b>
@@ -109,6 +119,7 @@
           </ul>
         </div>
       </li>
+<!--Author filter-->
       <li class="mb-1">
         <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
           <b>AUTHOR</b>
@@ -125,6 +136,7 @@
                 </form>
   </div>
         </div>
+<!--Search results-->
         <div class="col-md-8">
             {% if searched %}
             Results for "{{ searched }}"
@@ -154,8 +166,8 @@
                         <img class="card-img-top" src="{{ book.cover_url }}" alt="{{ book.title }}">
                         <div class="card-body">
                             <h5 class="card-title">{{ book.title }}</h5>
-                            {% for tag in book.get_tags_list %}
-                            <a href="{% url 'book_genres_list' tag %}" class="badge badge-pill" style="color: #ffffff; background-color: {{ tag|random_color }};">{{ tag }}</a>
+                            {% for genre in book.get_genres_list %}
+                            <a href="{% url 'book_genres_list' genre %}" class="badge badge-pill" style="color: #ffffff; background-color: {{ genre|random_color }};">{{ genre }}</a>
                             {% endfor %}
                         </div>
                     </div>

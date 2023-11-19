@@ -47,12 +47,13 @@ def book_search(request):
     main_genres = Book.objects.values_list('main_genre', flat=True).distinct().order_by('main_genre')
     main_age = Book.objects.exclude(main_age__isnull=True).exclude(main_age='').values_list('main_age', flat=True).distinct()
     language = Book.objects.values_list('language', flat=True).distinct()
+    book_lists = BookCollection.objects.values_list('name', flat=True).distinct().order_by('name')
 
     # Get the search query and selected genres
     searched = request.GET.get("searched") or request.POST.get("searched")
     selected_genres = request.GET.getlist("selected_genres")
     selected_age = request.GET.getlist("selected_age")
-    book_lists = request.GET.getlist("book_lists")
+    selected_book_lists = request.GET.getlist("selected_book_lists")
     selected_format = request.GET.getlist("selected_format")
     selected_language = request.GET.getlist("selected_language")
 
@@ -64,9 +65,10 @@ def book_search(request):
     elif selected_genres:
         books = Book.objects.filter(main_genre__in=selected_genres)
     elif selected_age:
-        books = Book.objects.filter(age__in=selected_age)
-    elif book_lists:
-        books = Book.objects.filter(book_lists__name__in=book_lists)
+        books = Book.objects.filter(main_age__in=selected_age)
+    elif selected_book_lists:
+        books = Book.objects.filter(book_lists__name__in=selected_book_lists)
+        print(books)
     elif selected_format:
         books = Book.objects.filter(format_book__in=selected_format)
     elif selected_language:
@@ -79,7 +81,7 @@ def book_search(request):
         "reviews/search_results.html",
         {"searched": searched, "books": books, "main_genres": main_genres, "selected_genres": selected_genres,
          "main_age": main_age, "selected_age": selected_age, "language": language, "selected_language": selected_language,
-         "selected_format": selected_format, "book_lists": book_lists},
+         "selected_format": selected_format, "book_lists": book_lists, "selected_book_lists": selected_book_lists},
         )
 
 

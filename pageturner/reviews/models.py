@@ -65,6 +65,8 @@ class BookCollection(models.Model):
         return self.name
 
 
+
+
 class Review(models.Model):
     written_by = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     content = models.TextField(help_text="The Review text.")
