@@ -23,6 +23,28 @@
         <a href="{% url 'book_detail' book.id %}"><img src="{{ book.cover_url }}" class="random-book mt-2 mb-2"></a>
         {% endfor %}
         {% endif %}
+        <div class="text-center">
+        <h1 class="mt-5">Book Collections</h1>
+            <div class="container">
+    <div class="row mx-auto">
+        {% for book_collection in book_collections %}
+        <div class="card" style="width: 400px; border: transparent">
+            <img src="{{ book_collection.list_cover.url }}" class="card-img-top" alt="...">
+            <div class="card-body">
+                <a href="{% url 'book_collections' book_collection.id %}"><h5 class="card-title">{{ book_collection.name }}</h5></a>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+
+            </div>
+    </div>
+
     </div>
 
 

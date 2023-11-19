@@ -31,8 +31,8 @@
                         <p class="summary mt-3">{{ book.summary }}</p>
                         <p>
 
-                        {% for tag in book.get_tags_list %}
-                        <a href="{% url 'book_genres_list' tag %}" class="badge badge-pill" style="color: #ffffff; background-color: {{ tag|random_color }};">{{ tag }}</a>
+                        {% for genre in book.get_genres_list %}
+                        <a href="{% url 'book_genres_list' genre %}" class="badge badge-pill" style="color: #ffffff; background-color: {{ genre|random_color }};">{{ genre }}</a>
                         {% endfor %}
 
                         </p>

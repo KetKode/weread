@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import PIL
 
 
 class Publisher(models.Model):
@@ -54,9 +55,10 @@ class Book(models.Model):
         return [age_item.strip() for age_item in self.age.split(',')]
 
 
-class BookList(models.Model):
+class BookCollection(models.Model):
     name = models.CharField(max_length=50, help_text="The name of the Book List")
-    books = models.ManyToManyField (Book, related_name='book_lists', help_text="Books in the list")
+    books = models.ManyToManyField(Book, related_name='book_lists', help_text="Books in the list")
+    list_cover = models.ImageField(upload_to="media/", null=True, blank=True)
 
     def __str__(self):
         return self.name

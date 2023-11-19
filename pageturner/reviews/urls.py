@@ -13,5 +13,7 @@ urlpatterns = [
     path('review_share/<int:pk>', views.review_share, name="review_share"),
     path('review_comment/<int:pk>', views.review_comment, name="review_comment"),
     path('genres/<str:tag>/', views.book_genres_list, name="book_genres_list"),
+    path('book_collections/<int:pk>/', views.show_book_collections, name='book_collections'),
 
     ]
+

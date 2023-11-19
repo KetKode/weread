@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse
-from .models import Book, Author, Review, SharedReview
+from .models import Book, Author, Review, SharedReview, BookCollection
 from members.models import Snippet
 from django.db.models import Q
 from django.views.generic.list import ListView
@@ -21,6 +21,7 @@ def welcome_page(request):
 
     books = list(Book.objects.all())
     random_books = random.sample(books, 12)
+    book_collections = list(BookCollection.objects.all())
 
     if request.user.is_authenticated:
         form = SnippetForm(request.POST or None)
@@ -33,10 +34,12 @@ def welcome_page(request):
                 return redirect("welcome_page")
 
         snippets = Snippet.objects.all().order_by("-created_at")
-        return render(request, "reviews/base.html", {"snippets": snippets, "form": form, "random_books": random_books})
+        return render(request, "reviews/base.html", {"snippets": snippets, "form": form, "random_books": random_books,
+                                                     "book_collections": book_collections})
     else:
         snippets = Snippet.objects.all().order_by("-created_at")
-        return render(request, "reviews/base.html", {"snippets": snippets, "random_books": random_books})
+        return render(request, "reviews/base.html", {"snippets": snippets, "random_books": random_books,
+                                                     "book_lists": book_lists})
 
 
 def book_search(request):
@@ -49,7 +52,7 @@ def book_search(request):
 
     # Apply filters based on search and selected genres
     if searched and selected_genres:
-        books = Book.objects.filter(Q(title__icontains=searched) | Q(author__name__icontains=searched) | Q(main_genre__in=selected_genres))
+        books = Book.objects.filter(Q(title__icontains=searched) & Q(author__name__icontains=searched) & Q(main_genre__in=selected_genres))
     elif searched:
         books = Book.objects.filter(Q(title__icontains=searched) | Q(author__name__icontains=searched))
     elif selected_genres:
@@ -89,16 +92,24 @@ class BookDetail(DetailView):
         return context
 
 
-def book_genres_list(request, tag):
+def show_book_collections(request, pk):
+    book_collection = get_object_or_404(BookCollection, pk=pk)
 
-    books_with_tag = Book.objects.filter(tags__icontains=tag)
+    books = book_collection.books.all()
+
+    return render(request, "reviews/book_collections.html", {"book_collection": book_collection, "books": books})
+
+
+def book_genres_list(request, genre):
+
+    books_with_genre = Book.objects.filter(genres__icontains=genre)
 
     items_per_page = 10
-    paginator = Paginator(books_with_tag, items_per_page)
+    paginator = Paginator(books_with_genre, items_per_page)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
 
-    return render(request, "reviews/book_genres_list.html", {'books': page, 'tag': tag})
+    return render(request, "reviews/book_genres_list.html", {'books': page, 'tag': genre})
 
 
 class ReviewCreateView(CreateView):
@@ -178,7 +189,7 @@ def review_share(request, pk):
 
 
 def genre_selection(request):
-    unique_genres = Book.objects.exclude(tags=None).values_list('tags', flat=True).distinct()
+    unique_genres = Book.objects.exclude(tags=None).values_list('genres', flat=True).distinct()
 
     # Remove None values and split tags into individual genres
     genres_list = [genre.strip() for genres in unique_genres if genres for genre in genres.split(',')]
