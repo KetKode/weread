@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Publisher, Book, Review, Author
+from .models import Publisher, Book, Review, Author, BookList
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
@@ -18,11 +18,17 @@ class BookResource(resources.ModelResource):
         row['author'] = author.id  # Assuming 'author' is the foreign key field in your Book model
 
 
-class BookAdmin(ImportExportModelAdmin):
+class BookAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_classes = [BookResource]
+    list_filter = ["title", "author", "year", "main_genre", "age", "best_books_of_2023"]
+
+
+class BookListAdmin(admin.ModelAdmin):
+    list_filter = ["name", "books__title", "books__author", "books__year", "books__main_genre", "books__age", "books__best_books_of_2023"]
 
 
 admin.site.register(Publisher)
 admin.site.register(Book, BookAdmin)
 admin.site.register(Author)
 admin.site.register(Review)
+admin.site.register(BookList, BookListAdmin)

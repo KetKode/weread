@@ -20,24 +20,46 @@ class Author(models.Model):
 
 class Book(models.Model):
     """A published book"""
+
+    BEST_BOOK_OF_2023_CHOICES = [("No", "No"),
+                                 ("Yes", "Yes")]
+
     title = models.CharField(max_length=200, help_text="The title of the book.")
-    rating = models.CharField(default=0, max_length=50, help_text="The smaller rating of the book", null=True, blank=True)
+    rating = models.FloatField(default=0, help_text="The rating of the book", null=True, blank=True)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     url = models.URLField(help_text="Link to the book page on Goodreads", default=None, null=True)
     cover_url = models.URLField(null=True, blank=True)
     summary = models.CharField(max_length=5000, help_text="Summary of the book", blank=True, null=True)
     main_genre = models.CharField(max_length=20, help_text="Main genre of the book", blank=True, null=True)
-    tags = models.CharField(max_length=1000, help_text="Genres of the book (tags)", null=True, blank=True)
-    number_of_pages = models.IntegerField(help_text="Number of pages in the book.", blank=True, null=True)
-    time = models.CharField(max_length=30, help_text="Time to finish the book.", blank=True, null=True)
-    amazon_link = models.URLField(help_text="Buy on Amazon.", blank=True, null=True)
-    audible_link = models.URLField(help_text="Buy on Amazon.", blank=True, null=True)
+    genres = models.CharField(max_length=1000, help_text="Genres of the book (tags)", null=True, blank=True)
+    number_of_pages = models.IntegerField(help_text="Number of pages in the book", blank=True, null=True)
+    time = models.CharField(max_length=30, help_text="Time to finish the book", blank=True, null=True)
+    amazon_link = models.URLField(help_text="Buy on Amazon", blank=True, null=True)
+    audible_link = models.URLField(help_text="Buy on Audible", blank=True, null=True)
+    year = models.IntegerField(help_text="Release year of the book", blank=True, null=True)
+    format_book = models.CharField(max_length=50, help_text="Format of the book", blank=True, null=True)
+    language = models.CharField(max_length=50, help_text="Language of the book", blank=True, null=True)
+    isbn = models.CharField(max_length=15, help_text="ISBN", blank=True, null=True)
+    isbn13 = models.CharField(max_length=15, help_text="ISBN13", blank=True, null=True)
+    age = models.CharField(max_length=100, help_text="Age of book's audience", blank=True, null=True)
+    best_books_of_2023 = models.CharField(max_length=3, choices=BEST_BOOK_OF_2023_CHOICES, default="No")
 
     def __str__(self):
-        return f"{self.title} / {self.author}"
+        return f"{self.title} / {self.author} / {self.main_genre} / {self.best_books_of_2023} / {self.year}"
 
-    def get_tags_list(self):
-        return [tag.strip() for tag in self.tags.split(',')]
+    def get_genres_list(self):
+        return [genre.strip() for genre in self.genres.split(',')]
+
+    def get_age_list(self):
+        return [age_item.strip() for age_item in self.age.split(',')]
+
+
+class BookList(models.Model):
+    name = models.CharField(max_length=50, help_text="The name of the Book List")
+    books = models.ManyToManyField (Book, related_name='book_lists', help_text="Books in the list")
+
+    def __str__(self):
+        return self.name
 
 
 class Review(models.Model):
