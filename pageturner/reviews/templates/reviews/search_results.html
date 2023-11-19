@@ -81,19 +81,19 @@
                 </div>
         </div>
       </li>
-<!--Lists filter-->
+<!--Format filter-->
         <li class="mb-1">
     <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
-        <b>LISTS</b>
+        <b>FORMAT</b>
     </button>
     <div class="show" style="">
         <div class="form-check">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                {% for book_list_name in book_lists %}
+                {% for format_type in format_book %}
                     <li>
                         <label>
-                            <input type="checkbox" class="form-check-input" name="selected_book_lists" value="{{ book_list_name }}" {% if book_list_name in selected_book_lists %}checked{% endif %}>
-                            {{ book_list_name }}
+                            <input type="checkbox" class="form-check-input" name="selected_format" value="{{ format_type }}" {% if format_type in selected_format %}checked{% endif %}>
+                            {{ format_type }}
                         </label>
                     </li>
                 {% endfor %}
@@ -101,7 +101,21 @@
         </div>
     </div>
 </li>
-
+<!--Genre filter-->
+      <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+          <b>GENRE</b>
+        </button>
+        <div class="show" style="">
+            <div class="form-check">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            {% for main_genre in main_genres %}
+              <li><label><input type="checkbox" class="form-check-input" name="selected_genres" value="{{ main_genre }}" {% if main_genre in selected_genres %}checked{% endif %}> {{ main_genre }}</label></li>
+            {% endfor %}
+          </ul>
+                </div>
+        </div>
+      </li>
 
 <!--Year filter-->
         <li class="mb-1">

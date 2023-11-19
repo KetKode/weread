@@ -48,6 +48,7 @@ def book_search(request):
     main_age = Book.objects.exclude(main_age__isnull=True).exclude(main_age='').values_list('main_age', flat=True).distinct()
     language = Book.objects.values_list('language', flat=True).distinct()
     book_lists = BookCollection.objects.values_list('name', flat=True).distinct().order_by('name')
+    format_book = Book.objects.values_list('format_book', flat=True).distinct()
 
     # Get the search query and selected genres
     searched = request.GET.get("searched") or request.POST.get("searched")
@@ -68,7 +69,6 @@ def book_search(request):
         books = Book.objects.filter(main_age__in=selected_age)
     elif selected_book_lists:
         books = Book.objects.filter(book_lists__name__in=selected_book_lists)
-        print(books)
     elif selected_format:
         books = Book.objects.filter(format_book__in=selected_format)
     elif selected_language:
@@ -79,9 +79,18 @@ def book_search(request):
     return render(
         request,
         "reviews/search_results.html",
-        {"searched": searched, "books": books, "main_genres": main_genres, "selected_genres": selected_genres,
-         "main_age": main_age, "selected_age": selected_age, "language": language, "selected_language": selected_language,
-         "selected_format": selected_format, "book_lists": book_lists, "selected_book_lists": selected_book_lists},
+        {"searched": searched,
+         "books": books,
+         "main_genres": main_genres,
+         "selected_genres": selected_genres,
+         "main_age": main_age,
+         "selected_age": selected_age,
+         "language": language,
+         "selected_language": selected_language,
+         "format_book": format_book,
+         "selected_format": selected_format,
+         "book_lists": book_lists,
+         "selected_book_lists": selected_book_lists},
         )
 
 
