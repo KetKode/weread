@@ -39,16 +39,22 @@ def welcome_page(request):
     else:
         snippets = Snippet.objects.all().order_by("-created_at")
         return render(request, "reviews/base.html", {"snippets": snippets, "random_books": random_books,
-                                                     "book_lists": book_lists})
+                                                     "book_collections": book_collections})
 
 
 def book_search(request):
     queryset = Book.objects.all()
-    main_genres = Book.objects.values_list('main_genre', flat=True).distinct()
+    main_genres = Book.objects.values_list('main_genre', flat=True).distinct().order_by('main_genre')
+    main_age = Book.objects.exclude(main_age__isnull=True).exclude(main_age='').values_list('main_age', flat=True).distinct()
+    language = Book.objects.values_list('language', flat=True).distinct()
 
     # Get the search query and selected genres
     searched = request.GET.get("searched") or request.POST.get("searched")
     selected_genres = request.GET.getlist("selected_genres")
+    selected_age = request.GET.getlist("selected_age")
+    book_lists = request.GET.getlist("book_lists")
+    selected_format = request.GET.getlist("selected_format")
+    selected_language = request.GET.getlist("selected_language")
 
     # Apply filters based on search and selected genres
     if searched and selected_genres:
@@ -56,14 +62,24 @@ def book_search(request):
     elif searched:
         books = Book.objects.filter(Q(title__icontains=searched) | Q(author__name__icontains=searched))
     elif selected_genres:
-            books = Book.objects.filter(main_genre__in=selected_genres)
+        books = Book.objects.filter(main_genre__in=selected_genres)
+    elif selected_age:
+        books = Book.objects.filter(age__in=selected_age)
+    elif book_lists:
+        books = Book.objects.filter(book_lists__name__in=book_lists)
+    elif selected_format:
+        books = Book.objects.filter(format_book__in=selected_format)
+    elif selected_language:
+        books = Book.objects.filter(language__in=selected_language)
     else:
         books = Book.objects.all()
 
     return render(
         request,
         "reviews/search_results.html",
-        {"searched": searched, "books": books, "main_genres": main_genres, "selected_genres": selected_genres},
+        {"searched": searched, "books": books, "main_genres": main_genres, "selected_genres": selected_genres,
+         "main_age": main_age, "selected_age": selected_age, "language": language, "selected_language": selected_language,
+         "selected_format": selected_format, "book_lists": book_lists},
         )
 
 
@@ -208,13 +224,6 @@ def genre_selection(request):
 
     # Remove duplicates by converting the list to a set and then back to a list
     unique_genres_list = list(set(genres_list))
-
-    # Generate random colors for each genre
-    # genre_color_mapping = {genre: generate_random_dark_color() for genre in unique_genres_list}
-    #
-    # # Create a list of tuples containing genre names and their corresponding colors
-    # genre_color_tuples = [(genre, genre_color_mapping.get(genre, generate_random_dark_color())) for genre in
-    #                       unique_genres_list]
 
     return render(request, "reviews/genres_list.html", {"unique_genres_list": unique_genres_list})
 

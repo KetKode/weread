@@ -18,11 +18,48 @@
         <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
           <b>BESTSELLER</b>
         </button>
-        <div class="collapse show" id="home-collapse">
+        <div class="show">
+            <div class="form-check">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li><label><input type="checkbox" name="bestseller" value="1"> Best Books 2023</label></li>
-            <li><label><input type="checkbox" name="bestseller" value="2"> Monthly Picks</label></li>
-            <li><label><input type="checkbox" name="bestseller" value="3"> Staff Picks Top 100</label></li>
+            <li><label><input type="checkbox" class="form-check-input" name="bestseller" value="1"> Best Books 2023</label></li>
+            <li><label><input type="checkbox" class="form-check-input" name="bestseller" value="2"> Monthly Picks</label></li>
+            <li><label><input type="checkbox" class="form-check-input" name="bestseller" value="3"> Staff Picks Top 100</label></li>
+          </ul>
+        </div>
+        </div>
+      </li>
+        <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+          <b>LANGUAGE</b>
+        </button>
+        <div class="show">
+            <div class="form-check">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                {% for lang in language %}
+                    <li>
+                        <label>
+                            <input type="checkbox" class="form-check-input" name="selected_language" value="{{ lang }}">
+                            {{ lang }}
+                        </label>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        </div>
+      </li>
+        <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+          <b>AGE</b>
+        </button>
+        <div class="show">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+    <li>
+{% for age_item in main_age %}
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" name="selected_age" value="{{ age_item }}" {% if age_item in selected_age %}checked{% endif %}>
+        <label class="form-check-label">{{ age_item }}</label>
+    </div>
+{% endfor %}
           </ul>
         </div>
       </li>
@@ -30,11 +67,45 @@
         <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
           <b>GENRE</b>
         </button>
-        <div class="collapse show" id="dashboard-collapse" style="">
+        <div class="show" style="">
+            <div class="form-check">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
             {% for main_genre in main_genres %}
-              <li><label><input type="checkbox" name="selected_genres" value="{{ main_genre }}" {% if main_genre in selected_genres %}checked{% endif %}> {{ main_genre }}</label></li>
+              <li><label><input type="checkbox" class="form-check-input" name="selected_genres" value="{{ main_genre }}" {% if main_genre in selected_genres %}checked{% endif %}> {{ main_genre }}</label></li>
             {% endfor %}
+          </ul>
+                </div>
+        </div>
+      </li>
+        <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+          <b>LISTS</b>
+        </button>
+        <div class="show" style="">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            {% for book_list in book_lists %}
+  <li>
+    <label>
+      <input type="checkbox" name="book_lists" value="{{ book_list.name }}" {% if book_list.name in book_lists %}checked{% endif %}>
+      {{ book_list.name }}
+    </label>
+  </li>
+{% endfor %}
+          </ul>
+        </div>
+      </li>
+        <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+          <b>YEAR</b>
+        </button>
+        <div class="show" style="">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+              <li>
+  <label>
+
+
+  </label>
+</li>
           </ul>
         </div>
       </li>
@@ -42,7 +113,7 @@
         <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
           <b>AUTHOR</b>
         </button>
-        <div class="collapse show" id="orders-collapse">
+        <div class="show">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
             <li><label for="author" class="form-label"></label>
         <input type="text" name="searched" id="author" class="form-control" placeholder="Search by author or title" style="width:250px">
@@ -64,8 +135,8 @@
                         <img class="card-img-top" src="{{ book.cover_url }}" alt="{{ book.title }}">
                         <div class="card-body">
                             <h5 class="card-title">{{ book.title }}</h5>
-                            {% for tag in book.get_tags_list %}
-                            <a href="{% url 'book_genres_list' tag %}" class="badge badge-pill" style="color: #ffffff; background-color: {{ tag|random_color }};">{{ tag }}</a>
+                            {% for genre in book.get_genres_list %}
+                            <a href="{% url 'book_genres_list' genre %}" class="badge badge-pill" style="color: #ffffff; background-color: {{ genre|random_color }};">{{ genre }}</a>
                             {% endfor %}
                         </div>
                     </div>

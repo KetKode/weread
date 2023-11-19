@@ -43,6 +43,7 @@ class Book(models.Model):
     isbn = models.CharField(max_length=15, help_text="ISBN", blank=True, null=True)
     isbn13 = models.CharField(max_length=15, help_text="ISBN13", blank=True, null=True)
     age = models.CharField(max_length=100, help_text="Age of book's audience", blank=True, null=True)
+    main_age = models.CharField(max_length=20, help_text="Main age of the book", blank=True, null=True)
     best_books_of_2023 = models.CharField(max_length=3, choices=BEST_BOOK_OF_2023_CHOICES, default="No")
 
     def __str__(self):
