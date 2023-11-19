@@ -32,15 +32,15 @@
 
                                 </p>
                             <div class="book-info-card">
-                                <p class="py-5 px-5" align="justify"><em>{{ book.summary|truncatechars:200 }}</em></p>
+                                <p class="py-5 px-5" align="justify"><em>{{ book.summary|truncatechars:300 }}</em></p>
                             <a href="{% url 'book_detail' book.id %}">View more details</a>
                                 </div>
                 <div class="buttons-user mt-5">
                         <a class="button-6" href="{% url 'mark_as_read' book.id %}">Mark as read</a>
                         <a class="button-6" href="{% url 'bookmark_book' book.id %}">Bookmark<i class="fa-solid fa-bookmark mx-2"></i></a>
                         <a class="button-6" href="{% url 'create_review' pk=book.id %}">Write a Review</a>
-                        <a class="button-6" href="{{ book.amazon_link }}"><i class="fa-brands fa-amazon"></i></a>
-                        <a class="button-6" href="{{ book.audible_link }}"><i class="fa-brands fa-audible"></i></a>
+                        <a class="button-6" style="background-color:#FFEBD8" href="{{ book.amazon_link }}"><i class="fa-brands fa-amazon"></i></a>
+                        <a class="button-6" style="background-color:#FFEBD8" href="{{ book.audible_link }}"><i class="fa-brands fa-audible"></i></a>
                         </div>
             </div>
                 </div>
@@ -54,6 +54,24 @@
 
 <div class="container-xxl d-flex justify-content-center">
         <div class="text-center">
+            <div class="pagination">
+
+            {% if books.has_previous %}
+                <a class="mx-3" href="?page=1">First Page</a>
+                <a href="?page={{ books.previous_page_number }}"><i class="fa-solid fa-chevron-left"></i></a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ books.number }} of {{ books.paginator.num_pages }}
+            </span>
+
+            {% if books.has_next %}
+                <a href="?page={{ books.next_page_number }}"><i class="fa-solid fa-chevron-right"></i></a>
+                <a class="mx-3" href="?page={{ books.paginator.num_pages }}">Go to the Last Page</a>
+            {% endif %}
+        </div>
+        </div>
+</div>
 
 
 {% endblock %}

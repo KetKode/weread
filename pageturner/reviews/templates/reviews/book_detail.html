@@ -13,7 +13,7 @@
     <div class="text-center">
 
     <div class="container">
-        <h2>{{ book.title }}</h2>
+        <h2 class="mb-5">{{ book.title }}</h2>
 
             <div class="row">
                 <div class="col-6">
@@ -22,6 +22,16 @@
                     <img src="{{ book.cover_url }}" alt="Book Cover" class="book-cover">
                     {% endif %}
                         </div>
+                    <div class="buttons-user mt-5">
+                        <a class="button-6" href="{% url 'mark_as_read' book.id %}">Mark as read</a>
+                        <a class="button-6" href="{% url 'bookmark_book' book.id %}">Bookmark<i class="fa-solid fa-bookmark mx-2"></i></a>
+                        <a class="button-6" href="{% url 'create_review' pk=book.id %}">Write a Review</a>
+                    </div>
+                    <div class="buttons-user mt-2">
+                        <a class="button-6" style="background-color:#FFEBD8" href="{{ book.amazon_link }}"><i class="fa-brands fa-amazon"></i></a>
+                        <a class="button-6" style="background-color:#FFEBD8" href="{{ book.audible_link }}"><i class="fa-brands fa-audible"></i></a>
+                    </div>
+
                 </div>
 
                 <div class="col-6">
@@ -41,13 +51,7 @@
                             <a class="button-56" href="{{ book.url }}" target="_blank">View this book on Goodreads</a>
                         </div>
                     </div>
-                    <div class="buttons-user mt-5">
-                        <a class="button-6" href="{% url 'mark_as_read' book.id %}">Mark as read</a>
-                        <a class="button-6" href="{% url 'bookmark_book' book.id %}">Bookmark<i class="fa-solid fa-bookmark mx-2"></i></a>
-                        <a class="button-6" href="{% url 'create_review' pk=book.id %}">Write a Review</a>
-                        <a class="button-6" href="{{ book.amazon_link }}"><i class="fa-brands fa-amazon"></i></a>
-                        <a class="button-6" href="{{ book.audible_link }}"><i class="fa-brands fa-audible"></i></a>
-                        </div>
+
                 </div>
             </div>
         </div>

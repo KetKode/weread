@@ -7,7 +7,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic import CreateView
 from django.contrib.auth.decorators import login_required
 from members.forms import SnippetForm, CommentForm
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import ReviewCommentForm
 from django.contrib import messages
 from .forms import ReviewForm
@@ -97,7 +97,19 @@ def show_book_collections(request, pk):
 
     books = book_collection.books.all()
 
-    return render(request, "reviews/book_collections.html", {"book_collection": book_collection, "books": books})
+    items_per_page = 10
+    paginator = Paginator(books, items_per_page)
+    page_number = request.GET.get('page')
+    try:
+        page = paginator.page(page_number)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        page = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g., 9999), deliver last page.
+        page = paginator.page(paginator.num_pages)
+
+    return render(request, "reviews/book_collections.html", {"book_collection": book_collection, "books": page})
 
 
 def book_genres_list(request, genre):
@@ -109,7 +121,7 @@ def book_genres_list(request, genre):
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
 
-    return render(request, "reviews/book_genres_list.html", {'books': page, 'tag': genre})
+    return render(request, "reviews/book_genres_list.html", {'books': page, 'genre': genre})
 
 
 class ReviewCreateView(CreateView):

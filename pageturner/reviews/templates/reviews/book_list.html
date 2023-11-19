@@ -15,29 +15,32 @@
             <div class="book-container">
                 <div class="container">
                     <div class="row">
-                        <div class="col-2">
+                        <div class="col-3">
                             {% if book.cover_url %}
                     <img src="{{ book.cover_url }}" alt="Book Cover" class="book-cover-list">
                     {% endif %}
 
                         </div>
 
-                        <div class="col-10">
+                        <div class="col-9">
             <a class="book-info" href="{% url 'book_detail' book.pk %}"> <b>{{ book.title }}</b> by {{ book.author }}</a>
                             <p class="book-info mt-2">⭐️<b>{{ book.rating }}</b></p>
                             <p>
-                                {% for tag in book.get_tags_list %}
-                                <a href="{% url 'book_genres_list' tag %}" class="badge badge-pill" style="color: #ffffff; background-color: {{ tag|random_color }};">{{ tag }}</a>
+                                {% for genre in book.get_genres_list %}
+                                <a href="{% url 'book_genres_list' genre %}" class="badge badge-pill" style="color: #ffffff; background-color: {{ genre|random_color }}; font-size: 16px;">{{ genre }}</a>
                                 {% endfor %}
 
                                 </p>
-                            <p class="py-5 px-5" align="justify">{{ book.summary }}</p>
+                            <div class="book-info-card">
+                                <p class="py-5 px-5" align="justify"><em>{{ book.summary|truncatechars:300 }}</em></p>
+                            <a href="{% url 'book_detail' book.id %}">View more details</a>
+                                </div>
                 <div class="buttons-user mt-5">
                         <a class="button-6" href="{% url 'mark_as_read' book.id %}">Mark as read</a>
                         <a class="button-6" href="{% url 'bookmark_book' book.id %}">Bookmark<i class="fa-solid fa-bookmark mx-2"></i></a>
                         <a class="button-6" href="{% url 'create_review' pk=book.id %}">Write a Review</a>
-                        <a class="button-6" href="{{ book.amazon_link }}"><i class="fa-brands fa-amazon"></i></a>
-                        <a class="button-6" href="{{ book.audible_link }}"><i class="fa-brands fa-audible"></i></a>
+                        <a class="button-6" style="background-color:#FFEBD8" href="{{ book.amazon_link }}"><i class="fa-brands fa-amazon"></i></a>
+                        <a class="button-6" style="background-color:#FFEBD8" href="{{ book.audible_link }}"><i class="fa-brands fa-audible"></i></a>
                         </div>
             </div>
                 </div>

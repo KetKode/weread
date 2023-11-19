@@ -132,7 +132,6 @@ color: black;
 
 
 .button-container {
-
     display: flex;
     justify-content: center;
     margin-top: 20px;
@@ -140,7 +139,6 @@ color: black;
 }
 
 .book-cover {
-
     height: 500px;
     width: 350px;
     border-radius: 20px;
@@ -531,11 +529,7 @@ input {
 
 }
 
-.book-cover {
-    margin-top: 10px;
-    margin-left: 10px;
-    padding: 10px;
-}
+
 
 .book-info-card {
     background-color: white;
