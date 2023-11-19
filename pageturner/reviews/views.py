@@ -49,6 +49,7 @@ def book_search(request):
     language = Book.objects.values_list('language', flat=True).distinct()
     book_lists = BookCollection.objects.values_list('name', flat=True).distinct().order_by('name')
     format_book = Book.objects.values_list('format_book', flat=True).distinct()
+    year = Book.objects.values_list('year', flat=True).distinct()
 
     # Get the search query and selected genres
     searched = request.GET.get("searched") or request.POST.get("searched")
@@ -57,6 +58,8 @@ def book_search(request):
     selected_book_lists = request.GET.getlist("selected_book_lists")
     selected_format = request.GET.getlist("selected_format")
     selected_language = request.GET.getlist("selected_language")
+    year_from = request.GET.get("year_from")
+    year_to = request.GET.get("year_to")
 
     # Apply filters based on search and selected genres
     if searched and selected_genres:
@@ -73,6 +76,8 @@ def book_search(request):
         books = Book.objects.filter(format_book__in=selected_format)
     elif selected_language:
         books = Book.objects.filter(language__in=selected_language)
+    elif year_from and year_to:
+        books = Book.objects.filter(year__range=[year_from, year_to])
     else:
         books = Book.objects.all()
 

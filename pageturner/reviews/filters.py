@@ -33,11 +33,11 @@ class BookFilter(django_filters.FilterSet):
         widget=django_filters.widgets.CSVWidget(),
         )
 
+    year_range = django_filters.RangeFilter(field_name='year')
 
     class Meta:
         model = Book
         fields = {
             'title': ['icontains'],
-            'author__name': ['icontains'],
-            'year': ['lt', 'gt']
+            'author__name': ['icontains']
         }
