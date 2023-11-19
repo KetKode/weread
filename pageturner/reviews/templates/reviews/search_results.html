@@ -101,22 +101,6 @@
         </div>
     </div>
 </li>
-<!--Genre filter-->
-      <li class="mb-1">
-        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
-          <b>GENRE</b>
-        </button>
-        <div class="show" style="">
-            <div class="form-check">
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            {% for main_genre in main_genres %}
-              <li><label><input type="checkbox" class="form-check-input" name="selected_genres" value="{{ main_genre }}" {% if main_genre in selected_genres %}checked{% endif %}> {{ main_genre }}</label></li>
-            {% endfor %}
-          </ul>
-                </div>
-        </div>
-      </li>
-
 <!--Year filter-->
         <li class="mb-1">
         <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
@@ -136,12 +120,12 @@
 <!--Author filter-->
       <li class="mb-1">
         <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
-          <b>AUTHOR</b>
+          <b>AUTHOR / TITLE / ISBN</b>
         </button>
         <div class="show">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
             <li><label for="author" class="form-label"></label>
-        <input type="text" name="searched" id="author" class="form-control" placeholder="Search by author or title" style="width:250px">
+        <input type="text" name="searched" id="author" class="form-control" placeholder="Search by author, title or ISBN" style="width:250px">
           </ul>
         </div>
       </li>

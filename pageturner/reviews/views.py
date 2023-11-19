@@ -65,7 +65,7 @@ def book_search(request):
     if searched and selected_genres:
         books = Book.objects.filter(Q(title__icontains=searched) & Q(author__name__icontains=searched) & Q(main_genre__in=selected_genres))
     elif searched:
-        books = Book.objects.filter(Q(title__icontains=searched) | Q(author__name__icontains=searched))
+        books = Book.objects.filter(Q(title__icontains=searched) | Q(author__name__icontains=searched) |Q(isbn__contains=searched))
     elif selected_genres:
         books = Book.objects.filter(main_genre__in=selected_genres)
     elif selected_age:
@@ -94,6 +94,9 @@ def book_search(request):
          "selected_language": selected_language,
          "format_book": format_book,
          "selected_format": selected_format,
+         "year": year,
+         "year_from": year_from,
+         "year_to": year_to,
          "book_lists": book_lists,
          "selected_book_lists": selected_book_lists},
         )
