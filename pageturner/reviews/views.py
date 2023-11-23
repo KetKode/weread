@@ -48,6 +48,21 @@ def show_lucky_book(request):
     return render(request, "reviews/show_lucky_book.html", {"lucky_book": lucky_book})
 
 
+def like_book(request, pk):
+    if request.user.is_authenticated:
+        book = get_object_or_404(Book, id=pk)
+        if book.likes.filter(id=request.user.id):
+            book.likes.remove(request.user)
+        else:
+            book.likes.add(request.user)
+
+        return redirect(request.META.get("HTTP_REFERER"))
+
+    else:
+        messages.success(request, "You must be logged in to view this page.")
+        return redirect('welcome_page')
+
+
 def book_search(request):
     queryset = Book.objects.all()
     main_genres = Book.objects.values_list('main_genre', flat=True).distinct().order_by('main_genre')
