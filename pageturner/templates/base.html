@@ -53,7 +53,7 @@
                 <form action="{% url 'book_search' %}" class="form-inline my-2 my-md-0 mx-2" method="post">
                     {% csrf_token %}
                     <input aria-label="Search" class="form-control" name="searched" id="searched"
-                           placeholder="Search by author or title 🔍" type="text">
+                           placeholder="Search by author, title or ISBN 🔍" type="text">
                 </form>
             </li>
         </ul>

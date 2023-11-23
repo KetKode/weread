@@ -101,6 +101,22 @@
         </div>
     </div>
 </li>
+<!--Genre filter-->
+      <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+          <b>LISTS</b>
+        </button>
+        <div class="show" style="">
+            <div class="form-check">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            {% for book_list_name in book_lists %}
+              <li><label><input type="checkbox" class="form-check-input" name="selected_book_lists" value="{{ book_list_name }}" {% if book_list_name in selected_book_lists %}checked{% endif %}> {{ book_list_name }}</label></li>
+            {% endfor %}
+          </ul>
+                </div>
+        </div>
+      </li>
+
 <!--Year filter-->
         <li class="mb-1">
         <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
