@@ -42,6 +42,12 @@ def welcome_page(request):
                                                      "book_collections": book_collections})
 
 
+def show_lucky_book(request):
+    books = list(Book.objects.all())
+    lucky_book = random.choice(books)
+    return render(request, "reviews/show_lucky_book.html", {"lucky_book": lucky_book})
+
+
 def book_search(request):
     queryset = Book.objects.all()
     main_genres = Book.objects.values_list('main_genre', flat=True).distinct().order_by('main_genre')
