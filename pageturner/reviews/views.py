@@ -24,6 +24,14 @@ def welcome_page(request):
     book_collections = list(BookCollection.objects.all())
 
     if request.user.is_authenticated:
+        liked_books = Book.objects.filter(Q(likes__isnull=False) & Q(main_genre__isnull=False))
+        main_liked_genres = [book.main_genre for book in liked_books]
+        recommended_books = Book.objects.filter(Q(main_genre__in=main_liked_genres)).order_by('?')
+        personal_recommendations = recommended_books[:6]
+    else:
+        personal_recommendations = random.sample(books, 6)
+
+    if request.user.is_authenticated:
         form = SnippetForm(request.POST or None)
         if request.method == "POST":
             if form.is_valid():
@@ -35,11 +43,13 @@ def welcome_page(request):
 
         snippets = Snippet.objects.all().order_by("-created_at")
         return render(request, "reviews/base.html", {"snippets": snippets, "form": form, "random_books": random_books,
-                                                     "book_collections": book_collections})
+                                                     "book_collections": book_collections,
+                                                     "personal_recommendations": personal_recommendations})
     else:
         snippets = Snippet.objects.all().order_by("-created_at")
         return render(request, "reviews/base.html", {"snippets": snippets, "random_books": random_books,
-                                                     "book_collections": book_collections})
+                                                     "book_collections": book_collections,
+                                                     "personal_recommendations": personal_recommendations})
 
 
 def show_lucky_book(request):

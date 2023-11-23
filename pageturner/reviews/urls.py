@@ -15,7 +15,7 @@ urlpatterns = [
     path('genres/<str:tag>/', views.book_genres_list, name="book_genres_list"),
     path('book_collections/<int:pk>/', views.show_book_collections, name='book_collections'),
     path('show_lucky_book', views.show_lucky_book, name='show_lucky_book'),
-    path('book_like/<int:pk>', views.like_book, name='like_book')
+    path('book_like/<int:pk>', views.like_book, name='like_book'),
 
     ]
 

@@ -40,6 +40,10 @@
         </div>
         {% endfor %}
     </div>
+    <h1 class="mt-5">Recommended for You</h1>
+        {% for book in personal_recommendations %}
+        <a href="{% url 'book_detail' book.id %}"><img src="{{ book.cover_url }}" class="random-book mt-2 mb-2"></a>
+        {% endfor %}
 </div>
 
 
