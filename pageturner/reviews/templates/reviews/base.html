@@ -27,7 +27,7 @@
             <div class="button-container mt-3 mb-5">
             <a href="{% url 'show_lucky_book' %}" type="button" class="button-56">💎 I'm feeling lucky 💎</a>
                 </div>
-        <h1 class="mt-5">Book Collections</h1>
+        <h2 class="mt-5">Book Collections</h2>
             <div class="container">
     <div class="row mx-auto">
         {% for book_collection in book_collections %}
@@ -40,8 +40,12 @@
         </div>
         {% endfor %}
     </div>
-    <h1 class="mt-5">Recommended for You</h1>
+    <h2 class="mt-5">Recommended for You</h2>
         {% for book in personal_recommendations %}
+        <a href="{% url 'book_detail' book.id %}"><img src="{{ book.cover_url }}" class="random-book mt-2 mb-2"></a>
+        {% endfor %}
+    <h2 class="mt-5">Because your friends liked</h2>
+        {% for book in friends_recommendations %}
         <a href="{% url 'book_detail' book.id %}"><img src="{{ book.cover_url }}" class="random-book mt-2 mb-2"></a>
         {% endfor %}
 </div>

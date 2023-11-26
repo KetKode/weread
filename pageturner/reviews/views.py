@@ -27,11 +27,13 @@ def welcome_page(request):
     if request.user.is_authenticated:
 
         liked_books = Book.objects.filter(Q(likes=True) & Q(main_genre__isnull=False))
-        friends = Profile.objects.filter(follows=True)
 
-        friends_liked_books = Profile.objects.filter(follows=True)
+        friends = Profile.objects.filter(followed_by=request.user.profile)
+        friends_liked_books = Book.objects.filter(likes__in=friends)
+        main_friends_liked_genres = [book.main_genre for book in friends_liked_books]
+        friends_recommended_books = Book.objects.filter(Q(main_genre__in=main_friends_liked_genres)).order_by('?')
+        friends_recommendations = friends_recommended_books[:6]
 
-        print(friends)
         if liked_books:
             main_liked_genres = [book.main_genre for book in liked_books]
             recommended_books = Book.objects.filter(Q(main_genre__in=main_liked_genres)).order_by('?')
@@ -39,6 +41,10 @@ def welcome_page(request):
 
         else:
             personal_recommendations = random.sample(books, 6)
+
+    else:
+        personal_recommendations = random.sample(books, 6)
+        friends_recommendations = random.sample(books, 6)
 
     if request.user.is_authenticated:
         form = SnippetForm(request.POST or None)
@@ -53,12 +59,14 @@ def welcome_page(request):
         snippets = Snippet.objects.all().order_by("-created_at")
         return render(request, "reviews/base.html", {"snippets": snippets, "form": form, "random_books": random_books,
                                                      "book_collections": book_collections,
-                                                     "personal_recommendations": personal_recommendations})
+                                                     "personal_recommendations": personal_recommendations,
+                                                     "friends_recommendations": friends_recommendations})
     else:
         snippets = Snippet.objects.all().order_by("-created_at")
         return render(request, "reviews/base.html", {"snippets": snippets, "random_books": random_books,
                                                      "book_collections": book_collections,
-                                                     "personal_recommendations": personal_recommendations})
+                                                     "personal_recommendations": personal_recommendations,
+                                                     "friends_recommendations": friends_recommendations})
 
 
 def show_lucky_book(request):
@@ -71,9 +79,9 @@ def like_book(request, pk):
     if request.user.is_authenticated:
         book = get_object_or_404(Book, id=pk)
         if book.likes.filter(id=request.user.id):
-            book.likes.remove(request.user)
+            book.likes.remove(request.user.profile)
         else:
-            book.likes.add(request.user)
+            book.likes.add(request.user.profile)
 
         return redirect(request.META.get("HTTP_REFERER"))
 
