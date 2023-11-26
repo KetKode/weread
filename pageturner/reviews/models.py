@@ -45,8 +45,7 @@ class Book(models.Model):
     age = models.CharField(max_length=100, help_text="Age of book's audience", blank=True, null=True)
     main_age = models.CharField(max_length=20, help_text="Main age of the book", blank=True, null=True)
     best_books_of_2023 = models.CharField(max_length=3, choices=BEST_BOOK_OF_2023_CHOICES, default="No")
-    likes = models.ManyToManyField(User, related_name="book_likes", blank=True)
-
+    likes = models.ManyToManyField('members.Profile', related_name="book_likes", blank=True)
 
     def __str__(self):
         return f"{self.title} / {self.author} / {self.main_genre} / {self.best_books_of_2023} / {self.year}"
@@ -68,8 +67,6 @@ class BookCollection(models.Model):
 
     def __str__(self):
         return self.name
-
-
 
 
 class Review(models.Model):

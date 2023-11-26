@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from .models import Book, Author, Review, SharedReview, BookCollection
-from members.models import Snippet
+from members.models import Snippet, Profile
+from django.contrib.auth.models import User
 from django.db.models import Q
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -24,12 +25,20 @@ def welcome_page(request):
     book_collections = list(BookCollection.objects.all())
 
     if request.user.is_authenticated:
-        liked_books = Book.objects.filter(Q(likes__isnull=False) & Q(main_genre__isnull=False))
-        main_liked_genres = [book.main_genre for book in liked_books]
-        recommended_books = Book.objects.filter(Q(main_genre__in=main_liked_genres)).order_by('?')
-        personal_recommendations = recommended_books[:6]
-    else:
-        personal_recommendations = random.sample(books, 6)
+
+        liked_books = Book.objects.filter(Q(likes=True) & Q(main_genre__isnull=False))
+        friends = Profile.objects.filter(follows=True)
+
+        friends_liked_books = Profile.objects.filter(follows=True)
+
+        print(friends)
+        if liked_books:
+            main_liked_genres = [book.main_genre for book in liked_books]
+            recommended_books = Book.objects.filter(Q(main_genre__in=main_liked_genres)).order_by('?')
+            personal_recommendations = recommended_books[:6]
+
+        else:
+            personal_recommendations = random.sample(books, 6)
 
     if request.user.is_authenticated:
         form = SnippetForm(request.POST or None)

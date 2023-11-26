@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile, Snippet, SharedSnippet, Book, Comment
-from reviews.models import Review, SharedReview
+from members.models import Profile, Snippet, SharedSnippet, Comment
+from reviews.models import Review, SharedReview, Book
 from .utils import generate_avatar
 from django.contrib.auth.models import User
 from .forms import RegisterForm, ProfilePicForm, CommentForm, SnippetUpdate, CommentUpdate
