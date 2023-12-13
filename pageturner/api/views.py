@@ -1,5 +1,3 @@
-from django.shortcuts import render
-from rest_framework import viewsets, status
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -107,5 +105,13 @@ def friends_recommendations(request):
             }
 
         return Response(response_data)
+
+
+@api_view(['GET'])
+def show_lucky_book(request):
+    books = list(Book.objects.all())
+    lucky_book = random.choice(books)
+    book_serializer = BookSerializer(lucky_book, many=False)
+    return Response(book_serializer.data)
 
 

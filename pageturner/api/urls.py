@@ -8,7 +8,8 @@ urlpatterns = [
     path('books', BookList.as_view(), name="books"),
     path('books/<int:pk>', BookDetail.as_view(), name="book_details"),
     path('personal_recommendations', personal_recommendations, name="personal_recommendations"),
-    path('friends_recommendations', friends_recommendations, name="friends_recommendations")
+    path('friends_recommendations', friends_recommendations, name="friends_recommendations"),
+    path('show_lucky_book', show_lucky_book, name="show_lucky_book")
     ]
 
 urlpatterns += [
