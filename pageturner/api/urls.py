@@ -11,4 +11,6 @@ urlpatterns = [
     path('friends_recommendations', friends_recommendations, name="friends_recommendations")
     ]
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+urlpatterns += [
+    path('api-auth/', include('rest_framework.urls'))
+    ]

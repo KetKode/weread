@@ -65,16 +65,16 @@ def welcome_page(request):
         return render(request, "reviews/base.html", {"snippets": snippets, "form": form, "random_books": random_books,
                                                      "book_collections": book_collections,
                                                      "personal_recommendations": personal_recommendations,
-                                                     "friends": friends,
-                                                     "random_friend": random_friend,
+                                                     # "friends": friends,
+                                                     # "random_friend": random_friend,
                                                      "random_friends_recommendations": random_friends_recommendations})
     else:
         snippets = Snippet.objects.all().order_by("-created_at")
         return render(request, "reviews/base.html", {"snippets": snippets, "random_books": random_books,
                                                      "book_collections": book_collections,
                                                      "personal_recommendations": personal_recommendations,
-                                                     "friends": friends,
-                                                     "random_friend": random_friend,
+                                                     # "friends": friends,
+                                                     # "random_friend": random_friend,
                                                      "random_friends_recommendations": random_friends_recommendations})
 
 
@@ -87,10 +87,10 @@ def show_lucky_book(request):
 def like_book(request, pk):
     if request.user.is_authenticated:
         book = get_object_or_404(Book, id=pk)
-        if book.likes.filter(id=request.user.id):
-            book.likes.remove(request.user.profile)
+        if book.liked_books.filter(id=request.user.id):
+            book.liked_books.remove(request.user.profile)
         else:
-            book.likes.add(request.user.profile)
+            book.liked_books.add(request.user.profile)
 
         return redirect(request.META.get("HTTP_REFERER"))
 
