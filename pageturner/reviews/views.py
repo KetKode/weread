@@ -26,18 +26,18 @@ def welcome_page(request):
 
     if request.user.is_authenticated:
 
-        liked_books = Book.objects.filter(Q(likes=True) & Q(main_genre__isnull=False))
+        liked_books = Book.objects.filter(Q(liked_books=True) & Q(main_genre__isnull=False))
 
         friends = Profile.objects.filter(followed_by=request.user.profile)
         random_friend = random.choice(friends)
-        random_friends_liked_books = Book.objects.filter(likes=random_friend)
+        random_friends_liked_books = Book.objects.filter(liked_books=random_friend)
 
         if random_friends_liked_books:
             main_random_friends_liked_genres = [book.main_genre for book in random_friends_liked_books]
             random_friends_recommended_books = Book.objects.filter(Q(main_genre__in=main_random_friends_liked_genres)).order_by('?')
             random_friends_recommendations = random_friends_recommended_books[:6]
         else:
-            random_friends_recommendations = random.sample (books, 6)
+            random_friends_recommendations = random.sample(books, 6)
 
         if liked_books:
             main_liked_genres = [book.main_genre for book in liked_books]

@@ -21,6 +21,7 @@ class Profile(models.Model):
 
     books_bookmarked = models.ManyToManyField('reviews.Book', related_name="bookmarks", symmetrical=False, blank=True)
     books_read = models.ManyToManyField('reviews.Book', related_name="read_books", symmetrical=False, blank=True)
+    books_liked = models.ManyToManyField('reviews.Book', related_name="liked_books", symmetrical=False, blank=True)
 
     def __str__(self):
         return self.user.username
