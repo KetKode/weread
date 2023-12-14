@@ -154,12 +154,7 @@ def show_book_collection(request, pk):
     book_collection = get_object_or_404(BookCollection, pk=pk)
     collection_serializer = BookCollectionSerializer(book_collection, many=False)
 
-    books = book_collection.books.all()
-    book_serializer = BookSerializer(books, many=True)
-
-    response_data = {"book_collection": collection_serializer.data,
-                     "books": book_serializer.data}
-    return Response(response_data)
+    return Response(collection_serializer.data)
 
 
 
