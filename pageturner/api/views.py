@@ -81,6 +81,7 @@ def friends_recommendations(request):
     Display recommendations based on user's friends' likes
     """
     friends = Profile.objects.filter(followed_by=request.user.profile)
+    friends_serializer = ProfileSerializer(friends, many=True)
 
     if friends:
         random_friend = random.choice(friends)
@@ -92,7 +93,9 @@ def friends_recommendations(request):
         random_friends_recommended_books = Book.objects.filter(main_genre__in=main_random_friends_liked_genres).order_by('?')
         random_friends_recommendations = random_friends_recommended_books[:10]
         book_serializer = BookSerializer(random_friends_recommendations, many=True)
+
         response_data = {
+            "friends": friends_serializer.data,
             "recommended_books": book_serializer.data,
                 }
         return Response(response_data)

@@ -18,6 +18,10 @@ class BookCollectionSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    books_bookmarked = BookSerializer(many=True, read_only=True)
+    books_read = BookSerializer(many=True, read_only=True)
+    books_liked = BookSerializer(many=True, read_only=True)
+
     class Meta:
         model = Profile
-        fields = ["id", "user", "books_bookmarked", "books_read", "books_liked", "follows"]
+        fields = ["id", "user", "books_bookmarked", "books_read", "books_liked"]
