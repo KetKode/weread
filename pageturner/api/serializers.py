@@ -10,9 +10,11 @@ class BookSerializer(serializers.ModelSerializer):
 
 
 class BookCollectionSerializer(serializers.ModelSerializer):
+    books = BookSerializer(many=True, read_only=True)
+
     class Meta:
         model = BookCollection
-        fields = ["name", "list_cover"]
+        fields = ["id", "name", "books"]
 
 
 class ProfileSerializer(serializers.ModelSerializer):

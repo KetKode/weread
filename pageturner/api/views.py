@@ -139,10 +139,11 @@ class BookCollections(APIView):
     """
     List all book collections
     """
-    def get(self, request, format=None):
+    def get(self, request, *args, **kwargs):
         book_collections = BookCollection.objects.all()
-        serializer = BookCollectionSerializer(book_collections, many=True)
-        return Response(serializer.data)
+        collection_serializer = BookCollectionSerializer(book_collections, many=True)
+
+        return Response(collection_serializer.data)
 
 
 @api_view(['GET'])
