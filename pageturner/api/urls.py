@@ -9,7 +9,10 @@ urlpatterns = [
     path('books/<int:pk>', BookDetail.as_view(), name="book_details"),
     path('personal_recommendations', personal_recommendations, name="personal_recommendations"),
     path('friends_recommendations', friends_recommendations, name="friends_recommendations"),
-    path('show_lucky_book', show_lucky_book, name="show_lucky_book")
+    path('show_lucky_book', show_lucky_book, name="show_lucky_book"),
+    path('like_book/<int:pk>', like_book, name="like_book"),
+    path('book_collections', BookCollections.as_view(), name="book_collections"),
+    path('book_collections/<int:pk>', show_book_collection, name="show_book_collection")
     ]
 
 urlpatterns += [

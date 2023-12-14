@@ -56,7 +56,7 @@ class Book(models.Model):
         return [age_item.strip() for age_item in self.age.split(',')]
 
     def number_of_likes(self):
-        return self.likes.count()
+        return self.liked_books.count()
 
 
 class BookCollection(models.Model):
