@@ -50,6 +50,7 @@ def recommended_books(request):
 
     return Response(book_serializer.data)
 
+
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
