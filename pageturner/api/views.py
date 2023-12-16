@@ -39,6 +39,18 @@ class BookDetail(APIView):
 
 
 @api_view(['GET'])
+def recommended_books(request):
+    """
+    Display recommendations for a not logged-in user
+    """
+
+    books = list (Book.objects.all())
+    recommended_books = random.sample(books, 10)
+    book_serializer = BookSerializer(recommended_books, many=True)
+
+    return Response(book_serializer.data)
+
+@api_view(['GET'])
 @authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
 def personal_recommendations(request):
