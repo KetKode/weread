@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
-from rest_framework.authentication import SessionAuthentication
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -44,7 +44,7 @@ def recommended_books(request):
     Display recommendations for a not logged-in user
     """
 
-    books = list (Book.objects.all())
+    books = list(Book.objects.all())
     recommended_books = random.sample(books, 10)
     book_serializer = BookSerializer(recommended_books, many=True)
 
@@ -52,7 +52,7 @@ def recommended_books(request):
 
 
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication])
+@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def personal_recommendations(request):
     """
@@ -69,8 +69,8 @@ def personal_recommendations(request):
         book_serializer = BookSerializer(recommended_books, many=True)
 
         response_data = {
-            "recommended_books": book_serializer.data,
-            "profile_serializer": profile_serializer.data
+            "profile_data": profile_serializer.data,
+            "recommended_books": book_serializer.data
             }
         return Response(response_data)
 
@@ -80,14 +80,14 @@ def personal_recommendations(request):
         book_serializer = BookSerializer(recommended_books, many=True)
 
         response_data = {
-            "recommended_books": book_serializer.data,
-            "profile_serializer": profile_serializer.data
+            "profile_data": profile_serializer.data,
+            "recommended_books": book_serializer.data
             }
         return Response(response_data)
 
 
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication])
+@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def friends_recommendations(request):
     """
@@ -136,7 +136,7 @@ def show_lucky_book(request):
 
 
 @api_view(['GET', 'POST'])
-@authentication_classes([SessionAuthentication])
+@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def like_book(request, pk):
     """
