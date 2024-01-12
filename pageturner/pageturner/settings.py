@@ -44,8 +44,7 @@ INSTALLED_APPS = [
     'reviews',
     'members',
     'api',
-    # third-party
-    'widget_tweaks',
+    # third-part
     'django_extensions',
     'import_export',
     'django_filters',
@@ -56,6 +55,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'dj_rest_auth.registration',
+    'corsheaders',
     ]
 
 ACCOUNT_EMAIL_VERIFICATION = "none"
@@ -68,7 +68,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware'
+    'allauth.account.middleware.AccountMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'pageturner.urls'
@@ -103,9 +105,9 @@ WSGI_APPLICATION = 'pageturner.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'weread_books_db',
+        'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': '19092810',
+        'PASSWORD': '1990',
         'HOST': 'localhost',
         'PORT': '5432'
     }
@@ -168,11 +170,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         ],
     }
-
-
-
-
-
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # Разрешить доступ для React-приложения
+]
 
 
 
