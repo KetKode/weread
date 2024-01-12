@@ -32,6 +32,7 @@ class Book(models.Model):
     cover_url = models.URLField(null=True, blank=True)
     summary = models.CharField(max_length=5000, help_text="Summary of the book", blank=True, null=True)
     main_genre = models.CharField(max_length=20, help_text="Main genre of the book", blank=True, null=True)
+    secondary_genre = models.CharField (max_length=50, help_text="Secondary genre of the book", blank=True, null=True)
     genres = models.CharField(max_length=1000, help_text="Genres of the book (tags)", null=True, blank=True)
     number_of_pages = models.IntegerField(help_text="Number of pages in the book", blank=True, null=True)
     time = models.CharField(max_length=30, help_text="Time to finish the book", blank=True, null=True)
@@ -46,7 +47,6 @@ class Book(models.Model):
     main_age = models.CharField(max_length=20, help_text="Main age of the book", blank=True, null=True)
     best_books_of_2023 = models.CharField(max_length=3, choices=BEST_BOOK_OF_2023_CHOICES, default="No")
     country = models.CharField(max_length=50, help_text="Country associated with the book", blank=True, null=True)
-    secondary_genre = models.CharField(max_length=50, help_text="Secondary genre of the book", blank=True, null=True)
     part_of_series = models.CharField(max_length=200, help_text="Part of book series", blank=True, null=True)
     def __str__(self):
         return f"{self.title} / {self.author} / {self.main_genre}  / {self.year}"

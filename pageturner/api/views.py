@@ -138,16 +138,16 @@ def show_lucky_book(request):
 @api_view(['GET', 'POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def like_book(request, pk):
+def bookmark_book(request, pk):
     """
-    Like / unlike a book
+    Bookmark a book
     """
     book = get_object_or_404(Book, id=pk)
     book_serializer = BookSerializer(book)
-    if book.liked_books.filter(id=request.user.id):
-        book.liked_books.remove(request.user.profile)
+    if book.bookmarks.filter(id=request.user.id):
+        book.bookmarks.remove(request.user.profile)
     else:
-        book.liked_books.add(request.user.profile)
+        book.bookmarks.add(request.user.profile)
     return Response(book_serializer.data)
 
 

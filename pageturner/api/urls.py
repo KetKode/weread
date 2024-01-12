@@ -13,7 +13,7 @@ urlpatterns = [
     path('personal_recommendations/', personal_recommendations, name="personal_recommendations_api"),
     path('friends_recommendations/', friends_recommendations, name="friends_recommendations_api"),
     path('show_lucky_book', show_lucky_book, name="show_lucky_book_api"),
-    path('like_book/<int:pk>', like_book, name="like_book_api"),
+    path('bookmark_book/<int:pk>', bookmark_book, name="bookmark_book_api"),
     path('book_collections/', BookCollections.as_view(), name="book_collections_api"),
     path('book_collections/<int:pk>', show_book_collection, name="show_book_collection_api")
     ]
