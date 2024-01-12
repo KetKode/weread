@@ -45,9 +45,11 @@ class Book(models.Model):
     age = models.CharField(max_length=100, help_text="Age of book's audience", blank=True, null=True)
     main_age = models.CharField(max_length=20, help_text="Main age of the book", blank=True, null=True)
     best_books_of_2023 = models.CharField(max_length=3, choices=BEST_BOOK_OF_2023_CHOICES, default="No")
-
+    country = models.CharField(max_length=50, help_text="Country associated with the book", blank=True, null=True)
+    secondary_genre = models.CharField(max_length=50, help_text="Secondary genre of the book", blank=True, null=True)
+    part_of_series = models.CharField(max_length=200, help_text="Part of book series", blank=True, null=True)
     def __str__(self):
-        return f"{self.title} / {self.author} / {self.main_genre} / {self.best_books_of_2023} / {self.year}"
+        return f"{self.title} / {self.author} / {self.main_genre}  / {self.year}"
 
     def get_genres_list(self):
         return [genre.strip() for genre in self.genres.split(',')]

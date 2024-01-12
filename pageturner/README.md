@@ -6,7 +6,10 @@ python3 -m pip --version
 ```
 - Install all dependencies 
 ``` 
-  pip install –-user -r requirements.txt
+pip install –-user -r requirements.txt
+```
+```
+cd pageturner
 ```
 - Run server
 ``` ./manage.py runserver ```
