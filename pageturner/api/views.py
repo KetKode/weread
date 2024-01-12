@@ -173,5 +173,57 @@ def show_book_collection(request, pk):
     return Response(collection_serializer.data)
 
 
+@api_view(['GET', 'POST'])
+def book_search(request):
+    # queryset = Book.objects.all()
+    # main_genres = Book.objects.values_list('main_genre', flat=True).distinct().order_by('main_genre')
+    # main_age = Book.objects.exclude(main_age__isnull=True).exclude(main_age='').values_list
+    # ('main_age', flat=True).distinct()
+    # language = Book.objects.values_list('language', flat=True).distinct()
+    # book_lists = BookCollection.objects.values_list('name', flat=True).distinct().order_by('name')
+    # format_book = Book.objects.values_list('format_book', flat=True).distinct()
+    # year = Book.objects.values_list('year', flat=True).distinct()
+
+    # Get the search query and selected genres
+    search_text = request.GET.get("search_text") or request.POST.get("search_text")
+    selected_genres = request.GET.getlist("selected_genres")
+    selected_age = request.GET.getlist("selected_age")
+    selected_book_lists = request.GET.getlist("selected_book_lists")
+    selected_format = request.GET.getlist("selected_format")
+    selected_language = request.GET.getlist("selected_language")
+    year_from = request.GET.get("year_from")
+    year_to = request.GET.get("year_to")
+
+    combined_filters = Q()
+
+    if search_text:
+        combined_filters &= (Q(title__icontains=search_text) | Q(author__name__icontains=search_text) |
+                             Q(isbn__contains=search_text)
+        )
+
+    if selected_genres:
+        combined_filters &= Q(main_genre__in=selected_genres)
+
+    if selected_age:
+        combined_filters &= Q(main_age__in=selected_age)
+
+    if selected_book_lists:
+        combined_filters &= Q(book_lists__name__in=selected_book_lists)
+
+    if selected_format:
+        combined_filters &= Q(format_book__in=selected_format)
+
+    if selected_language:
+        combined_filters &= Q(language__in=selected_language)
+
+    if year_from and year_to:
+        combined_filters &= Q(year__range=[year_from, year_to])
+
+        # Apply the combined filters to the queryset
+    books = Book.objects.filter(combined_filters)
+    book_serializer = BookSerializer(books, many=True)
+
+    return Response(book_serializer.data)
+
 
 
