@@ -1,15 +1,20 @@
-from rest_framework.decorators import api_view, permission_classes, authentication_classes
+import random
+
+from django.db.models import Q
+from django.http import Http404
+from django.shortcuts import get_object_or_404
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.http import Http404
+
 from .serializers import BookSerializer, ProfileSerializer, BookCollectionSerializer
-from reviews.models import Book, BookCollection
 from members.models import Profile
-from django.db.models import Q
-from django.shortcuts import get_object_or_404
-import random
+from reviews.models import Book, BookCollection
+
+from django.conf import settings
+from django.core.mail import send_mail
 
 
 class BookList(APIView):
@@ -225,5 +230,48 @@ def book_search(request):
 
     return Response(book_serializer.data)
 
+
+@api_view(['GET', 'POST'])
+def email_subscription(request):
+
+    subject = "Welcome to WeRead - Your Literary Adventure Begins!"
+
+    message = """Dear ... ,
+
+        Welcome to WeRead, the ultimate destination for book enthusiasts like yourself! We are thrilled to 
+        have you join our community of avid readers who share a passion for the written word.
+
+        At WeRead, we believe in the transformative power of books, and we're excited to embark on this 
+        literary journey with you. Whether you're a seasoned bookworm or just starting to explore the world of 
+        literature, WeRead is here to enhance your reading experience.
+
+        Here's what you can expect from WeRead:
+
+        Personalized Recommendations: Our advanced recommendation system tailors book suggestions based on 
+        your preferences and reading history, ensuring you discover new titles that resonate with your tastes.
+
+        Engaging Book Discussions: Connect with fellow readers through vibrant discussions, book clubs, and 
+        community forums. Share your thoughts, insights, and favorite passages as we build a thriving 
+        literary community together.
+
+        Exclusive Content: Stay updated with the latest literary news, author interviews, and 
+        exclusive content curated just for you. We're committed to keeping you informed and 
+        inspired on your reading journey.
+
+        To get started, simply log in to your WeRead account and explore the wide array of features 
+        designed to make your reading experience enjoyable and enriching.
+
+        Thank you for choosing WeRead as your literary companion. We look forward to being a part 
+        of your reading adventures!
+
+        Happy reading!
+
+        Best regards,
+        The WeRead Team
+        """
+    recipients = ["ketkoder@gmail.com", ]
+    send_mail(subject=subject, message=message, from_email=settings.EMAIL_HOST_USER, recipient_list=recipients)
+
+    return Response({'message': 'Email subscription successful'})
 
 

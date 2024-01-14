@@ -1,6 +1,6 @@
-from rest_framework import serializers, permissions
-from reviews.models import Book, BookCollection, Author
 from members.models import Profile
+from rest_framework import serializers
+from reviews.models import Book, BookCollection, Author
 
 
 class AuthorSerializer(serializers.ModelSerializer):

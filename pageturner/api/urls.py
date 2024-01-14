@@ -1,8 +1,6 @@
 from django.urls import include, path
-from rest_framework import routers
-from rest_framework.urlpatterns import format_suffix_patterns
-from .views import *
 
+from .views import *
 
 urlpatterns = [
     # login, logout, registration
@@ -27,7 +25,9 @@ urlpatterns = [
     # show one book collection on a page
     path('book_collections/<int:pk>/', show_book_collection, name="show_book_collection_api"),
     # book search
-    path('book_search/', book_search, name="book_search")
+    path('book_search/', book_search, name="book_search"),
+    # email subscription
+    path('email_subscription/', email_subscription, name="email_subscription")
     ]
 
 urlpatterns += [
