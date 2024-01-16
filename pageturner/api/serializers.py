@@ -1,5 +1,6 @@
-from members.models import Profile
 from rest_framework import serializers
+
+from members.models import Profile
 from reviews.models import Book, BookCollection, Author
 
 

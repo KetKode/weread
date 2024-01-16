@@ -1,5 +1,7 @@
 import random
 
+from django.conf import settings
+from django.core.mail import send_mail
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404
@@ -9,12 +11,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import BookSerializer, ProfileSerializer, BookCollectionSerializer
 from members.models import Profile
 from reviews.models import Book, BookCollection
-
-from django.conf import settings
-from django.core.mail import send_mail
+from .serializers import BookSerializer, ProfileSerializer, BookCollectionSerializer
 
 
 class BookList(APIView):

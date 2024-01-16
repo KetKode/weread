@@ -4,9 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
+
 from members.models import Profile, Snippet, SharedSnippet, Comment
 from reviews.models import Review, SharedReview, Book
-
 from .forms import CustomAuthenticationForm
 from .forms import RegisterForm, ProfilePicForm, CommentForm, SnippetUpdate, CommentUpdate
 
