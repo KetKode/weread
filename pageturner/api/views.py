@@ -245,24 +245,7 @@ def email_subscription(request):
         literary journey with you. Whether you're a seasoned bookworm or just starting to explore the world of 
         literature, WeRead is here to enhance your reading experience.
 
-        Here's what you can expect from WeRead:
-
-        Personalized Recommendations: Our advanced recommendation system tailors book suggestions based on 
-        your preferences and reading history, ensuring you discover new titles that resonate with your tastes.
-
-        Engaging Book Discussions: Connect with fellow readers through vibrant discussions, book clubs, and 
-        community forums. Share your thoughts, insights, and favorite passages as we build a thriving 
-        literary community together.
-
-        Exclusive Content: Stay updated with the latest literary news, author interviews, and 
-        exclusive content curated just for you. We're committed to keeping you informed and 
-        inspired on your reading journey.
-
-        To get started, simply log in to your WeRead account and explore the wide array of features 
-        designed to make your reading experience enjoyable and enriching.
-
-        Thank you for choosing WeRead as your literary companion. We look forward to being a part 
-        of your reading adventures!
+        Thank you for choosing WeRead as your literary companion. We look forward to being a part of your reading adventures!
 
         Happy reading!
 

@@ -26,12 +26,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-+%t%l#cb562))qpujdb)*i*7z0x$qjq&!cvb%@lz74*k#ua8)9'
+SECRET_KEY = str(os.getenv("SECRET_KEY"))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -112,16 +112,22 @@ WSGI_APPLICATION = 'pageturner.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+import dj_database_url
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'weread_books_db',
-        'USER': 'postgres',
-        'PASSWORD': '19092810',
-        'HOST': 'localhost',
-        'PORT': '5432'
+    'default': dj_database_url.parse(str(os.getenv("DATABASE_URL")))
     }
-}
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'weread_books_db',
+#         'USER': 'postgres',
+#         'PASSWORD': '19092810',
+#         'HOST': 'localhost',
+#         'PORT': '5432'
+#     }
+# }
 
 
 # Password validation
