@@ -186,10 +186,7 @@ REST_FRAMEWORK = {
         ],
     }
 
-
-
-
-
+CORS_ALLOWED_ORIGINS = ["*"]
 
 
 
