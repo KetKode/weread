@@ -10,7 +10,7 @@
 
 
   {% for genre in unique_genres_list %}
-<a href="#" class="badge badge-pill" style="color: #ffffff; background-color: {{ tag|random_color }};">{{ genre }}</a>
+<a href="#" class="badge badge-pill" style="color: #ffffff; background-color: {{ genre|random_color }};">{{ genre }}</a>
   {% empty %}
   <li>No genres available</li>
 {% endfor %}

@@ -1,6 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import User
-import PIL
+from django.db import models
 
 
 class Publisher(models.Model):
@@ -32,6 +31,7 @@ class Book(models.Model):
     cover_url = models.URLField(null=True, blank=True)
     summary = models.CharField(max_length=5000, help_text="Summary of the book", blank=True, null=True)
     main_genre = models.CharField(max_length=20, help_text="Main genre of the book", blank=True, null=True)
+    secondary_genre = models.CharField (max_length=50, help_text="Secondary genre of the book", blank=True, null=True)
     genres = models.CharField(max_length=1000, help_text="Genres of the book (tags)", null=True, blank=True)
     number_of_pages = models.IntegerField(help_text="Number of pages in the book", blank=True, null=True)
     time = models.CharField(max_length=30, help_text="Time to finish the book", blank=True, null=True)
@@ -45,9 +45,10 @@ class Book(models.Model):
     age = models.CharField(max_length=100, help_text="Age of book's audience", blank=True, null=True)
     main_age = models.CharField(max_length=20, help_text="Main age of the book", blank=True, null=True)
     best_books_of_2023 = models.CharField(max_length=3, choices=BEST_BOOK_OF_2023_CHOICES, default="No")
-
+    country = models.CharField(max_length=50, help_text="Country associated with the book", blank=True, null=True)
+    part_of_series = models.CharField(max_length=200, help_text="Part of book series", blank=True, null=True)
     def __str__(self):
-        return f"{self.title} / {self.author} / {self.main_genre} / {self.best_books_of_2023} / {self.year}"
+        return f"{self.title} / {self.author} / {self.main_genre}  / {self.year}"
 
     def get_genres_list(self):
         return [genre.strip() for genre in self.genres.split(',')]

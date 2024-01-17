@@ -1,9 +1,18 @@
-from rest_framework import serializers, permissions
-from reviews.models import Book, BookCollection
+from rest_framework import serializers
+
 from members.models import Profile
+from reviews.models import Book, BookCollection, Author
+
+
+class AuthorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Author
+        fields = "__all__"
 
 
 class BookSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer(many=False, read_only=True)
+
     class Meta:
         model = Book
         fields = "__all__"

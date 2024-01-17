@@ -1,15 +1,14 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render, redirect
+
 from members.models import Profile, Snippet, SharedSnippet, Comment
 from reviews.models import Review, SharedReview, Book
-from .utils import generate_avatar
-from django.contrib.auth.models import User
-from .forms import RegisterForm, ProfilePicForm, CommentForm, SnippetUpdate, CommentUpdate
-from django.shortcuts import get_object_or_404
 from .forms import CustomAuthenticationForm
-from django.contrib.auth.decorators import login_required
+from .forms import RegisterForm, ProfilePicForm, CommentForm, SnippetUpdate, CommentUpdate
 
 
 def login_user(request):

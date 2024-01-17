@@ -1,21 +1,21 @@
-from django.shortcuts import render, redirect, reverse
-from .models import Book, Author, Review, SharedReview, BookCollection
-from members.models import Snippet, Profile
-from django.contrib.auth.models import User
-from django.db.models import Q
-from django.views.generic.list import ListView
-from django.views.generic.detail import DetailView
-from django.views.generic import CreateView
-from django.contrib.auth.decorators import login_required
-from members.forms import SnippetForm, CommentForm
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .forms import ReviewCommentForm
-from django.contrib import messages
-from .forms import ReviewForm
-from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy
 import random
-from .filters import BookFilter
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
+from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
+
+from members.forms import SnippetForm, CommentForm
+from members.models import Snippet, Profile
+from .forms import ReviewCommentForm
+from .forms import ReviewForm
+from .models import Book, Review, SharedReview, BookCollection
 
 
 def welcome_page(request):

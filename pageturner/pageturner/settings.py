@@ -170,9 +170,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         ],
     }
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Разрешить доступ для React-приложения
-]
+CORS_ALLOW_ALL_ORIGINS = True
+
 
 
 

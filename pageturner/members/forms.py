@@ -1,9 +1,9 @@
 from django import forms
-from .models import Snippet, Profile, Comment
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import AuthenticationForm
-from django.views.generic import UpdateView
+
+from .models import Snippet, Profile, Comment
 
 
 class CustomAuthenticationForm(AuthenticationForm):
