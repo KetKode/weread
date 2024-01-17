@@ -188,5 +188,17 @@ REST_FRAMEWORK = {
 
 CORS_ALLOWED_ORIGINS = ["*"]
 
+CORS_ALLOW_HEADERS = [
+    'access-control-allow-origin',
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    ]
 
 
