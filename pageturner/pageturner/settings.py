@@ -10,10 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-import os
 from pathlib import Path
-
+import os
 from dotenv import load_dotenv
+
+import dj_database_url
 
 load_dotenv()
 
@@ -48,8 +49,7 @@ INSTALLED_APPS = [
     'reviews',
     'members',
     'api',
-    # third-party
-    'widget_tweaks',
+    # third-part
     'django_extensions',
     'import_export',
     'django_filters',
@@ -60,21 +60,22 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'dj_rest_auth.registration',
-    'corsheaders'
+    'corsheaders',
     ]
 
 ACCOUNT_EMAIL_VERIFICATION = "none"
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware'
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'pageturner.urls'
@@ -96,12 +97,7 @@ TEMPLATES = [
     },
 ]
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
-EMAIL_HOST_USER = "e5b608cf07d734"
-EMAIL_HOST_PASSWORD = "adb7463379f49a"
-EMAIL_PORT = '2525'
-
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 SITE_ID = 1
 
@@ -111,22 +107,9 @@ WSGI_APPLICATION = 'pageturner.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-import dj_database_url
-
 DATABASES = {
     'default': dj_database_url.parse(str(os.getenv("DATABASE_URL")))
-    }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'weread_books_db',
-#         'USER': 'postgres',
-#         'PASSWORD': '19092810',
-#         'HOST': 'localhost',
-#         'PORT': '5432'
-#     }
-# }
+}
 
 
 # Password validation
@@ -185,6 +168,11 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         ],
     }
+<<<<<<< HEAD
+CORS_ALLOW_ALL_ORIGINS = True
+
+
+=======
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -200,5 +188,6 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
     ]
+>>>>>>> 29b1739bc5c1bf269289e648eed7416e60139cd3
 
 
