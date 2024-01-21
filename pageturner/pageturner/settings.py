@@ -168,11 +168,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         ],
     }
-<<<<<<< HEAD
-CORS_ALLOW_ALL_ORIGINS = True
-
-
-=======
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -188,6 +183,5 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
     ]
->>>>>>> 29b1739bc5c1bf269289e648eed7416e60139cd3
 
 
