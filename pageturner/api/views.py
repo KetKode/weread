@@ -251,7 +251,7 @@ def email_subscription(request):
         Best regards,
         The WeRead Team
         """
-    recipients = ["ketkoder@gmail.com", ]
+    recipients = [request.data, ]
     send_mail(subject=subject, message=message, from_email=settings.EMAIL_HOST_USER, recipient_list=recipients)
 
     return Response({'message': 'Email subscription successful'})
