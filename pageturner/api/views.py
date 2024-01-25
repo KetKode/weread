@@ -13,7 +13,7 @@ from rest_framework.views import APIView
 
 from members.models import Profile
 from reviews.models import Book, BookCollection
-from .serializers import BookSerializer, ProfileSerializer, BookCollectionSerializer
+from .serializers import BookSerializer, ProfileSerializer, BookCollectionSerializer, EmailSubscriptionSerializer
 
 
 class BookList(APIView):
@@ -233,27 +233,38 @@ def book_search(request):
 @api_view(['GET', 'POST'])
 def email_subscription(request):
 
-    subject = "Welcome to WeRead - Your Literary Adventure Begins!"
+    if request.method == "POST":
+        serializer = EmailSubscriptionSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
 
-    message = """Dear ... ,
+            subject = "Welcome to WeRead - Your Literary Adventure Begins!"
 
-        Welcome to WeRead, the ultimate destination for book enthusiasts like yourself! We are thrilled to 
-        have you join our community of avid readers who share a passion for the written word.
+            message = """Dear ... ,
+        
+                Welcome to WeRead, the ultimate destination for book enthusiasts like yourself! We are thrilled to 
+                have you join our community of avid readers who share a passion for the written word.
+        
+                At WeRead, we believe in the transformative power of books, and we're excited to embark on this 
+                literary journey with you. Whether you're a seasoned bookworm or just starting to explore the world of 
+                literature, WeRead is here to enhance your reading experience.
+        
+                Thank you for choosing WeRead as your literary companion. We look forward to being a part of your reading adventures!
+        
+                Happy reading!
+        
+                Best regards,
+                The WeRead Team
+                """
 
-        At WeRead, we believe in the transformative power of books, and we're excited to embark on this 
-        literary journey with you. Whether you're a seasoned bookworm or just starting to explore the world of 
-        literature, WeRead is here to enhance your reading experience.
+            recipients = [email, ]
 
-        Thank you for choosing WeRead as your literary companion. We look forward to being a part of your reading adventures!
+            send_mail(subject=subject, message=message, from_email=settings.EMAIL_HOST_USER, recipient_list=recipients)
 
-        Happy reading!
+            return Response({'message': 'Email subscription successful'})
+        else:
+            return Response({'error': 'Invalid data provided'}, status=400)
 
-        Best regards,
-        The WeRead Team
-        """
-    recipients = [request.data, ]
-    send_mail(subject=subject, message=message, from_email=settings.EMAIL_HOST_USER, recipient_list=recipients)
-
-    return Response({'message': 'Email subscription successful'})
-
-
+    elif request.method == 'GET':
+        # Handle GET request if needed
+        return Response({'message': 'GET request received'})

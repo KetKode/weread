@@ -34,3 +34,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ["id", "user", "books_bookmarked", "books_read", "books_liked"]
+
+
+class EmailSubscriptionSerializer(serializers.Serializer):
+    email = serializers.EmailField()
