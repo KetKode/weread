@@ -45,6 +45,13 @@ def create_profile(sender, instance, created, **kwargs):
         instance.profile.save()
 
 
+class EmailSubscription(models.Model):
+    email = models.EmailField(null=False, blank=False)
+
+    def __str__(self):
+        return f"{self.email}"
+
+
 class Snippet(models.Model):
     user = models.ForeignKey(User, related_name="snippets", on_delete=models.CASCADE)
     body = models.CharField(max_length=300)

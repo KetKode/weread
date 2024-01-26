@@ -2,6 +2,7 @@ import random
 
 from django.conf import settings
 from django.core.mail import send_mail
+from django.db import IntegrityError
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404
@@ -11,7 +12,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from members.models import Profile
+from members.models import Profile, EmailSubscription
 from reviews.models import Book, BookCollection
 from .serializers import BookSerializer, ProfileSerializer, BookCollectionSerializer, EmailSubscriptionSerializer
 
@@ -237,6 +238,12 @@ def email_subscription(request):
         serializer = EmailSubscriptionSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data['email']
+            try:
+                user, created = EmailSubscription.objects.get_or_create(email=email)
+                if not created:
+                    return Response({'error': 'Email already subscribed'}, status=400)
+            except IntegrityError:
+                return Response({'error': 'Error creating subscription'}, status=500)
 
             subject = "Welcome to WeRead - Your Literary Adventure Begins!"
 
