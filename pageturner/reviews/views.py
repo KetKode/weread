@@ -302,6 +302,3 @@ def genre_selection(request):
     unique_genres_list = list(set(genres_list))
 
     return render(request, "reviews/genres_list.html", {"unique_genres_list": unique_genres_list})
-
-
-

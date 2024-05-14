@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'dj_rest_auth.registration',
     'corsheaders',
+    'drf_spectacular'
     ]
 
 ACCOUNT_EMAIL_VERIFICATION = "none"
@@ -108,7 +109,14 @@ WSGI_APPLICATION = 'pageturner.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.parse(str(os.getenv("DATABASE_URL")))
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": str(os.getenv("POSTGRESQL_DBNAME")),
+        "USER": str(os.getenv("POSTGRESQL_USER")),
+        "PASSWORD": str(os.getenv("POSTGRESQL_PASSWORD")),
+        "HOST": str(os.getenv("POSTGRESQL_HOST")),
+        "PORT": str(os.getenv("POSTGRESQL_PORT")),
+    }
 }
 
 
@@ -168,7 +176,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
         ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     }
+
 
 CORS_ALLOW_ALL_ORIGINS = True
 

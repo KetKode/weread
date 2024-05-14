@@ -19,7 +19,6 @@ class Author(models.Model):
 
 
 class Book(models.Model):
-    """A published book"""
 
     BEST_BOOK_OF_2023_CHOICES = [("No", "No"),
                                  ("Yes", "Yes")]
@@ -109,6 +108,11 @@ class ReviewComment(models.Model):
 
 
 class BookImport(models.Model):
+    csv_file = models.FileField(upload_to='uploads/')
+    date_added = models.DateTimeField(auto_now_add=True)
+
+
+class AuthorImport(models.Model):
     csv_file = models.FileField(upload_to='uploads/')
     date_added = models.DateTimeField(auto_now_add=True)
 

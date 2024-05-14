@@ -24,12 +24,22 @@ class BookAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_filter = ["title", "author", "year", "main_genre", "age", "best_books_of_2023"]
 
 
+class AuthorResource(resources.ModelResource):
+    class Meta:
+        model = Author
+
+
+class AuthorAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    resource_classes = [AuthorResource]
+    list_filter = ["name"]
+
+
 class BookCollectionAdmin(admin.ModelAdmin):
     list_filter = ["name", "books__title", "books__author", "books__year", "books__main_genre", "books__age", "books__best_books_of_2023"]
 
 
 admin.site.register(Publisher)
 admin.site.register(Book, BookAdmin)
-admin.site.register(Author)
+admin.site.register(Author, AuthorAdmin)
 admin.site.register(Review)
 admin.site.register(BookCollection, BookCollectionAdmin)

@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Review, BookImport, ReviewComment
+from .models import Review, BookImport, ReviewComment, AuthorImport
 
 
 class BookSearchForm(forms.Form):
@@ -10,6 +10,12 @@ class BookSearchForm(forms.Form):
 class BookImportForm(forms.ModelForm):
     class Meta:
         model = BookImport
+        fields = ('csv_file',)
+
+
+class AuthorImportForm(forms.ModelForm):
+    class Meta:
+        model = AuthorImport
         fields = ('csv_file',)
 
 
