@@ -26,22 +26,30 @@ def welcome_page(request):
 
     if request.user.is_authenticated:
 
-        liked_books = Book.objects.filter(Q(liked_books=True) & Q(main_genre__isnull=False))
+        liked_books = Book.objects.filter(
+            Q(liked_books=True) & Q(main_genre__isnull=False)
+        )
 
         friends = Profile.objects.filter(followed_by=request.user.profile)
         random_friend = random.choice(friends)
         random_friends_liked_books = Book.objects.filter(liked_books=random_friend)
 
         if random_friends_liked_books:
-            main_random_friends_liked_genres = [book.main_genre for book in random_friends_liked_books]
-            random_friends_recommended_books = Book.objects.filter(Q(main_genre__in=main_random_friends_liked_genres)).order_by('?')
+            main_random_friends_liked_genres = [
+                book.main_genre for book in random_friends_liked_books
+            ]
+            random_friends_recommended_books = Book.objects.filter(
+                Q(main_genre__in=main_random_friends_liked_genres)
+            ).order_by("?")
             random_friends_recommendations = random_friends_recommended_books[:6]
         else:
             random_friends_recommendations = random.sample(books, 6)
 
         if liked_books:
             main_liked_genres = [book.main_genre for book in liked_books]
-            recommended_books = Book.objects.filter(Q(main_genre__in=main_liked_genres)).order_by('?')
+            recommended_books = Book.objects.filter(
+                Q(main_genre__in=main_liked_genres)
+            ).order_by("?")
             personal_recommendations = recommended_books[:6]
 
         else:
@@ -62,20 +70,35 @@ def welcome_page(request):
                 return redirect("welcome_page")
 
         snippets = Snippet.objects.all().order_by("-created_at")
-        return render(request, "reviews/base.html", {"snippets": snippets, "form": form, "random_books": random_books,
-                                                     "book_collections": book_collections,
-                                                     "personal_recommendations": personal_recommendations,
-                                                     # "friends": friends,
-                                                     # "random_friend": random_friend,
-                                                     "random_friends_recommendations": random_friends_recommendations})
+        return render(
+            request,
+            "reviews/base.html",
+            {
+                "snippets": snippets,
+                "form": form,
+                "random_books": random_books,
+                "book_collections": book_collections,
+                "personal_recommendations": personal_recommendations,
+                # "friends": friends,
+                # "random_friend": random_friend,
+                "random_friends_recommendations": random_friends_recommendations,
+            },
+        )
     else:
         snippets = Snippet.objects.all().order_by("-created_at")
-        return render(request, "reviews/base.html", {"snippets": snippets, "random_books": random_books,
-                                                     "book_collections": book_collections,
-                                                     "personal_recommendations": personal_recommendations,
-                                                     # "friends": friends,
-                                                     # "random_friend": random_friend,
-                                                     "random_friends_recommendations": random_friends_recommendations})
+        return render(
+            request,
+            "reviews/base.html",
+            {
+                "snippets": snippets,
+                "random_books": random_books,
+                "book_collections": book_collections,
+                "personal_recommendations": personal_recommendations,
+                # "friends": friends,
+                # "random_friend": random_friend,
+                "random_friends_recommendations": random_friends_recommendations,
+            },
+        )
 
 
 def show_lucky_book(request):
@@ -96,17 +119,30 @@ def like_book(request, pk):
 
     else:
         messages.success(request, "You must be logged in to view this page.")
-        return redirect('welcome_page')
+        return redirect("welcome_page")
 
 
 def book_search(request):
     queryset = Book.objects.all()
-    main_genres = Book.objects.values_list('main_genre', flat=True).distinct().order_by('main_genre')
-    main_age = Book.objects.exclude(main_age__isnull=True).exclude(main_age='').values_list('main_age', flat=True).distinct()
-    language = Book.objects.values_list('language', flat=True).distinct()
-    book_lists = BookCollection.objects.values_list('name', flat=True).distinct().order_by('name')
-    format_book = Book.objects.values_list('format_book', flat=True).distinct()
-    year = Book.objects.values_list('year', flat=True).distinct()
+    main_genres = (
+        Book.objects.values_list("main_genre", flat=True)
+        .distinct()
+        .order_by("main_genre")
+    )
+    main_age = (
+        Book.objects.exclude(main_age__isnull=True)
+        .exclude(main_age="")
+        .values_list("main_age", flat=True)
+        .distinct()
+    )
+    language = Book.objects.values_list("language", flat=True).distinct()
+    book_lists = (
+        BookCollection.objects.values_list("name", flat=True)
+        .distinct()
+        .order_by("name")
+    )
+    format_book = Book.objects.values_list("format_book", flat=True).distinct()
+    year = Book.objects.values_list("year", flat=True).distinct()
 
     # Get the search query and selected genres
     searched = request.GET.get("searched") or request.POST.get("searched")
@@ -120,9 +156,17 @@ def book_search(request):
 
     # Apply filters based on search and selected genres
     if searched and selected_genres:
-        books = Book.objects.filter(Q(title__icontains=searched) & Q(author__name__icontains=searched) & Q(main_genre__in=selected_genres))
+        books = Book.objects.filter(
+            Q(title__icontains=searched)
+            & Q(author__name__icontains=searched)
+            & Q(main_genre__in=selected_genres)
+        )
     elif searched:
-        books = Book.objects.filter(Q(title__icontains=searched) | Q(author__name__icontains=searched) |Q(isbn__contains=searched))
+        books = Book.objects.filter(
+            Q(title__icontains=searched)
+            | Q(author__name__icontains=searched)
+            | Q(isbn__contains=searched)
+        )
     elif selected_genres:
         books = Book.objects.filter(main_genre__in=selected_genres)
     elif selected_age:
@@ -141,32 +185,34 @@ def book_search(request):
     return render(
         request,
         "reviews/search_results.html",
-        {"searched": searched,
-         "books": books,
-         "main_genres": main_genres,
-         "selected_genres": selected_genres,
-         "main_age": main_age,
-         "selected_age": selected_age,
-         "language": language,
-         "selected_language": selected_language,
-         "format_book": format_book,
-         "selected_format": selected_format,
-         "year": year,
-         "year_from": year_from,
-         "year_to": year_to,
-         "book_lists": book_lists,
-         "selected_book_lists": selected_book_lists},
-        )
+        {
+            "searched": searched,
+            "books": books,
+            "main_genres": main_genres,
+            "selected_genres": selected_genres,
+            "main_age": main_age,
+            "selected_age": selected_age,
+            "language": language,
+            "selected_language": selected_language,
+            "format_book": format_book,
+            "selected_format": selected_format,
+            "year": year,
+            "year_from": year_from,
+            "year_to": year_to,
+            "book_lists": book_lists,
+            "selected_book_lists": selected_book_lists,
+        },
+    )
 
 
 class BookList(ListView):
     model = Book
-    template_name = 'reviews/book_list.html'
+    template_name = "reviews/book_list.html"
     context_object_name = "book_list"
     paginate_by = 10
 
     def get_queryset(self):
-        return Book.objects.order_by('pk')
+        return Book.objects.order_by("pk")
 
 
 class BookDetail(DetailView):
@@ -176,11 +222,11 @@ class BookDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        book_id = self.kwargs.get('pk')
+        book_id = self.kwargs.get("pk")
         book = get_object_or_404(Book, id=book_id)
-        context['book'] = book
+        context["book"] = book
 
-        context['reviews'] = book.reviews.all()
+        context["reviews"] = book.reviews.all()
         return context
 
 
@@ -191,7 +237,7 @@ def show_book_collections(request, pk):
 
     items_per_page = 10
     paginator = Paginator(books, items_per_page)
-    page_number = request.GET.get('page')
+    page_number = request.GET.get("page")
     try:
         page = paginator.page(page_number)
     except PageNotAnInteger:
@@ -201,7 +247,11 @@ def show_book_collections(request, pk):
         # If page is out of range (e.g., 9999), deliver last page.
         page = paginator.page(paginator.num_pages)
 
-    return render(request, "reviews/book_collections.html", {"book_collection": book_collection, "books": page})
+    return render(
+        request,
+        "reviews/book_collections.html",
+        {"book_collection": book_collection, "books": page},
+    )
 
 
 def book_genres_list(request, genre):
@@ -210,10 +260,12 @@ def book_genres_list(request, genre):
 
     items_per_page = 10
     paginator = Paginator(books_with_genre, items_per_page)
-    page_number = request.GET.get('page')
+    page_number = request.GET.get("page")
     page = paginator.get_page(page_number)
 
-    return render(request, "reviews/book_genres_list.html", {'books': page, 'genre': genre})
+    return render(
+        request, "reviews/book_genres_list.html", {"books": page, "genre": genre}
+    )
 
 
 class ReviewCreateView(CreateView):
@@ -222,16 +274,16 @@ class ReviewCreateView(CreateView):
     template_name = "reviews/create_review.html"
 
     def get_success_url(self):
-        return reverse_lazy('profile', kwargs={'pk': self.request.user.pk})
+        return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
 
     def form_valid(self, form):
-        rating = self.request.POST.get('rating')
+        rating = self.request.POST.get("rating")
         if rating:
             form.instance.rating = rating
 
         form.instance.user = self.request.user
 
-        book_id = self.kwargs.get('pk')
+        book_id = self.kwargs.get("pk")
         book = get_object_or_404(Book, id=book_id)
         form.instance.book = book
 
@@ -242,9 +294,9 @@ class ReviewCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        book_id = self.kwargs.get('pk')
+        book_id = self.kwargs.get("pk")
         book = get_object_or_404(Book, id=book_id)
-        context['book'] = book
+        context["book"] = book
         return context
 
 
@@ -273,16 +325,22 @@ def review_comment(request, pk):
             return redirect(request.META.get("HTTP_REFERER"))
     else:
         form = CommentForm()
-    return render(request, "reviews/comment_review.html", {"original_review": original_review, "form": form})
+    return render(
+        request,
+        "reviews/comment_review.html",
+        {"original_review": original_review, "form": form},
+    )
 
 
 @login_required
 def review_share(request, pk):
     review = get_object_or_404(Review, id=pk)
 
-    shared_review = SharedReview.objects.create(original_review=review, user=request.user)
+    shared_review = SharedReview.objects.create(
+        original_review=review, user=request.user
+    )
 
-    return redirect('profile', pk=request.user.pk)
+    return redirect("profile", pk=request.user.pk)
 
 
 # def generate_random_dark_color():
@@ -293,12 +351,21 @@ def review_share(request, pk):
 
 
 def genre_selection(request):
-    unique_genres = Book.objects.exclude(tags=None).values_list('genres', flat=True).distinct()
+    unique_genres = (
+        Book.objects.exclude(tags=None).values_list("genres", flat=True).distinct()
+    )
 
     # Remove None values and split tags into individual genres
-    genres_list = [genre.strip() for genres in unique_genres if genres for genre in genres.split(',')]
+    genres_list = [
+        genre.strip()
+        for genres in unique_genres
+        if genres
+        for genre in genres.split(",")
+    ]
 
     # Remove duplicates by converting the list to a set and then back to a list
     unique_genres_list = list(set(genres_list))
 
-    return render(request, "reviews/genres_list.html", {"unique_genres_list": unique_genres_list})
+    return render(
+        request, "reviews/genres_list.html", {"unique_genres_list": unique_genres_list}
+    )

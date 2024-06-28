@@ -20,5 +20,4 @@ from django.urls import path
 #     path('show_lucky_book', views.show_lucky_book, name='show_lucky_book'),
 #     path('book_like/<int:pk>', views.like_book, name='like_book'),
 
-    # ]
-
+# ]

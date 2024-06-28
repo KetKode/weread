@@ -8,13 +8,15 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('reviews', '0012_book_main_age'),
+        ("reviews", "0012_book_main_age"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='book',
-            name='likes',
-            field=models.ManyToManyField(blank=True, related_name='book_likes', to=settings.AUTH_USER_MODEL),
+            model_name="book",
+            name="likes",
+            field=models.ManyToManyField(
+                blank=True, related_name="book_likes", to=settings.AUTH_USER_MODEL
+            ),
         ),
     ]

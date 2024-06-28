@@ -6,14 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('reviews', '0017_remove_book_likes'),
-        ('members', '0002_alter_snippet_user'),
+        ("reviews", "0017_remove_book_likes"),
+        ("members", "0002_alter_snippet_user"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='profile',
-            name='books_liked',
-            field=models.ManyToManyField(blank=True, related_name='liked_books', to='reviews.book'),
+            model_name="profile",
+            name="books_liked",
+            field=models.ManyToManyField(
+                blank=True, related_name="liked_books", to="reviews.book"
+            ),
         ),
     ]

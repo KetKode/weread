@@ -9,9 +9,9 @@ router.register(r"books", views.BookAPIViewSet)
 
 urlpatterns = [
     # login, logout, registration
-    path('v1/', include("dj_rest_auth.urls")),
-    path('v1/registration/', include("dj_rest_auth.registration.urls")),
-    path("", include(router.urls))
+    path("v1/", include("dj_rest_auth.urls")),
+    path("v1/registration/", include("dj_rest_auth.registration.urls")),
+    path("", include(router.urls)),
     # # all books from the db
     # path('books/', BookList.as_view(), name="books_api"),
     # # one book on a page
@@ -34,8 +34,6 @@ urlpatterns = [
     # path('book_search/', book_search, name="book_search"),
     # # email subscription
     # path('email_subscription/', email_subscription, name="email_subscription")
-    ]
+]
 
-urlpatterns += [
-    path('api-auth/', include('rest_framework.urls'))
-    ]
+urlpatterns += [path("api-auth/", include("rest_framework.urls"))]

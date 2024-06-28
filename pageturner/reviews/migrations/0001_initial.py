@@ -15,75 +15,277 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Author',
+            name="Author",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(default=None, help_text='The name of the author', max_length=100)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        default=None, help_text="The name of the author", max_length=100
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Book',
+            name="Book",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(help_text='The title of the book.', max_length=70)),
-                ('rating', models.CharField(blank=True, default=0, help_text='The smaller rating of the book', max_length=50, null=True)),
-                ('url', models.URLField(default=None, help_text='Link to the book page on Goodreads', null=True)),
-                ('cover_url', models.URLField(blank=True, null=True)),
-                ('summary', models.CharField(blank=True, help_text='Summary of the book', max_length=2000, null=True)),
-                ('tags', models.CharField(blank=True, help_text='Genres of the book (tags)', max_length=1000, null=True)),
-                ('number_of_pages', models.IntegerField(blank=True, help_text='Number of pages in the book.', null=True)),
-                ('time', models.CharField(blank=True, help_text='Time to finish the book.', max_length=30, null=True)),
-                ('amazon_link', models.URLField(blank=True, help_text='Buy on Amazon.', null=True)),
-                ('audible_link', models.URLField(blank=True, help_text='Buy on Amazon.', null=True)),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='reviews.author')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(help_text="The title of the book.", max_length=70),
+                ),
+                (
+                    "rating",
+                    models.CharField(
+                        blank=True,
+                        default=0,
+                        help_text="The smaller rating of the book",
+                        max_length=50,
+                        null=True,
+                    ),
+                ),
+                (
+                    "url",
+                    models.URLField(
+                        default=None,
+                        help_text="Link to the book page on Goodreads",
+                        null=True,
+                    ),
+                ),
+                ("cover_url", models.URLField(blank=True, null=True)),
+                (
+                    "summary",
+                    models.CharField(
+                        blank=True,
+                        help_text="Summary of the book",
+                        max_length=2000,
+                        null=True,
+                    ),
+                ),
+                (
+                    "tags",
+                    models.CharField(
+                        blank=True,
+                        help_text="Genres of the book (tags)",
+                        max_length=1000,
+                        null=True,
+                    ),
+                ),
+                (
+                    "number_of_pages",
+                    models.IntegerField(
+                        blank=True, help_text="Number of pages in the book.", null=True
+                    ),
+                ),
+                (
+                    "time",
+                    models.CharField(
+                        blank=True,
+                        help_text="Time to finish the book.",
+                        max_length=30,
+                        null=True,
+                    ),
+                ),
+                (
+                    "amazon_link",
+                    models.URLField(blank=True, help_text="Buy on Amazon.", null=True),
+                ),
+                (
+                    "audible_link",
+                    models.URLField(blank=True, help_text="Buy on Amazon.", null=True),
+                ),
+                (
+                    "author",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="reviews.author"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='BookImport',
+            name="BookImport",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('csv_file', models.FileField(upload_to='uploads/')),
-                ('date_added', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("csv_file", models.FileField(upload_to="uploads/")),
+                ("date_added", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Publisher',
+            name="Publisher",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(help_text='The name of the Publisher.', max_length=50)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        help_text="The name of the Publisher.", max_length=50
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Review',
+            name="Review",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('content', models.TextField(help_text='The Review text.')),
-                ('rating', models.CharField(blank=True, help_text='The rating the reviewer has given.', max_length=10, null=True)),
-                ('date_created', models.DateTimeField(auto_now_add=True, help_text='The date and time the review was created.')),
-                ('date_edited', models.DateTimeField(help_text='The date and time this review was last edited.', null=True)),
-                ('book', models.ForeignKey(help_text='The Book that this review is for.', on_delete=django.db.models.deletion.CASCADE, related_name='reviews', to='reviews.book')),
-                ('likes', models.ManyToManyField(blank=True, default=0, related_name='review_like', to=settings.AUTH_USER_MODEL)),
-                ('written_by', models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("content", models.TextField(help_text="The Review text.")),
+                (
+                    "rating",
+                    models.CharField(
+                        blank=True,
+                        help_text="The rating the reviewer has given.",
+                        max_length=10,
+                        null=True,
+                    ),
+                ),
+                (
+                    "date_created",
+                    models.DateTimeField(
+                        auto_now_add=True,
+                        help_text="The date and time the review was created.",
+                    ),
+                ),
+                (
+                    "date_edited",
+                    models.DateTimeField(
+                        help_text="The date and time this review was last edited.",
+                        null=True,
+                    ),
+                ),
+                (
+                    "book",
+                    models.ForeignKey(
+                        help_text="The Book that this review is for.",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="reviews",
+                        to="reviews.book",
+                    ),
+                ),
+                (
+                    "likes",
+                    models.ManyToManyField(
+                        blank=True,
+                        default=0,
+                        related_name="review_like",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "written_by",
+                    models.ForeignKey(
+                        default=None,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='SharedReview',
+            name="SharedReview",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('shared_at', models.DateTimeField(auto_now_add=True)),
-                ('original_review', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='shared_review', to='reviews.review')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("shared_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "original_review",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="shared_review",
+                        to="reviews.review",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='ReviewComment',
+            name="ReviewComment",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('body', models.CharField(max_length=300)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('likes', models.ManyToManyField(blank=True, related_name='review_comment_like', to=settings.AUTH_USER_MODEL)),
-                ('review', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='commented_review', to='reviews.review')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='review_comment', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("body", models.CharField(max_length=300)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "likes",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="review_comment_like",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "review",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="commented_review",
+                        to="reviews.review",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="review_comment",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

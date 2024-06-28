@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('reviews', '0018_book_country_book_secondary_genre'),
+        ("reviews", "0018_book_country_book_secondary_genre"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='book',
-            name='part_of_series',
-            field=models.CharField(blank=True, help_text='Part of book series', max_length=200, null=True),
+            model_name="book",
+            name="part_of_series",
+            field=models.CharField(
+                blank=True, help_text="Part of book series", max_length=200, null=True
+            ),
         ),
     ]
