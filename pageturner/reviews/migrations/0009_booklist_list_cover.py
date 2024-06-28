@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('reviews', '0008_remove_booklist_book_titles_booklist_books'),
+        ("reviews", "0008_remove_booklist_book_titles_booklist_books"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='booklist',
-            name='list_cover',
-            field=models.ImageField(blank=True, null=True, upload_to='media/'),
+            model_name="booklist",
+            name="list_cover",
+            field=models.ImageField(blank=True, null=True, upload_to="media/"),
         ),
     ]

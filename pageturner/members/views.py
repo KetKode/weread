@@ -1,15 +1,20 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render, redirect
+
 from members.models import Profile, Snippet, SharedSnippet, Comment
 from reviews.models import Review, SharedReview, Book
-from .utils import generate_avatar
-from django.contrib.auth.models import User
-from .forms import RegisterForm, ProfilePicForm, CommentForm, SnippetUpdate, CommentUpdate
-from django.shortcuts import get_object_or_404
 from .forms import CustomAuthenticationForm
-from django.contrib.auth.decorators import login_required
+from .forms import (
+    RegisterForm,
+    ProfilePicForm,
+    CommentForm,
+    SnippetUpdate,
+    CommentUpdate,
+)
 
 
 def login_user(request):
@@ -28,7 +33,7 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     messages.success(request, "You have been logged out.")
-    return redirect('welcome_page')
+    return redirect("welcome_page")
 
 
 def register_user(request):
@@ -62,7 +67,7 @@ def profile_list(request):
 
     else:
         messages.success(request, "You must be logged in to view this page.")
-        return redirect('welcome_page')
+        return redirect("welcome_page")
 
 
 def unfollow(request, pk):
@@ -74,7 +79,7 @@ def unfollow(request, pk):
         return redirect(request.META.get("HTTP_REFERER"))
     else:
         messages.success(request, "You must be logged in to view this page.")
-        return redirect('welcome_page')
+        return redirect("welcome_page")
 
 
 def follow(request, pk):
@@ -86,7 +91,7 @@ def follow(request, pk):
         return redirect(request.META.get("HTTP_REFERER"))
     else:
         messages.success(request, "You must be logged in to view this page.")
-        return redirect('welcome_page')
+        return redirect("welcome_page")
 
 
 @login_required
@@ -108,7 +113,18 @@ def profile(request, pk):
 
         current_user_profile.save()
 
-    return render(request, "profiles/profile.html", {"profile": profile, "user_snippets": user_snippets, "shared_snippets": shared_snippets, "books_bookmarked": books_bookmarked, "user_reviews": user_reviews, "shared_reviews": shared_reviews})
+    return render(
+        request,
+        "profiles/profile.html",
+        {
+            "profile": profile,
+            "user_snippets": user_snippets,
+            "shared_snippets": shared_snippets,
+            "books_bookmarked": books_bookmarked,
+            "user_reviews": user_reviews,
+            "shared_reviews": shared_reviews,
+        },
+    )
 
 
 def update_user(request):
@@ -116,26 +132,32 @@ def update_user(request):
         current_user = get_object_or_404(User, id=request.user.id)
         profile_user = get_object_or_404(Profile, user__id=request.user.id)
 
-        if request.method == 'POST':
+        if request.method == "POST":
             user_form = RegisterForm(request.POST, instance=current_user)
-            profile_form = ProfilePicForm(request.POST, request.FILES, instance=profile_user)
+            profile_form = ProfilePicForm(
+                request.POST, request.FILES, instance=profile_user
+            )
 
             if user_form.is_valid() and profile_form.is_valid():
                 user_form.save()
                 profile_form.save()
                 login(request, current_user)
                 messages.success(request, "Your profile has been updated!")
-                return redirect('welcome_page')
+                return redirect("welcome_page")
             else:
                 messages.error(request, "Please correct the errors below.")
         else:
             user_form = RegisterForm(instance=current_user)
             profile_form = ProfilePicForm(instance=profile_user)
 
-        return render(request, "profiles/update_user.html", {"user_form": user_form, "profile_form": profile_form})
+        return render(
+            request,
+            "profiles/update_user.html",
+            {"user_form": user_form, "profile_form": profile_form},
+        )
     else:
         messages.success(request, "You must be logged in to view this page.")
-        return redirect('welcome_page')
+        return redirect("welcome_page")
 
 
 def snippet_like(request, pk):
@@ -150,7 +172,7 @@ def snippet_like(request, pk):
 
     else:
         messages.success(request, "You must be logged in to view this page.")
-        return redirect('welcome_page')
+        return redirect("welcome_page")
 
 
 @login_required()
@@ -171,7 +193,7 @@ def snippet_delete(request, pk):
         return redirect(request.META.get("HTTP_REFERER"))
     else:
         messages.success(request, "You must be logged in to view this page.")
-        return redirect('welcome_page')
+        return redirect("welcome_page")
 
 
 @login_required
@@ -181,24 +203,28 @@ def snippet_edit(request, pk):
     if form.is_valid():
         form.save()
         messages.success(request, "Your snippet has been successfully updated!")
-        return redirect('welcome_page')
+        return redirect("welcome_page")
     else:
         form = SnippetUpdate(instance=snippet)
-    return render(request, 'snippets/edit_snippet.html', {"form": form, "snippet": snippet})
+    return render(
+        request, "snippets/edit_snippet.html", {"form": form, "snippet": snippet}
+    )
 
 
 def snippet_share(request, pk):
     original_snippet = get_object_or_404(Snippet, id=pk)
 
-    shared_snippet = SharedSnippet.objects.create(original_snippet=original_snippet, user=request.user)
+    shared_snippet = SharedSnippet.objects.create(
+        original_snippet=original_snippet, user=request.user
+    )
 
-    return redirect('profile', pk=request.user.pk)
+    return redirect("profile", pk=request.user.pk)
 
 
 @login_required
 def snippet_comment(request, pk):
     original_snippet = get_object_or_404(Snippet, id=pk)
-    if request.method == 'POST':
+    if request.method == "POST":
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
@@ -209,7 +235,11 @@ def snippet_comment(request, pk):
             return redirect("welcome_page")
     else:
         form = CommentForm()
-    return render(request, "snippets/comment_snippet.html", {"original_snippet": original_snippet, "form": form})
+    return render(
+        request,
+        "snippets/comment_snippet.html",
+        {"original_snippet": original_snippet, "form": form},
+    )
 
 
 @login_required()
@@ -222,15 +252,21 @@ def comment_delete(request, pk):
 @login_required
 def comment_edit(request, snippet_id, comment_id):
     original_snippet = get_object_or_404(Snippet, id=snippet_id)
-    comment = get_object_or_404(Comment, id=comment_id, original_snippet=original_snippet)
+    comment = get_object_or_404(
+        Comment, id=comment_id, original_snippet=original_snippet
+    )
     form = CommentUpdate(request.POST, instance=comment)
     if form.is_valid():
         form.save()
         messages.success(request, "Your comment has been successfully updated!")
-        return redirect('welcome_page')
+        return redirect("welcome_page")
     else:
         form = CommentUpdate(instance=comment)
-    return render(request, 'snippets/edit_comment.html', {"form": form, "comment": comment, "original_snippet": original_snippet})
+    return render(
+        request,
+        "snippets/edit_comment.html",
+        {"form": form, "comment": comment, "original_snippet": original_snippet},
+    )
 
 
 def bookmark_book(request, pk):
@@ -240,19 +276,20 @@ def bookmark_book(request, pk):
         messages.success(request, f"You have bookmarked {book.title} by {book.author}.")
     else:
         messages.success(request, "You must be logged in to view this page.")
-        return redirect('welcome_page')
+        return redirect("welcome_page")
 
-    return redirect('profile', pk=request.user.pk)
+    return redirect("profile", pk=request.user.pk)
 
 
 def mark_as_read(request, pk):
     book = get_object_or_404(Book, id=pk)
     if request.user.is_authenticated:
         request.user.profile.books_read.add(book)
-        messages.success(request, f"You have added {book.title} by {book.author} as a finished book.")
+        messages.success(
+            request, f"You have added {book.title} by {book.author} as a finished book."
+        )
     else:
         messages.success(request, "You must be logged in to view this page.")
-        return redirect('welcome_page')
+        return redirect("welcome_page")
 
-    return redirect('profile', pk=request.user.pk)
-
+    return redirect("profile", pk=request.user.pk)
