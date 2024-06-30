@@ -111,11 +111,11 @@ WSGI_APPLICATION = "pageturner.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": str(os.getenv("POSTGRESQL_DBNAME")),
-        "USER": str(os.getenv("POSTGRESQL_USER")),
-        "PASSWORD": str(os.getenv("POSTGRESQL_PASSWORD")),
-        "HOST": str(os.getenv("POSTGRESQL_HOST")),
-        "PORT": str(os.getenv("POSTGRESQL_PORT")),
+        "NAME": os.getenv("POSTGRESQL_DBNAME"),
+        "USER": os.getenv("POSTGRESQL_USER"),
+        "PASSWORD": os.getenv("POSTGRESQL_PASSWORD"),
+        "HOST": os.getenv("POSTGRESQL_HOST"),
+        "PORT": os.getenv("POSTGRESQL_PORT"),
     }
 }
 

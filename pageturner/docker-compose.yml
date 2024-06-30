@@ -1,0 +1,69 @@
+#version: '3.11'
+
+services:
+  db:
+    image: postgres:15.3-alpine
+    volumes:
+      - database_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    restart: always
+
+  api:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: dev_build
+    command: python -Wd manage.py runserver 0.0.0.0:8001
+    volumes:
+      - ./static:/app/static
+      - ./media:/app/media
+      - .:/app
+    ports:
+      - 8001:8001
+    env_file:
+      - .env
+    depends_on:
+      - db
+    restart: always
+
+  members:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: dev_build
+    command: python -Wd manage.py runserver 0.0.0.0:8002
+    volumes:
+      - ./static:/app/static
+      - ./media:/app/media
+      - .:/app
+    ports:
+      - 8002:8002
+    env_file:
+      - .env
+    depends_on:
+      - db
+    restart: always
+
+  reviews:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: dev_build
+    command: python -Wd manage.py runserver 0.0.0.0:8003
+    volumes:
+      - ./static:/app/static
+      - ./media:/app/media
+      - .:/app
+    ports:
+      - 8003:8003
+    env_file:
+      - .env
+    depends_on:
+      - db
+    restart: always
+
+volumes:
+  database_data:
+  static:
+  media:
