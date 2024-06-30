@@ -1,9 +1,6 @@
-from api.serializers import BookSerializer, BookCollectionSerializer
-
-from drf_spectacular.types import OpenApiTypes
-from rest_framework import serializers
-
 from enum import Enum
+
+from api.serializers import BookSerializer, BookCollectionSerializer
 
 
 class SchemaTags(Enum):
@@ -37,7 +34,7 @@ BOOK_API_METADATA = {
     },
     "LuckyBook": {"tags": [SchemaTags.BOOK.value], "summary": "Display a random book"},
     "BookmarkBook": {"tags": [SchemaTags.BOOK.value], "summary": "Bookmark a book"},
-    "BookSearch": {"tags": [SchemaTags.BOOK.value], "summary": "Search a book"}
+    "BookSearch": {"tags": [SchemaTags.BOOK.value], "summary": "Search a book"},
 }
 
 BOOK_COLLECTION_API_METADATA = {

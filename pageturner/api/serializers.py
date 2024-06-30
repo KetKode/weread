@@ -38,4 +38,3 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class EmailSubscriptionSerializer(serializers.Serializer):
     email = serializers.EmailField()
-

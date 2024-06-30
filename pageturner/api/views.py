@@ -1,33 +1,26 @@
 import random
 
-from django.conf import settings
-from django.core.mail import send_mail
-from django.db import IntegrityError
 from django.db.models import Q
-from django.http import Http404
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import (
-    api_view,
     permission_classes,
     authentication_classes,
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from members.models import Profile, EmailSubscription
+from api.schema_data import BOOK_API_METADATA, BOOK_COLLECTION_API_METADATA
+from members.models import Profile
 from reviews.models import Book, BookCollection
 from .serializers import (
     BookSerializer,
     ProfileSerializer,
     BookCollectionSerializer,
-    EmailSubscriptionSerializer,
 )
-from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema
-from api.schema_data import BOOK_API_METADATA, BOOK_COLLECTION_API_METADATA
 
 
 class BookAPIViewSet(ModelViewSet):
@@ -164,7 +157,7 @@ def bookmark_book(request, pk):
     return Response(book_serializer.data)
 
 
-class BookCollections(ModelViewSet):
+class BookCollectionViewSet(ModelViewSet):
     queryset = BookCollection.objects.select_related("books").all()
     serializer_class = BookCollectionSerializer
 
@@ -219,8 +212,10 @@ def book_search(request):
     combined_filters = Q()
 
     if search_text:
-        combined_filters &= (Q(title__icontains=search_text) | Q(author__name__icontains=search_text) |
-                             Q(isbn__contains=search_text)
+        combined_filters &= (
+            Q(title__icontains=search_text)
+            | Q(author__name__icontains=search_text)
+            | Q(isbn__contains=search_text)
         )
 
     if selected_genres:
