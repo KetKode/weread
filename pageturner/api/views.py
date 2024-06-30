@@ -12,6 +12,7 @@ from rest_framework.decorators import (
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.decorators import api_view
 
 from api.schema_data import BOOK_API_METADATA, BOOK_COLLECTION_API_METADATA
 from members.models import Profile
@@ -54,8 +55,9 @@ class BookAPIViewSet(ModelViewSet):
         return super().destroy(request, *args, **kwargs)
 
 
+@api_view()
 @extend_schema(**BOOK_API_METADATA["GeneralRecommendations"])
-def recommended_books():
+def recommended_books(request):
 
     books = list(Book.objects.all())
     recommendations = random.sample(books, 10)
@@ -64,6 +66,7 @@ def recommended_books():
     return Response(book_serializer.data)
 
 
+@api_view()
 @extend_schema(**BOOK_API_METADATA["PersonalRecommendations"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -97,6 +100,7 @@ def personal_recommendations(request):
         return Response(response_data)
 
 
+@api_view()
 @extend_schema(**BOOK_API_METADATA["FriendsRecommendations"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -136,14 +140,16 @@ def friends_recommendations(request):
         return Response(response_data)
 
 
+@api_view()
 @extend_schema(**BOOK_API_METADATA["LuckyBook"])
-def show_lucky_book():
+def show_lucky_book(request):
     books = list(Book.objects.all())
     lucky_book = random.choice(books)
     book_serializer = BookSerializer(lucky_book, many=False)
     return Response(book_serializer.data)
 
 
+@api_view()
 @extend_schema(**BOOK_API_METADATA["BookmarkBook"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -188,6 +194,7 @@ class BookCollectionViewSet(ModelViewSet):
         return super().destroy(request, *args, **kwargs)
 
 
+@api_view()
 @extend_schema(**BOOK_API_METADATA["BookSearch"])
 def book_search(request):
     # queryset = Book.objects.all()
