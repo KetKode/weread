@@ -216,60 +216,57 @@ class SearchBarApiListView(ListAPIView):
         return queryset
 
 
-@api_view()
-@extend_schema(**BOOK_API_METADATA["BookSearch"])
-def book_search(request):
-    # queryset = Book.objects.all()
-    # main_genres = Book.objects.values_list('main_genre', flat=True).distinct().order_by('main_genre')
-    # main_age = Book.objects.exclude(main_age__isnull=True).exclude(main_age='').values_list
-    # ('main_age', flat=True).distinct()
-    # language = Book.objects.values_list('language', flat=True).distinct()
-    # book_lists = BookCollection.objects.values_list('name', flat=True).distinct().order_by('name')
-    # format_book = Book.objects.values_list('format_book', flat=True).distinct()
-    # year = Book.objects.values_list('year', flat=True).distinct()
+@extend_schema(**BOOK_API_METADATA["SearchFilters"])
+class SearchFiltersApiListView(ListAPIView):
+    serializer_class = BookSerializer
 
-    # Get the search query and selected genres
-    search_text = request.GET.get("search_text") or request.POST.get("search_text")
-    selected_genres = request.GET.getlist("selected_genres")
-    selected_age = request.GET.getlist("selected_age")
-    selected_book_lists = request.GET.getlist("selected_book_lists")
-    selected_format = request.GET.getlist("selected_format")
-    selected_language = request.GET.getlist("selected_language")
-    year_from = request.GET.get("year_from")
-    year_to = request.GET.get("year_to")
+    def get_queryset(self):
+        queryset = Book.objects.all()
 
-    combined_filters = Q()
+        title = self.request.query_params.get("title")
+        author = self.request.query_params.get("author")
+        isbn = self.request.query_params.get("isbn")
 
-    if search_text:
-        combined_filters &= (
-            Q(title__icontains=search_text)
-            | Q(author__name__icontains=search_text)
-            | Q(isbn__contains=search_text)
-        )
+        selected_genres = self.request.query_params.getlist("genre")
+        selected_age = self.request.query_params.getlist("age")
+        selected_book_collections = self.request.query_params.getlist("book_collection")
+        selected_format = self.request.query_params.getlist("format")
+        selected_language = self.request.query_params.getlist("language")
+        year_from = self.request.query_params.get("year_from")
+        year_to = self.request.query_params.get("year_to")
 
-    if selected_genres:
-        combined_filters &= Q(main_genre__in=selected_genres)
+        combined_filters = Q()
 
-    if selected_age:
-        combined_filters &= Q(main_age__in=selected_age)
+        if title is not None:
+            queryset = queryset.filter(title__icontains=title)
+        if author is not None:
+            queryset = queryset.filter(author__name__icontains=author)
+        if isbn is not None:
+            queryset = queryset.filter(isbn=isbn)
 
-    if selected_book_lists:
-        combined_filters &= Q(book_lists__name__in=selected_book_lists)
+        if selected_genres:
+            combined_filters &= Q(main_genre__in=selected_genres)
 
-    if selected_format:
-        combined_filters &= Q(format_book__in=selected_format)
+        if selected_age:
+            combined_filters &= Q(main_age__in=selected_age)
 
-    if selected_language:
-        combined_filters &= Q(language__in=selected_language)
+        if selected_book_collections:
+            combined_filters &= Q(book_lists__name__in=selected_book_collections)
 
-    if year_from and year_to:
-        combined_filters &= Q(year__range=[year_from, year_to])
+        if selected_format:
+            combined_filters &= Q(format_book__in=selected_format)
 
-        # Apply the combined filters to the queryset
-    books = Book.objects.filter(combined_filters)
-    book_serializer = BookSerializer(books, many=True)
+        if selected_language:
+            combined_filters &= Q(language__in=selected_language)
 
-    return Response(book_serializer.data)
+        if year_from and year_to:
+            combined_filters &= Q(year__range=[year_from, year_to])
+        elif year_from:
+            combined_filters &= Q(year__gte=year_from)
+        elif year_to:
+            combined_filters &= Q(year__lte=year_to)
+
+        return queryset.filter(combined_filters)
 
 
 # @api_view(['GET', 'POST'])

@@ -23,8 +23,12 @@ urlpatterns = [
     ),
     path("lucky_book/", views.show_lucky_book, name="lucky_book"),
     path("bookmark_book/<int:pk>/", views.bookmark_book, name="bookmark_book"),
-    path("book_search/", views.book_search, name="book_search"),
     path("search_bar/", views.SearchBarApiListView.as_view(), name="search_bar"),
+    path(
+        "search_filters/",
+        views.SearchFiltersApiListView.as_view(),
+        name="search_filters",
+    ),
     # # email subscription
     # path('email_subscription/', email_subscription, name="email_subscription")
 ]
