@@ -1,6 +1,7 @@
 from enum import Enum
 
 from api.serializers import BookSerializer, BookCollectionSerializer
+from drf_spectacular.utils import OpenApiParameter, OpenApiTypes
 
 
 class SchemaTags(Enum):
@@ -35,6 +36,33 @@ BOOK_API_METADATA = {
     "LuckyBook": {"tags": [SchemaTags.BOOK.value], "summary": "Display a random book"},
     "BookmarkBook": {"tags": [SchemaTags.BOOK.value], "summary": "Bookmark a book"},
     "BookSearch": {"tags": [SchemaTags.BOOK.value], "summary": "Search a book"},
+    "SearchBar": {
+        "tags": [SchemaTags.BOOK.value],
+        "summary": "Search bar: title, author, ISBN",
+        "parameters": [
+            OpenApiParameter(
+                name="title",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                required=False,
+                description="Title of the book. Case-insensitive.",
+            ),
+            OpenApiParameter(
+                name="author",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                required=False,
+                description="Author of the book. Case-insensitive.",
+            ),
+            OpenApiParameter(
+                name="isbn",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                required=False,
+                description="ISBN of the book. Needs to be exact.",
+            ),
+        ],
+    },
 }
 
 BOOK_COLLECTION_API_METADATA = {

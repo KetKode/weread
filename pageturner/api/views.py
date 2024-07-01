@@ -13,6 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import api_view
+from rest_framework.generics import ListAPIView
 
 from api.schema_data import BOOK_API_METADATA, BOOK_COLLECTION_API_METADATA
 from members.models import Profile
@@ -145,8 +146,8 @@ def friends_recommendations(request):
 def show_lucky_book(request):
     books = list(Book.objects.all())
     lucky_book = random.choice(books)
-    book_serializer = BookSerializer(lucky_book, many=False)
-    return Response(book_serializer.data)
+    serializer_class = BookSerializer(lucky_book, many=False)
+    return Response(serializer_class.data)
 
 
 @api_view()
@@ -155,12 +156,12 @@ def show_lucky_book(request):
 @permission_classes([IsAuthenticated])
 def bookmark_book(request, pk):
     book = get_object_or_404(Book, id=pk)
-    book_serializer = BookSerializer(book)
+    serializer_class = BookSerializer(book)
     if book.bookmarks.filter(id=request.user.id):
         book.bookmarks.remove(request.user.profile)
     else:
         book.bookmarks.add(request.user.profile)
-    return Response(book_serializer.data)
+    return Response(serializer_class.data)
 
 
 class BookCollectionViewSet(ModelViewSet):
@@ -192,6 +193,27 @@ class BookCollectionViewSet(ModelViewSet):
     @extend_schema(**BOOK_COLLECTION_API_METADATA["BookCollectionDelete"])
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
+
+
+@extend_schema(**BOOK_API_METADATA["SearchBar"])
+class SearchBarApiListView(ListAPIView):
+    serializer_class = BookSerializer
+
+    def get_queryset(self):
+        queryset = Book.objects.all()
+
+        title = self.request.query_params.get("title")
+        author = self.request.query_params.get("author")
+        isbn = self.request.query_params.get("isbn")
+
+        if title is not None:
+            queryset = queryset.filter(title__icontains=title)
+        if author is not None:
+            queryset = queryset.filter(author__name__icontains=author)
+        if isbn is not None:
+            queryset = queryset.filter(isbn=isbn)
+
+        return queryset
 
 
 @api_view()
