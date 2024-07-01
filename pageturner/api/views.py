@@ -15,7 +15,11 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import api_view
 from rest_framework.generics import ListAPIView
 
-from api.schema_data import BOOK_API_METADATA, BOOK_COLLECTION_API_METADATA
+from api.schema_data import (
+    BOOK_API_METADATA,
+    BOOK_COLLECTION_API_METADATA,
+    RECS_API_METADATA,
+)
 from members.models import Profile
 from reviews.models import Book, BookCollection
 from .serializers import (
@@ -57,7 +61,7 @@ class BookAPIViewSet(ModelViewSet):
 
 
 @api_view()
-@extend_schema(**BOOK_API_METADATA["GeneralRecommendations"])
+@extend_schema(**RECS_API_METADATA["GeneralRecommendations"])
 def recommended_books(request):
 
     books = list(Book.objects.all())
@@ -68,7 +72,7 @@ def recommended_books(request):
 
 
 @api_view()
-@extend_schema(**BOOK_API_METADATA["PersonalRecommendations"])
+@extend_schema(**RECS_API_METADATA["PersonalRecommendations"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def personal_recommendations(request):
@@ -102,7 +106,7 @@ def personal_recommendations(request):
 
 
 @api_view()
-@extend_schema(**BOOK_API_METADATA["FriendsRecommendations"])
+@extend_schema(**RECS_API_METADATA["FriendsRecommendations"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def friends_recommendations(request):
@@ -142,7 +146,7 @@ def friends_recommendations(request):
 
 
 @api_view()
-@extend_schema(**BOOK_API_METADATA["LuckyBook"])
+@extend_schema(**RECS_API_METADATA["LuckyBook"])
 def show_lucky_book(request):
     books = list(Book.objects.all())
     lucky_book = random.choice(books)

@@ -9,6 +9,7 @@ class SchemaTags(Enum):
     AUTHOR = "author"
     USER = "user"
     BOOK_COLLECTION = "book_collection"
+    REC = "rec"
 
 
 BOOK_API_METADATA = {
@@ -21,19 +22,6 @@ BOOK_API_METADATA = {
     "BookGet": {"tags": [SchemaTags.BOOK.value], "summary": "Get a book by ID"},
     "BookUpdate": {"tags": [SchemaTags.BOOK.value], "summary": "Update a book by ID"},
     "BookDelete": {"tags": [SchemaTags.BOOK.value], "summary": "Delete a book by ID"},
-    "GeneralRecommendations": {
-        "tags": [SchemaTags.BOOK.value],
-        "summary": "Display recommendations for a not logged-in user",
-    },
-    "PersonalRecommendations": {
-        "tags": [SchemaTags.BOOK.value],
-        "summary": "Display recommendations for a logged-in user based on their likes",
-    },
-    "FriendsRecommendations": {
-        "tags": [SchemaTags.BOOK.value],
-        "summary": "Display recommendations based on user's friends' likes",
-    },
-    "LuckyBook": {"tags": [SchemaTags.BOOK.value], "summary": "Display a random book"},
     "BookmarkBook": {"tags": [SchemaTags.BOOK.value], "summary": "Bookmark a book"},
     "SearchFilters": {
         "tags": [SchemaTags.BOOK.value],
@@ -139,6 +127,22 @@ BOOK_API_METADATA = {
             ),
         ],
     },
+}
+
+RECS_API_METADATA = {
+    "GeneralRecommendations": {
+        "tags": [SchemaTags.REC.value],
+        "summary": "Display recommendations for a not logged-in user",
+    },
+    "PersonalRecommendations": {
+        "tags": [SchemaTags.REC.value],
+        "summary": "Display recommendations for a logged-in user based on their likes",
+    },
+    "FriendsRecommendations": {
+        "tags": [SchemaTags.REC.value],
+        "summary": "Display recommendations based on user's friends' likes",
+    },
+    "LuckyBook": {"tags": [SchemaTags.REC.value], "summary": "Display a random book"},
 }
 
 BOOK_COLLECTION_API_METADATA = {
