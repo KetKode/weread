@@ -9,54 +9,18 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
     restart: always
 
-  api:
+  weread-backend:
     build:
       context: .
       dockerfile: ./Dockerfile
       target: dev_build
-    command: python -Wd manage.py runserver 0.0.0.0:8001
+    command: gunicorn pageturner.wsgi:application
     volumes:
       - ./static:/app/static
       - ./media:/app/media
       - .:/app
     ports:
-      - 8001:8001
-    env_file:
-      - .env
-    depends_on:
-      - db
-    restart: always
-
-  members:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-      target: dev_build
-    command: python -Wd manage.py runserver 0.0.0.0:8002
-    volumes:
-      - ./static:/app/static
-      - ./media:/app/media
-      - .:/app
-    ports:
-      - 8002:8002
-    env_file:
-      - .env
-    depends_on:
-      - db
-    restart: always
-
-  reviews:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-      target: dev_build
-    command: python -Wd manage.py runserver 0.0.0.0:8003
-    volumes:
-      - ./static:/app/static
-      - ./media:/app/media
-      - .:/app
-    ports:
-      - 8003:8003
+      - 8000:8000
     env_file:
       - .env
     depends_on:
