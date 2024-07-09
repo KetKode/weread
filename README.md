@@ -39,3 +39,9 @@ cd weread/pageturner
 ```
 sudo docker compose docker-compose.yml up --build -d
 ```
+
+### configure venv
+
+```
+poetry env use python3.11
+```

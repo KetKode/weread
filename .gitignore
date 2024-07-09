@@ -42,3 +42,4 @@ packages.microsoft.gpg
 
 venv
 *.xml
+/pageturner/.venv/
