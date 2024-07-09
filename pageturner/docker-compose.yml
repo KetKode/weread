@@ -14,11 +14,11 @@ services:
       context: .
       dockerfile: ./Dockerfile
       target: dev_build
-    command: gunicorn pageturner.wsgi:application
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./static:/app/static
       - ./media:/app/media
-      - .:/app
+      - .:/app/
     ports:
       - 8000:8000
     env_file:

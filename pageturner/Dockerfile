@@ -35,16 +35,18 @@ RUN $POETRY_HOME/bin/pip install poetry
 
 RUN poetry self update
 
-COPY api app/api
-COPY members app/members
-COPY reviews app/reviews
-
-# copy project
-COPY . /app
-
 # set work directory
 WORKDIR /app
-COPY pyproject.toml poetry.lock /code/
 
-# Install dependencies:
+COPY pyproject.toml ./
+
+# install dependencies:
 RUN poetry install --no-interaction --no-ansi
+
+# copy project
+COPY . ./
+
+
+
+
+
