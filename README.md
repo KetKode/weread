@@ -7,7 +7,9 @@
 - PostgreSQL
 - Celery (to be added)
 - Docker
-- Redis
+- Redis (to be added)
+
+**API docs:** http://localhost:8000/api/docs/
 
 
 ### clone project repo
@@ -31,7 +33,7 @@ SECRET_KEY=your_secret_key
 ### cd into working directory
 
 ```
-cd weread/pageturner
+cd pageturner
 ```
 
 ### run dev build
@@ -40,7 +42,7 @@ cd weread/pageturner
 sudo docker compose docker-compose.yml up --build -d
 ```
 
-### configure venv
+### configure venv (if you need)
 
 ```
 poetry env use python3.11
