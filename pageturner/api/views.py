@@ -60,49 +60,48 @@ class BookAPIViewSet(ModelViewSet):
         return super().destroy(request, *args, **kwargs)
 
 
-@api_view()
 @extend_schema(**RECS_API_METADATA["GeneralRecommendations"])
-def recommended_books(request):
-
-    books = Book.objects.all().prefetch_related("author")
-    recommendations = random.sample(books, 10)
-    book_serializer = BookSerializer(recommendations, many=True)
-
-    return Response(book_serializer.data)
-
-
-@api_view()
-@extend_schema(**RECS_API_METADATA["PersonalRecommendations"])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def personal_recommendations(request):
-    profile_serializer = ProfileSerializer(request.user.profile)
-
-    liked_books = Book.objects.filter(Q(liked_books=True) & Q(main_genre__isnull=False))
-
-    if liked_books:
-        main_liked_genres = [book.main_genre for book in liked_books]
-        recommendations = Book.objects.filter(
-            Q(main_genre__in=main_liked_genres)
-        ).order_by("?")[:10]
-        book_serializer = BookSerializer(recommendations, many=True)
-
-        response_data = {
-            "profile_data": profile_serializer.data,
-            "recommended_books": book_serializer.data,
-        }
-        return Response(response_data)
-
-    else:
+class RecommendedBooks(GenericAPIView):
+    def get(self):
         books = Book.objects.all().prefetch_related("author")
         recommendations = random.sample(books, 10)
         book_serializer = BookSerializer(recommendations, many=True)
 
-        response_data = {
-            "profile_data": profile_serializer.data,
-            "recommended_books": book_serializer.data,
-        }
-        return Response(response_data)
+        return Response(book_serializer.data)
+
+
+@extend_schema(**RECS_API_METADATA["PersonalRecommendations"])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+class PersonalRecommendations(GenericAPIView):
+    def get(self, request):
+        profile_serializer = ProfileSerializer(request.user.profile)
+
+        liked_books = Book.objects.filter(Q(liked_books=True) & Q(main_genre__isnull=False))
+
+        if liked_books:
+            main_liked_genres = [book.main_genre for book in liked_books]
+            recommendations = Book.objects.filter(
+                Q(main_genre__in=main_liked_genres)
+            ).order_by("?")[:10]
+            book_serializer = BookSerializer(recommendations, many=True)
+
+            response_data = {
+                "profile_data": profile_serializer.data,
+                "recommended_books": book_serializer.data,
+            }
+            return Response(response_data)
+
+        else:
+            books = Book.objects.all().prefetch_related("author")
+            recommendations = random.sample(books, 10)
+            book_serializer = BookSerializer(recommendations, many=True)
+
+            response_data = {
+                "profile_data": profile_serializer.data,
+                "recommended_books": book_serializer.data,
+            }
+            return Response(response_data)
 
 
 @extend_schema(**RECS_API_METADATA["FriendsRecommendations"])

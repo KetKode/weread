@@ -12,10 +12,10 @@ urlpatterns = [
     path("v1/", include("dj_rest_auth.urls")),
     path("v1/registration/", include("dj_rest_auth.registration.urls")),
     path("", include(router.urls)),
-    path("recs/", views.recommended_books, name="recommended_books"),
+    path("recs/", views.RecommendedBooks.as_view(), name="recommended_books"),
     path(
         "personal_recs/",
-        views.personal_recommendations,
+        views.PersonalRecommendations.as_view(),
         name="personal_recommendations",
     ),
     path(
