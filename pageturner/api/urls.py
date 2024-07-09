@@ -19,7 +19,7 @@ urlpatterns = [
         name="personal_recommendations",
     ),
     path(
-        "friends_recs/", views.friends_recommendations, name="friends_recommendations"
+        "friends_recs/", views.FriendsRecommendations.as_view(), name="friends_recommendations"
     ),
     path("lucky_book/", views.show_lucky_book, name="lucky_book"),
     path("bookmark_book/<int:pk>/", views.bookmark_book, name="bookmark_book"),

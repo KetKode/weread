@@ -9,7 +9,7 @@ class SchemaTags(Enum):
     AUTHOR = "author"
     USER = "user"
     BOOK_COLLECTION = "book_collection"
-    REC = "rec"
+    RECS = "recs"
 
 
 BOOK_API_METADATA = {
@@ -131,18 +131,18 @@ BOOK_API_METADATA = {
 
 RECS_API_METADATA = {
     "GeneralRecommendations": {
-        "tags": [SchemaTags.REC.value],
+        "tags": [SchemaTags.RECS.value],
         "summary": "Display recommendations for a not logged-in user",
     },
     "PersonalRecommendations": {
-        "tags": [SchemaTags.REC.value],
+        "tags": [SchemaTags.RECS.value],
         "summary": "Display recommendations for a logged-in user based on their likes",
     },
     "FriendsRecommendations": {
-        "tags": [SchemaTags.REC.value],
+        "tags": [SchemaTags.RECS.value],
         "summary": "Display recommendations based on user's friends' likes",
     },
-    "LuckyBook": {"tags": [SchemaTags.REC.value], "summary": "Display a random book"},
+    "LuckyBook": {"tags": [SchemaTags.RECS.value], "summary": "Display a random book"},
 }
 
 BOOK_COLLECTION_API_METADATA = {

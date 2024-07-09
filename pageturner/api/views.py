@@ -13,7 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import api_view
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, GenericAPIView
 
 from api.schema_data import (
     BOOK_API_METADATA,
@@ -30,7 +30,7 @@ from .serializers import (
 
 
 class BookAPIViewSet(ModelViewSet):
-    queryset = Book.objects.select_related("author").all()
+    queryset = Book.objects.prefetch_related("author").all()
     serializer_class = BookSerializer
 
     fiter_backends = [DjangoFilterBackend]
@@ -64,7 +64,7 @@ class BookAPIViewSet(ModelViewSet):
 @extend_schema(**RECS_API_METADATA["GeneralRecommendations"])
 def recommended_books(request):
 
-    books = list(Book.objects.all())
+    books = Book.objects.all().prefetch_related("author")
     recommendations = random.sample(books, 10)
     book_serializer = BookSerializer(recommendations, many=True)
 
@@ -94,7 +94,7 @@ def personal_recommendations(request):
         return Response(response_data)
 
     else:
-        books = list(Book.objects.all())
+        books = Book.objects.all().prefetch_related("author")
         recommendations = random.sample(books, 10)
         book_serializer = BookSerializer(recommendations, many=True)
 
@@ -105,50 +105,50 @@ def personal_recommendations(request):
         return Response(response_data)
 
 
-@api_view()
 @extend_schema(**RECS_API_METADATA["FriendsRecommendations"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def friends_recommendations(request):
-    friends = Profile.objects.filter(followed_by=request.user.profile)
-    friends_serializer = ProfileSerializer(friends, many=True)
+class FriendsRecommendations(GenericAPIView):
+    def get(self, request):
+        friends = Profile.objects.filter(followed_by=request.user.profile)
+        friends_serializer = ProfileSerializer(friends, many=True)
 
-    if friends:
-        random_friend = random.choice(friends)
-        random_friends_books = Book.objects.filter(
-            Q(liked_books=random_friend)
-            | Q(bookmarks=random_friend)
-            | Q(read_books=random_friend)
-        )
+        if friends:
+            random_friend = random.choice(friends)
+            random_friends_books = Book.objects.filter(
+                Q(liked_books=random_friend)
+                | Q(bookmarks=random_friend)
+                | Q(read_books=random_friend)
+            )
 
-        main_random_friends_liked_genres = [
-            book.main_genre for book in random_friends_books
-        ]
-        random_friends_recommended_books = Book.objects.filter(
-            main_genre__in=main_random_friends_liked_genres
-        ).order_by("?")
-        random_friends_recommendations = random_friends_recommended_books[:10]
-        book_serializer = BookSerializer(random_friends_recommendations, many=True)
+            main_random_friends_liked_genres = [
+                book.main_genre for book in random_friends_books
+            ]
+            random_friends_recommended_books = Book.objects.filter(
+                main_genre__in=main_random_friends_liked_genres
+            ).order_by("?")
+            random_friends_recommendations = random_friends_recommended_books[:10]
+            book_serializer = BookSerializer(random_friends_recommendations, many=True)
 
-        response_data = {
-            "friends": friends_serializer.data,
-            "recommended_books": book_serializer.data,
-        }
-        return Response(response_data)
-    else:
-        books = list(Book.objects.all())
-        recommendations = random.sample(books, 10)
-        book_serializer = BookSerializer(recommendations, many=True)
+            response_data = {
+                "friends": friends_serializer.data,
+                "recommended_books": book_serializer.data,
+            }
+            return Response(response_data)
+        else:
+            books = Book.objects.all().prefetch_related("author")
+            recommendations = random.sample(books, 10)
+            book_serializer = BookSerializer(recommendations, many=True)
 
-        response_data = {"recommended_books": book_serializer.data}
+            response_data = {"recommended_books": book_serializer.data}
 
-        return Response(response_data)
+            return Response(response_data)
 
 
 @api_view()
 @extend_schema(**RECS_API_METADATA["LuckyBook"])
 def show_lucky_book(request):
-    books = list(Book.objects.all())
+    books = Book.objects.all().prefetch_related("author")
     lucky_book = random.choice(books)
     serializer_class = BookSerializer(lucky_book, many=False)
     return Response(serializer_class.data)
@@ -204,7 +204,7 @@ class SearchBarApiListView(ListAPIView):
     serializer_class = BookSerializer
 
     def get_queryset(self):
-        queryset = Book.objects.all()
+        queryset = Book.objects.all().prefetch_related("author")
 
         title = self.request.query_params.get("title")
         author = self.request.query_params.get("author")
@@ -225,7 +225,7 @@ class SearchFiltersApiListView(ListAPIView):
     serializer_class = BookSerializer
 
     def get_queryset(self):
-        queryset = Book.objects.all()
+        queryset = Book.objects.all().prefetch_related("author")
 
         title = self.request.query_params.get("title")
         author = self.request.query_params.get("author")
